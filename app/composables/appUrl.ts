@@ -7,6 +7,7 @@ export const AppUrl ={
 
 	// Tout le reste a besoin d'authentification
 	DASHBOARD: "/dashboard",
+	WELCOME: "/welcome",
 	ABOUT: "/about",
 	CLIENTS: "/clients",
 	ORDERS: "/orders",

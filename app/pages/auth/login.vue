@@ -90,8 +90,8 @@
 </template>
 
 <script setup lang="ts">
-import Spinner from '../../components/partials/Spinner.vue';
-import { createDefaultLoginCredential, type LoginCredential } from '~~/models/User';
+import Spinner from '@/components/partials/Spinner.vue';
+import { createDefaultLoginCredential, type LoginCredential } from '~/models/User';
 
 definePageMeta({
   layout: false
@@ -105,7 +105,7 @@ const handleLogin = async () => {
 	try {
 		await useAuthStore().login(credentials.value);
 		credentials.value = createDefaultLoginCredential();
-		await navigateTo(AppUrl.TENDERS_TASK_FORM);
+		await navigateTo(AppUrl.WELCOME);
 	} catch (error) {
 		console.log("Error while authenticating:", error);
 		alert(error);
