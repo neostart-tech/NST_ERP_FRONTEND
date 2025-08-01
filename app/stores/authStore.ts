@@ -1,9 +1,10 @@
 // stores/auth.ts
-import { defineStore } from 'pinia';
-import { AppUrl } from "../composables/appUrl";
-import type { User, LoginCredential, AuthUser } from '../../models/User';
-import { useApi } from '../composables/useApi';
+import { AppUrl } from "@/composables/appUrl";
+import type { User, LoginCredential, AuthUser } from '~/models/User';
+import { useApi } from '@/composables/useApi';
 import { ApiUrls } from '#imports';
+import { defineStore } from 'pinia';
+
 
 export const useAuthStore = defineStore('AuthStore', {
 	state: () => ({
@@ -44,7 +45,11 @@ export const useAuthStore = defineStore('AuthStore', {
 	},
 
 	// Configuration de la persistance
-	// Persistence is handled by @pinia-plugin-persistedstate/nuxt
-	// The plugin is configured in nuxt.config.ts
-	pick: ['user', 'token']
+	persist: {
+		storage: persistedState.cookies,
+		// Optionnel : personnaliser la clé de stockage
+		key: 'auth-store',
+		// Optionnel : choisir quelles propriétés persister
+		pick: ['user', 'token']
+	}
 });

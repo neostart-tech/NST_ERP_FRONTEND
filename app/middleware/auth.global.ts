@@ -1,11 +1,11 @@
 import { defineNuxtRouteMiddleware } from "nuxt/app";
-import {AppUrl} from "../composables/appUrl";
-import { useAuthStore } from "../stores/authStore";
+import {AppUrl} from "@/composables/appUrl";
+import { useAuthStore } from "@/stores/authStore";
 
 export default defineNuxtRouteMiddleware((to) => {
 	const authStore = useAuthStore();
 
-	const publicRoutes = [AppUrl.HOME, AppUrl.REGISTER, AppUrl.FORGOT_PASSWORD];
+	const publicRoutes = [AppUrl.HOME, AppUrl.LOGIN, AppUrl.REGISTER, AppUrl.FORGOT_PASSWORD];
 	const isPublicRoute = publicRoutes.includes(to.path);
 	const isAuthenticated = authStore.isAuthenticated;
 
@@ -16,11 +16,11 @@ export default defineNuxtRouteMiddleware((to) => {
 	// });
 
 	// Éviter les boucles de redirection
-	if (isAuthenticated && isPublicRoute && to.path !== AppUrl.CLIENTS) {
-		return navigateTo(AppUrl.CLIENTS);
+	if (isAuthenticated && isPublicRoute && to.path !== AppUrl.WELCOME) {
+		return navigateTo(AppUrl.WELCOME);
 	}
 
-	if (!isAuthenticated && !isPublicRoute && to.path !== AppUrl.HOME) {
-		return navigateTo(AppUrl.HOME);
+	if (!isAuthenticated && !isPublicRoute && to.path !== AppUrl.LOGIN) {
+		return navigateTo(AppUrl.LOGIN);
 	}
 });
