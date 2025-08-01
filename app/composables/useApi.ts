@@ -14,6 +14,7 @@ export const useApi = () => {
 	const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 	let XSRFToken = useCookie('XSRF-TOKEN').value;
+	console.log("XSRFToken:", XSRFToken);
 	if (!XSRFToken) {
 		refreshToken().then();
 		XSRFToken = useCookie('XSRF-TOKEN').value;
@@ -24,6 +25,7 @@ export const useApi = () => {
 		'Content-Type': 'application/json',
 		'Accept': 'application/json',
 		...(authStore.token && {Authorization: `Bearer ${authStore.token}`}),
+		// credentials: 'include',
 		...headers,
 	});
 
@@ -92,6 +94,7 @@ export const useApi = () => {
 };
 
 const refreshToken = async () => {
+	console.log("Refreshing token...");
 	await $fetch('http://localhost:8000/sanctum/csrf-cookie', {
 		credentials: 'include',
 	})
