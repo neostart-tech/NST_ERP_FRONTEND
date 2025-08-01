@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "types": [
+      "./types/stores"
+    ]
+  },
+  "include": [
+    "types/stores.d.ts"
+  ]
+}

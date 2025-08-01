@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./*"]
+      // or, if your code is in 'src':
+      // "~/*": ["src/*"]
+    }
+  }
+}
