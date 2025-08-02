@@ -15,7 +15,11 @@ export const useAuthStore = defineStore('AuthStore', {
 	getters: {
 		isAuthenticated: (state) => {
 			return !!(state.user && state.token);
+		},
+		fullName: (state) => {
+			return `${state.user?.firstName} ${state.user?.lastName}`;
 		}
+
 	},
 
 	actions: {
@@ -29,6 +33,8 @@ export const useAuthStore = defineStore('AuthStore', {
 				this.user = response.data;
 				this.token = response.data.token;
 
+				useAlert().showAlert("Login successful", "success");
+
 			} catch (error: any) {
 				console.log("Login error:", error);
 				throw new Error(error.data?.message || error.message);
@@ -40,7 +46,7 @@ export const useAuthStore = defineStore('AuthStore', {
 			this.user = null;
 			this.token = null;
 
-			navigateTo(AppUrl.HOME);
+			navigateTo(AppUrl.LOGIN);
 		}
 	},
 

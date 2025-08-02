@@ -10,7 +10,8 @@ export default defineNuxtConfig({
   modules: [
 		'@nuxtjs/tailwindcss',
 		'@pinia/nuxt',
-		'@pinia-plugin-persistedstate/nuxt'
+		'@pinia-plugin-persistedstate/nuxt',
+    '@nuxt/icon'
 	],
   // Configuration des alias pour les imports
   alias: {

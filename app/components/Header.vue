@@ -57,18 +57,18 @@
           <div class="relative">
             <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium text-sm">
               <span v-if="!useAuthStore().user?.avatar">
-                {{ useAuthStore().user?.name?.charAt(0) || 'U' }}
+                {{ useAuthStore().fullName.charAt(0) || 'U' }}
               </span>
               <img
                 v-else
-                :src="useAuthStore().user.avatar"
-                :alt="useAuthStore().user.name || 'Utilisateur'"
+                :src="useAuthStore().user?.avatar || '/avatar.png'"
+                :alt="useAuthStore().fullName || 'Utilisateur'"
                 class="w-full h-full rounded-full object-cover"
               />
             </div>
           </div>
           <div class="text-left">
-            <p class="text-sm font-medium text-gray-800">{{ useAuthStore().user?.name || 'Utilisateur' }}</p>
+            <p class="text-sm font-medium text-gray-800">{{ useAuthStore().fullName || 'Utilisateur' }}</p>
             <p class="text-xs text-gray-500">{{ useAuthStore().user?.role || 'Rôle' }}</p>
           </div>
           <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -146,8 +146,7 @@ const pageTitle = computed(() => {
 })
 
 const logout = () => {
-  authStore.logout()
-  router.push('/login')
+  authStore.logout();
   showUserMenu.value = false
 }
 

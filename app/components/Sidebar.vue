@@ -1,13 +1,28 @@
 <template>
-  <div class="fixed inset-0 z-50 lg:relative lg:inset-auto lg:z-auto">
+  <div>
     <!-- Mobile overlay with smooth backdrop -->
     <div
       v-if="mobileSidebarOpen"
       @click="mobileSidebarOpen = false"
-      class="fixed inset-0 bg-black/50 backdrop-blur-sm lg:hidden transition-opacity duration-300"
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm lg:hidden transition-opacity duration-300 z-40"
     />
 
-    <aside class="fixed inset-y-0 left-0 z-50 w-64 h-screen overflow-hidden">
+    <!-- Hamburger button for mobile -->
+    <button
+      @click="mobileSidebarOpen = !mobileSidebarOpen"
+      class="fixed top-4 left-4 z-50 p-2 text-gray-600 rounded-lg lg:hidden bg-white/90 backdrop-blur-sm shadow-md"
+      :class="{ 'left-[17rem]': mobileSidebarOpen }"
+    >
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path v-if="!mobileSidebarOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+
+    <aside 
+      class="fixed inset-y-0 left-0 z-40 w-64 h-screen overflow-hidden transform transition-transform duration-300 ease-in-out lg:translate-x-0"
+      :class="{'translate-x-0': mobileSidebarOpen, '-translate-x-full': !mobileSidebarOpen}"
+    >
       <div class="flex flex-col h-full bg-gradient-to-b from-sky-800 to-sky-900 shadow-xl">
         <!-- Header fixe -->
         <div class="flex-shrink-0 px-6 py-5 border-b border-sky-700 bg-sky-800 sticky top-0 z-10">
@@ -24,39 +39,20 @@
               </div>
             </div>
 
-            <button
-              @click="mobileSidebarOpen = false"
-              class="p-2 text-white/70 transition-colors rounded-lg lg:hidden hover:text-white hover:bg-white/10"
-            >
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
+            <!-- Mobile close button moved to the top left -->
+            <div class="w-8"></div>
           </div>
         </div>
 
-        <!-- Close button for mobile -->
-        <button
-          @click="$emit('close')"
-          class="lg:hidden p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            ></path>
-          </svg>
-        </button>
+
         
         <!-- Navigation scrollable -->
         <nav class="flex-1 overflow-y-auto px-4 py-6 custom-scrollbar">
           <div class="space-y-1">
-            <router-link
-              to="/dashboard"
+            <NuxtLink
+              :to="AppUrl.DASHBOARD"
               class="nav-item"
-              :class="{ 'nav-item-active': $route.path === '/dashboard' }"
+              :class="{ 'nav-item-active': $route.path === AppUrl.DASHBOARD }"
             >
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,7 +64,7 @@
                 <p class="nav-label">Tableau de bord</p>
                 <p class="nav-description">Vue d'ensemble</p>
               </div>
-            </router-link>
+            </NuxtLink>
 
            <div class="nav-section">
         <button
@@ -93,7 +89,7 @@
 
         <transition name="slide-down">
           <div v-show="expandedSections.clients" class="mt-2 space-y-1">
-            <router-link to="/customer" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/ficheclient' }">
+            <NuxtLink :to="AppUrl.CLIENTS" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.CLIENTS }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
@@ -103,9 +99,9 @@
                 <p class="nav-label">Gestion client</p>
                 
               </div>
-            </router-link>
+            </NuxtLink>
 
-            <router-link to="/sales" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/contactassocie' }">
+            <NuxtLink :to="AppUrl.SALES" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.SALES }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -115,9 +111,9 @@
                 <p class="nav-label">Gestion commerciaux</p>
                
               </div>
-            </router-link>
+            </NuxtLink>
 
-            <router-link to="/recouvrement" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/historiquevente' }">
+            <NuxtLink :to="AppUrl.FOLLOWUP" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.FOLLOWUP }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
@@ -127,9 +123,9 @@
                 <p class="nav-label">Gestion recouvrement</p>
                 
               </div>
-            </router-link>
+            </NuxtLink>
 
-            <router-link to="/users" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/conditionpaiement' }">
+            <NuxtLink :to="AppUrl.USERS" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.USERS }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -139,7 +135,7 @@
                 <p class="nav-label">Gestion des utilisateurs</p>
                 
               </div>
-            </router-link>
+            </NuxtLink>
 
             
           </div>
@@ -175,10 +171,10 @@
 
               <transition name="slide-down">
                 <div v-show="expandedSections.sales" class="mt-2 space-y-1">
-                  <router-link
-                    to="/quotes"
+                  <NuxtLink
+                    :to="AppUrl.QUOTES"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === '/quotes' }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.QUOTES }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -189,12 +185,12 @@
                       <p class="nav-label">Devis</p>
                       <p class="nav-description">Propositions commerciales</p>
                     </div>
-                  </router-link>
+                  </NuxtLink>
 
-                  <router-link
-                    to="/orders"
+                  <NuxtLink
+                    :to="AppUrl.ORDERS"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === '/orders' }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.ORDERS }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -205,12 +201,12 @@
                       <p class="nav-label">Commandes</p>
                       <p class="nav-description">Suivi des ventes</p>
                     </div>
-                  </router-link>
+                  </NuxtLink>
 
-                  <router-link
-                    to="/invoices"
+                  <NuxtLink
+                    :to="AppUrl.INVOICES"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === '/invoices' }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.INVOICES }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -221,7 +217,7 @@
                       <p class="nav-label">Factures</p>
                       <p class="nav-description">Facturation client</p>
                     </div>
-                  </router-link>
+                  </NuxtLink>
                 </div>
               </transition>
             </div>
@@ -255,10 +251,10 @@
 
               <transition name="slide-down">
                 <div v-show="expandedSections.tenders" class="mt-2 space-y-1">
-                  <router-link
-                    to="/appels-offres"
+                  <NuxtLink
+                    :to="AppUrl.TENDERS"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === '/appels-offres' }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.TENDERS }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -269,12 +265,12 @@
                       <p class="nav-label">Appels d'Offres</p>
                       <p class="nav-description">Gestion & soumissions</p>
                     </div>
-                  </router-link>
+                  </NuxtLink>
 
-                  <router-link
-                    to="/appels-offres/documents"
+                  <NuxtLink
+                    :to="AppUrl.TENDERS_DOCUMENTS"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === '/appels-offres/documents' }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.TENDERS_DOCUMENTS }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -285,12 +281,12 @@
                       <p class="nav-label">Documents</p>
                       <p class="nav-description">Dossiers & pièces jointes</p>
                     </div>
-                  </router-link>
+                  </NuxtLink>
 
-                  <router-link
-                    to="/appels-offres/soumissions"
+                  <NuxtLink
+                    :to="AppUrl.TENDERS_SUBMISSIONS"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === '/appels-offres/soumissions' }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.TENDERS_SUBMISSIONS }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -301,12 +297,12 @@
                       <p class="nav-label">Soumissions</p>
                       <p class="nav-description">Envoi & suivi résultats</p>
                     </div>
-                  </router-link>
+                  </NuxtLink>
 
-                  <router-link
-                    to="/appels-offres/projets"
+                  <NuxtLink
+                    :to="AppUrl.TENDERS_PROJECTS"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === '/appels-offres/projets' }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.TENDERS_PROJECTS }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -317,7 +313,7 @@
                       <p class="nav-label">Pilotage Projet</p>
                       <p class="nav-description">Tâches & planning</p>
                     </div>
-                  </router-link>
+                  </NuxtLink>
                 </div>
               </transition>
             </div>
@@ -345,7 +341,7 @@
 
         <transition name="slide-down">
           <div v-show="expandedSections.fournisseurs" class="mt-2 space-y-1">
-            <router-link to="/fournisseurs/fiches" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/fournisseurs/fiches' }">
+            <NuxtLink :to="AppUrl.SUPPLIERS" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.SUPPLIERS }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
@@ -355,9 +351,9 @@
                 <p class="nav-label">Fiches Fournisseurs</p>
                 <p class="nav-description">Dossiers complets</p>
               </div>
-            </router-link>
+            </NuxtLink>
 
-            <router-link to="/fournisseurs/contacts" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/fournisseurs/contacts' }">
+            <NuxtLink :to="AppUrl.SUPPLIERS_CONTACTS" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.SUPPLIERS_CONTACTS }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -367,9 +363,9 @@
                 <p class="nav-label">Contacts</p>
                 <p class="nav-description">Interlocuteurs commerciaux</p>
               </div>
-            </router-link>
+            </NuxtLink>
 
-            <router-link to="/fournisseurs/commandes" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/fournisseurs/commandes' }">
+            <NuxtLink :to="AppUrl.SUPPLIERS_COMMANDS" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.SUPPLIERS_COMMANDS }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
@@ -379,9 +375,9 @@
                 <p class="nav-label">Commandes</p>
                 <p class="nav-description">Historique des achats</p>
               </div>
-            </router-link>
+            </NuxtLink>
 
-            <router-link to="/fournisseurs/contrats" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/fournisseurs/contrats' }">
+            <NuxtLink :to="AppUrl.SUPPLIERS_CONTRACTS" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.SUPPLIERS_CONTRACTS }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
@@ -391,9 +387,9 @@
                 <p class="nav-label">Contrats</p>
                 <p class="nav-description">Accords commerciaux</p>
               </div>
-            </router-link>
+            </NuxtLink>
 
-            <router-link to="/fournisseurs/evaluations" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/fournisseurs/evaluations' }">
+            <NuxtLink :to="AppUrl.SUPPLIERS_EVALUATIONS" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.SUPPLIERS_EVALUATIONS }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
@@ -403,7 +399,7 @@
                 <p class="nav-label">Évaluations</p>
                 <p class="nav-description">Performances fournisseurs</p>
               </div>
-            </router-link>
+            </NuxtLink>
           </div>
         </transition>
       </div>
@@ -432,7 +428,7 @@
 
         <transition name="slide-down">
           <div v-show="expandedSections.maintenance" class="mt-2 space-y-1">
-            <router-link to="/maintenance/tickets" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/maintenance/tickets' }">
+            <NuxtLink :to="AppUrl.MAINTENANCE_TICKETS" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.MAINTENANCE_TICKETS }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -442,9 +438,9 @@
                 <p class="nav-label">Tickets</p>
                 <p class="nav-description">Gestion des incidents</p>
               </div>
-            </router-link>
+            </NuxtLink>
 
-            <router-link to="/maintenance/planning" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/maintenance/planning' }">
+            <NuxtLink :to="AppUrl.MAINTENANCE_PLANNING" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.MAINTENANCE_PLANNING }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -454,9 +450,9 @@
                 <p class="nav-label">Planning</p>
                 <p class="nav-description">Interventions programmées</p>
               </div>
-            </router-link>
+            </NuxtLink>
 
-            <router-link to="/maintenance/equipements" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/maintenance/equipements' }">
+            <NuxtLink :to="AppUrl.MAINTENANCE_EQUIPMENTS" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.MAINTENANCE_EQUIPMENTS }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
@@ -466,9 +462,9 @@
                 <p class="nav-label">Équipements</p>
                 <p class="nav-description">Parc matériel</p>
               </div>
-            </router-link>
+            </NuxtLink>
 
-            <router-link to="/maintenance/contrats" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/maintenance/contrats' }">
+            <NuxtLink :to="AppUrl.MAINTENANCE_CONTRACTS" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.MAINTENANCE_CONTRACTS }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
@@ -478,9 +474,9 @@
                 <p class="nav-label">Contrats</p>
                 <p class="nav-description">Maintenance préventive</p>
               </div>
-            </router-link>
+            </NuxtLink>
 
-            <router-link to="/maintenance/rapports" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === '/maintenance/rapports' }">
+            <NuxtLink :to="AppUrl.MAINTENANCE_REPORTS" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.MAINTENANCE_REPORTS }">
               <div class="nav-icon">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -490,7 +486,7 @@
                 <p class="nav-label">Rapports</p>
                 <p class="nav-description">Bilans et statistiques</p>
               </div>
-            </router-link>
+            </NuxtLink>
           </div>
         </transition>
       </div>
@@ -637,14 +633,14 @@ const handleClickOutside = (event: Event) => {
 
 // Logique de déconnexion
 const logout = () => {
-  authStore.logout()
-  router.push('/login')
+  authStore.logout();
   showUserMenu.value = false
   showHeaderUserMenu.value = false
 }
 
 const pageTitle = computed(() => {
   const titleMap: Record<string, string> = {
+    '/login': 'Connexion',
     '/': 'Tableau de bord',
     '/dashboard': 'Tableau de bord',
     '/customer': 'Gestion des Clients',
