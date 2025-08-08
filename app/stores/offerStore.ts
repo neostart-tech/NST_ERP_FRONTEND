@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 
-export const useTenderStore = defineStore("TenderStore", {
+export const useofferStore = defineStore("offerStore", {
 	state: () => ({
-		tenders: [] as any[],
+		offers: [] as any[],
 	}),
 
     actions: {
-        getTenderTasks(tenderId: number) {
+        getofferTasks(offerId: number) {
             return [];
         },
         updateTask(taskId: number, taskData: any) {

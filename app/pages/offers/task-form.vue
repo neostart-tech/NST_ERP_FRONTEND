@@ -272,24 +272,24 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useTenderStore } from '../../stores/tenderStore';
-import type { ProjectTask, TaskFormData, TaskPriority } from '../../../types/tenders';
+import { useofferStore } from '../../stores/offerStore';
+import type { ProjectTask, TaskFormData, TaskPriority } from '../../../types/offers';
 
 // Props and Emits
 interface Props {
-  tenderId: string
+  offerId: string
   task?: ProjectTask | null
 }
 
 interface Emits {
   (e: 'close'): void
-  (e: 'save', data: TaskFormData & { tenderId: string }): void
+  (e: 'save', data: TaskFormData & { offerId: string }): void
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
-const tendersStore = useTenderStore()
+const offersStore = useofferStore()
 
 // State
 const isLoading = ref(false)
@@ -337,7 +337,7 @@ const suggestedTags = computed(() => {
 
 // Available tasks for dependencies (exclude current task)
 const availableTasks = computed(() => {
-  const allTasks = tendersStore.getTenderTasks(props.tenderId)
+  const allTasks = offersStore.getofferTasks(props.offerId)
   return allTasks.filter((task) => task.id !== props.task?.id)
 })
 
@@ -405,18 +405,18 @@ const handleSubmit = async () => {
 
   try {
     // Convert deadline back to ISO string
-    const submitData: TaskFormData & { tenderId: string } = {
+    const submitData: TaskFormData & { offerId: string } = {
       ...formData.value,
-      tenderId: props.tenderId,
+      offerId: props.offerId,
       dueDate: new Date(formData.value.dueDate).toISOString(),
     }
 
     if (props.task) {
       // Update existing task
-      await tendersStore.updateTask(props.task.id, submitData)
+      await offersStore.updateTask(props.task.id, submitData)
     } else {
       // Create new task
-      await tendersStore.createTask(submitData)
+      await offersStore.createTask(submitData)
     }
 
     emit('save', submitData)

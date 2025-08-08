@@ -790,6 +790,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@heroicons/vue@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@heroicons/vue@npm:2.2.0"
+  peerDependencies:
+    vue: ">= 3"
+  checksum: 10c0/8872f89cd033ce21363b5457adb7ea6cb9631cfbe85006b4131f9078c75c1c9701fd6d9d727d49c739b8716f4a46ccdd2ffae8c6635fc2528efaf0982759edb3
+  languageName: node
+  linkType: hard
+
 "@iconify/collections@npm:^1.0.563":
   version: 1.0.575
   resolution: "@iconify/collections@npm:1.0.575"
@@ -6698,6 +6707,7 @@ __metadata:
   resolution: "nuxt-app@workspace:."
   dependencies:
     "@fortawesome/fontawesome-free": "npm:^7.0.0"
+    "@heroicons/vue": "npm:^2.2.0"
     "@nuxt/icon": "npm:^1.15.0"
     "@nuxtjs/tailwindcss": "npm:^6.14.0"
     "@pinia-plugin-persistedstate/nuxt": "npm:^1.2.1"

@@ -3,9 +3,9 @@
     <h3 class="text-lg font-medium text-gray-900 mb-4">Actions Rapides</h3>
     
     <div class="space-y-3">
-      <!-- Create New Tender -->
+      <!-- Create New offer -->
       <button
-        @click="createNewTender"
+        @click="createNewoffer"
         class="w-full flex items-center space-x-3 p-3 text-left bg-green-50 hover:bg-green-100 rounded-lg transition-colors group"
       >
         <div class="flex-shrink-0 w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center group-hover:bg-green-600 transition-colors">
@@ -19,9 +19,9 @@
         </div>
       </button>
 
-      <!-- View All Tenders -->
+      <!-- View All offers -->
       <router-link
-        to="/tenders"
+        to="/offers"
         class="w-full flex items-center space-x-3 p-3 text-left bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group"
       >
         <div class="flex-shrink-0 w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center group-hover:bg-blue-600 transition-colors">
@@ -37,7 +37,7 @@
 
       <!-- View Submissions -->
       <router-link
-        to="/tenders/submissions"
+        to="/offers/submissions"
         class="w-full flex items-center space-x-3 p-3 text-left bg-yellow-50 hover:bg-yellow-100 rounded-lg transition-colors group"
       >
         <div class="flex-shrink-0 w-10 h-10 bg-yellow-500 rounded-lg flex items-center justify-center group-hover:bg-yellow-600 transition-colors">
@@ -53,7 +53,7 @@
 
       <!-- View Projects -->
       <router-link
-        to="/tenders/projects"
+        to="/offers/projects"
         class="w-full flex items-center space-x-3 p-3 text-left bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors group"
       >
         <div class="flex-shrink-0 w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center group-hover:bg-purple-600 transition-colors">
@@ -67,7 +67,7 @@
         </div>
       </router-link>
 
-      <!-- Search Tenders -->
+      <!-- Search offers -->
       <div class="relative">
         <input
           v-model="searchQuery"
@@ -97,19 +97,19 @@
           
           <div v-else-if="searchResults.length > 0" class="py-1">
             <div
-              v-for="tender in searchResults"
-              :key="tender.id"
-              @mousedown="selectTender(tender)"
+              v-for="offer in searchResults"
+              :key="offer.id"
+              @mousedown="selectoffer(offer)"
               class="px-3 py-2 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
             >
               <div class="flex items-center space-x-2">
-                <div :class="getTenderStatusDot(tender.status)" class="w-2 h-2 rounded-full flex-shrink-0"></div>
+                <div :class="getofferStatusDot(offer.status)" class="w-2 h-2 rounded-full flex-shrink-0"></div>
                 <div class="flex-1 min-w-0">
-                  <p class="text-sm font-medium text-gray-900 truncate">{{ tender.title }}</p>
-                  <p class="text-xs text-gray-500">{{ tender.reference }} • {{ tender.publisher }}</p>
+                  <p class="text-sm font-medium text-gray-900 truncate">{{ offer.title }}</p>
+                  <p class="text-xs text-gray-500">{{ offer.reference }} • {{ offer.publisher }}</p>
                 </div>
-                <span :class="getTenderStatusBadge(tender.status)" class="text-xs">
-                  {{ getTenderStatusText(tender.status) }}
+                <span :class="getofferStatusBadge(offer.status)" class="text-xs">
+                  {{ getofferStatusText(offer.status) }}
                 </span>
               </div>
             </div>
@@ -192,16 +192,16 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useTendersStore } from '@/stores/tenders'
-import { tendersService } from '@/services/tendersService'
-import type { Tender } from '@/types/tenders'
+import { useoffersStore } from '@/stores/offers'
+import { offersService } from '@/services/offersService'
+import type { offer } from '@/types/offers'
 
 const router = useRouter()
-const tendersStore = useTendersStore()
+const offersStore = useoffersStore()
 
 // Reactive state
 const searchQuery = ref('')
-const searchResults = ref<Tender[]>([])
+const searchResults = ref<offer[]>([])
 const showSearchResults = ref(false)
 const isSearching = ref(false)
 const isExporting = ref(false)
@@ -212,21 +212,21 @@ const urgentDeadlines = computed(() => {
   const now = new Date()
   const threeDaysFromNow = new Date(now.getTime() + 3 * 24 * 60 * 60 * 1000)
   
-  return tendersStore.getTenders().filter(tender => {
-    const deadline = new Date(tender.deadline)
-    return deadline <= threeDaysFromNow && deadline > now && tender.status === 'active'
+  return offersStore.getoffers().filter(offer => {
+    const deadline = new Date(offer.deadline)
+    return deadline <= threeDaysFromNow && deadline > now && offer.status === 'active'
   }).length
 })
 
 const pendingTasks = computed(() => {
-  return tendersStore.getAllTasks().filter(task => 
+  return offersStore.getAllTasks().filter(task => 
     task.status === 'todo' || task.status === 'in_progress'
   ).length
 })
 
 // Methods
-const createNewTender = () => {
-  router.push('/tenders?action=create')
+const createNewoffer = () => {
+  router.push('/offers?action=create')
 }
 
 const performSearch = async () => {
@@ -239,22 +239,22 @@ const performSearch = async () => {
   try {
     // In a real application, this would call the API
     // For now, we'll search through the store
-    const allTenders = tendersStore.getTenders()
-    searchResults.value = allTenders.filter(tender =>
-      tender.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      tender.reference.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      tender.publisher.toLowerCase().includes(searchQuery.value.toLowerCase())
+    const alloffers = offersStore.getoffers()
+    searchResults.value = alloffers.filter(offer =>
+      offer.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      offer.reference.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      offer.publisher.toLowerCase().includes(searchQuery.value.toLowerCase())
     ).slice(0, 5)
   } catch (error) {
-    console.error('Error searching tenders:', error)
+    console.error('Error searching offers:', error)
     searchResults.value = []
   } finally {
     isSearching.value = false
   }
 }
 
-const selectTender = (tender: Tender) => {
-  router.push(`/tenders/${tender.id}`)
+const selectoffer = (offer: offer) => {
+  router.push(`/offers/${offer.id}`)
   searchQuery.value = ''
   showSearchResults.value = false
 }
@@ -269,7 +269,7 @@ const hideSearchResults = () => {
 const exportData = async () => {
   isExporting.value = true
   try {
-    const blob = await tendersService.exportTendersReport('excel')
+    const blob = await offersService.exportoffersReport('excel')
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
@@ -309,7 +309,7 @@ const importData = async (event: Event) => {
 
 const downloadTemplate = async (templateType: 'submission' | 'financial' | 'technical') => {
   try {
-    const blob = await tendersService.downloadTemplate(templateType)
+    const blob = await offersService.downloadTemplate(templateType)
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
@@ -325,7 +325,7 @@ const downloadTemplate = async (templateType: 'submission' | 'financial' | 'tech
 }
 
 // Status helpers
-const getTenderStatusDot = (status: string): string => {
+const getofferStatusDot = (status: string): string => {
   const colors: Record<string, string> = {
     draft: 'bg-gray-400',
     active: 'bg-blue-500',
@@ -338,7 +338,7 @@ const getTenderStatusDot = (status: string): string => {
   return colors[status] || 'bg-gray-400'
 }
 
-const getTenderStatusBadge = (status: string): string => {
+const getofferStatusBadge = (status: string): string => {
   const badges: Record<string, string> = {
     draft: 'px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800',
     active: 'px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800',
@@ -351,7 +351,7 @@ const getTenderStatusBadge = (status: string): string => {
   return badges[status] || badges['draft']
 }
 
-const getTenderStatusText = (status: string): string => {
+const getofferStatusText = (status: string): string => {
   const texts: Record<string, string> = {
     draft: 'Brouillon',
     active: 'Actif',

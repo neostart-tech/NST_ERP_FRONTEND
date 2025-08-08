@@ -5,7 +5,7 @@
       <!-- Modal Header -->
       <div class="px-6 py-4 border-b border-gray-200">
         <div class="flex items-center justify-between">
-          <h3 class="text-lg font-medium text-gray-900">Télécharger un document</h3>
+          <h3 class="text-lg font-medium text-gray-900">Téléverser un document</h3>
           <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600">
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
@@ -25,7 +25,7 @@
           <!-- File Upload Section -->
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-4">
-              Fichier à télécharger *
+              Fichier à téléverser *
             </label>
 
             <!-- Drop Zone -->
@@ -128,21 +128,21 @@
 
           <!-- Document Metadata -->
           <div v-if="selectedFiles.length > 0" class="space-y-6">
-            <!-- Tender Selection -->
+            <!-- offer Selection -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2"> Appel d'offres * </label>
               <select
-                v-model="formData.tenderId"
+                v-model="formData.offerId"
                 required
                 class="w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
               >
                 <option value="">Sélectionner un appel d'offres</option>
                 <option
-                  v-for="tender in tendersStore.tenders"
-                  :key="tender.id"
-                  :value="tender.id"
+                  v-for="offer in offersStore.offers"
+                  :key="offer.id"
+                  :value="offer.id"
                 >
-                  {{ tender.reference }} - {{ tender.title }}
+                  {{ offer.reference }} - {{ offer.title }}
                 </option>
               </select>
             </div>
@@ -286,8 +286,8 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-import { useTendersStore } from '@/stores/tenders'
-import type { DocumentType, DocumentCategory } from '@/types/tenders'
+import { useoffersStore } from '@/stores/offers'
+import type { DocumentType, DocumentCategory } from '@/types/offers'
 
 // Props and Emits
 interface Emits {
@@ -296,7 +296,7 @@ interface Emits {
 }
 
 const emit = defineEmits<Emits>()
-const tendersStore = useTendersStore()
+const offersStore = useoffersStore()
 
 // State
 const fileInput = ref<HTMLInputElement>()
@@ -308,7 +308,7 @@ const errors = ref<string[]>([])
 
 // Form data
 const formData = reactive({
-  tenderId: '',
+  offerId: '',
   type: '' as DocumentType | '',
   category: '' as DocumentCategory | '',
   description: '',
@@ -412,7 +412,7 @@ const validateForm = (): boolean => {
     errors.value.push('Au moins un fichier doit être sélectionné')
   }
 
-  if (!formData.tenderId) {
+  if (!formData.offerId) {
     errors.value.push("L'appel d'offres est obligatoire")
   }
 
@@ -449,7 +449,7 @@ const simulateUpload = async (files: File[]): Promise<any[]> => {
     // Create mock document object
     const document = {
       id: `DOC-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-      tenderId: formData.tenderId,
+      offerId: formData.offerId,
       name: file.name,
       type: formData.type,
       category: formData.category,
@@ -477,10 +477,10 @@ const handleSubmit = async () => {
   try {
     const uploadedDocuments = await simulateUpload(selectedFiles.value)
 
-    // Add documents to the tender
-    const tender = tendersStore.getTenderById(formData.tenderId)
-    if (tender) {
-      tender.documents.push(...uploadedDocuments)
+    // Add documents to the offer
+    const offer = offersStore.getofferById(formData.offerId)
+    if (offer) {
+      offer.documents.push(...uploadedDocuments)
     }
 
     emit('uploaded', uploadedDocuments)

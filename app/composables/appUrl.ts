@@ -13,26 +13,35 @@ export const AppUrl ={
 	ORDERS: "/orders",
 	QUOTES: "/quotes",
 	INVOICES: "/invoices",
-	TENDERS: "/tenders",
-	SUPPLIERS: "/suppliers",
 	SALES: "/sales",
 	FOLLOWUP: "/followup",
 	USERS: "/users",
-	TENDERS_DOCUMENTS: "/tenders/documents",
-	TENDERS_SUBMISSIONS: "/tenders/submissions",
-	TENDERS_PROJECTS: "/tenders/projects",
+
+	// OFFERS
+	OFFERS: "/offers",
+	OFFERS_NEW: "/offers/offer-form",
+	OFFERS_TASK_FORM: "/offers/task-form",
+	OFFERS_SUBMISSION_FORM: "/offers/submission-form",
+	OFFERS_DOCUMENTS: "/offers/documents",
+	OFFERS_SUBMISSIONS: "/offers/submissions",
+	OFFERS_PROJECTS: "/offers/projects",
+	OFFERS_QUICK_STAT: "/offers/offer-quick-stat",
+	
+	//SUPPLIERS
+	SUPPLIERS: "/suppliers",
 	SUPPLIERS_CONTACTS: "/suppliers/contacts",
 	SUPPLIERS_COMMANDS: "/suppliers/commands",
 	SUPPLIERS_CONTRACTS: "/suppliers/contracts",
 	SUPPLIERS_DOCUMENTS: "/suppliers/documents",
 	SUPPLIERS_INVOICES: "/suppliers/invoices",
 	SUPPLIERS_EVALUATIONS: "/suppliers/evaluations",
+
+	//MAINTENANCE
 	MAINTENANCE_TICKETS: "/maintenance/tickets",
 	MAINTENANCE_PLANNING: "/maintenance/planning",
 	MAINTENANCE_EQUIPMENTS: "/maintenance/equipements",
 	MAINTENANCE_CONTRACTS: "/maintenance/contracts",
 	MAINTENANCE_REPORTS: "/maintenance/reports",
 
-	// TENDERS
-	TENDERS_TASK_FORM: "tenders/task-form"
+
 } as const;

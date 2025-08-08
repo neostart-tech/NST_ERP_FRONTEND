@@ -2,9 +2,8 @@
 import { AppUrl } from "@/composables/appUrl";
 import type { User, LoginCredential, AuthUser } from '~/models/User';
 import { useApi } from '@/composables/useApi';
-import { ApiUrls } from '#imports';
 import { defineStore } from 'pinia';
-
+import { ApiUrl } from '@/composables/apiUrl';
 
 export const useAuthStore = defineStore('AuthStore', {
 	state: () => ({
@@ -27,7 +26,7 @@ export const useAuthStore = defineStore('AuthStore', {
 			const api = useApi();
 
 			try {
-				const response = await api.post<AuthUser>(ApiUrls.LOGIN, credentials);
+				const response = await api.post<AuthUser>(ApiUrl.LOGIN, credentials);
 
 				// Ces données seront automatiquement persistées
 				this.user = response.data;

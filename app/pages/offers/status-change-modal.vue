@@ -145,23 +145,23 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { TenderStatus } from '@/types/tenders'
+import type { offerStatus } from '@/types/offers'
 
 // Props and Emits
 interface Props {
-  currentStatus: TenderStatus
+  currentStatus: offerStatus
 }
 
 interface Emits {
   (e: 'close'): void
-  (e: 'change', status: TenderStatus, notes?: string): void
+  (e: 'change', status: offerStatus, notes?: string): void
 }
 
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 // State
-const selectedStatus = ref<TenderStatus | ''>('')
+const selectedStatus = ref<offerStatus | ''>('')
 const notes = ref('')
 
 // Status workflow configuration
@@ -177,41 +177,41 @@ const statusWorkflow = {
 
 // Computed
 const availableStatuses = computed(() => {
-  const allowedStatuses: TenderStatus[] = (statusWorkflow[props.currentStatus] || []) as TenderStatus[]
+  const allowedStatuses: offerStatus[] = (statusWorkflow[props.currentStatus] || []) as offerStatus[]
   
   const statusConfigs = [
     {
-      value: 'active' as TenderStatus,
+      value: 'active' as offerStatus,
       label: 'Actif',
       description: 'L\'appel d\'offres est actif et peut être travaillé',
       recommended: props.currentStatus === 'draft'
     },
     {
-      value: 'submitted' as TenderStatus,
+      value: 'submitted' as offerStatus,
       label: 'Soumis',
       description: 'La proposition a été envoyée au client',
       recommended: props.currentStatus === 'active'
     },
     {
-      value: 'evaluation' as TenderStatus,
+      value: 'evaluation' as offerStatus,
       label: 'En évaluation',
       description: 'Le client évalue les propositions reçues',
       recommended: false
     },
     {
-      value: 'won' as TenderStatus,
+      value: 'won' as offerStatus,
       label: 'Gagné',
       description: 'Notre proposition a été retenue',
       recommended: props.currentStatus === 'submitted' || props.currentStatus === 'evaluation'
     },
     {
-      value: 'lost' as TenderStatus,
+      value: 'lost' as offerStatus,
       label: 'Perdu',
       description: 'Notre proposition n\'a pas été retenue',
       recommended: false
     },
     {
-      value: 'cancelled' as TenderStatus,
+      value: 'cancelled' as offerStatus,
       label: 'Annulé',
       description: 'L\'appel d\'offres a été annulé',
       recommended: false
@@ -252,7 +252,7 @@ const handleChange = () => {
   emit('change', selectedStatus.value, notes.value || undefined)
 }
 
-const getStatusBadge = (status: TenderStatus): string => {
+const getStatusBadge = (status: offerStatus): string => {
   const badges: Record<string, string> = {
     draft: 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800',
     active: 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800',
@@ -265,7 +265,7 @@ const getStatusBadge = (status: TenderStatus): string => {
   return badges[status] || badges['draft']
 }
 
-const getStatusText = (status: TenderStatus): string => {
+const getStatusText = (status: offerStatus): string => {
   const texts: Record<string, string> = {
     draft: 'Brouillon',
     active: 'Actif',

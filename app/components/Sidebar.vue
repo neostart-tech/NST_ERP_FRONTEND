@@ -224,9 +224,9 @@
 
             <div class="nav-section">
               <button
-                @click="toggleSection('tenders')"
+                @click="toggleSection('offers')"
                 class="w-full nav-section-header"
-                :class="{ 'nav-section-header-active': expandedSections.tenders }"
+                :class="{ 'nav-section-header-active': expandedSections.offers }"
               >
                 <div class="flex items-center justify-between w-full">
                   <div class="flex items-center gap-3">
@@ -239,7 +239,7 @@
                   </div>
                   <svg
                     class="w-4 h-4 transition-transform duration-200 text-white"
-                    :class="{ 'rotate-180': expandedSections.tenders }"
+                    :class="{ 'rotate-180': expandedSections.offers }"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -250,11 +250,11 @@
               </button>
 
               <transition name="slide-down">
-                <div v-show="expandedSections.tenders" class="mt-2 space-y-1">
+                <div v-show="expandedSections.offers" class="mt-2 space-y-1">
                   <NuxtLink
-                    :to="AppUrl.TENDERS"
+                    :to="AppUrl.OFFERS_QUICK_STAT"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.TENDERS }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.OFFERS_QUICK_STAT }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -268,9 +268,9 @@
                   </NuxtLink>
 
                   <NuxtLink
-                    :to="AppUrl.TENDERS_DOCUMENTS"
+                    :to="AppUrl.OFFERS_DOCUMENTS"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.TENDERS_DOCUMENTS }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.OFFERS_DOCUMENTS }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -284,9 +284,9 @@
                   </NuxtLink>
 
                   <NuxtLink
-                    :to="AppUrl.TENDERS_SUBMISSIONS"
+                    :to="AppUrl.OFFERS_SUBMISSIONS"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.TENDERS_SUBMISSIONS }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.OFFERS_SUBMISSIONS }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -300,9 +300,9 @@
                   </NuxtLink>
 
                   <NuxtLink
-                    :to="AppUrl.TENDERS_PROJECTS"
+                    :to="AppUrl.OFFERS_PROJECTS"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.TENDERS_PROJECTS }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.OFFERS_PROJECTS }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -577,7 +577,7 @@ const mobileSidebarOpen = ref(false)
 // Sections dépliables
 const expandedSections = ref({
   sales: false,
-  tenders: false,
+  offers: false,
   clients: false,
   fournisseurs: false,
   maintenance: false
@@ -609,7 +609,7 @@ const autoExpandBasedOnRoute = () => {
   if (path.startsWith('/fournisseurs')) expandedSections.value.fournisseurs = true
   if (path.startsWith('/maintenance')) expandedSections.value.maintenance = true
   if (path.startsWith('/ventes')) expandedSections.value.sales = true
-  if (path.startsWith('/tenders')) expandedSections.value.tenders = true
+  if (path.startsWith('/offers')) expandedSections.value.offers = true
 }
 
 // Initialisation

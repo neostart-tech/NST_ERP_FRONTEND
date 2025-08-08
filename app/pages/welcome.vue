@@ -3,35 +3,32 @@
   <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
     <!-- Contenu principal -->
     <main class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+      <!-- Section fonctionnalités -->
+      <div class="text-center mb-16">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Nos fonctionnalités</h2>
+        <div class="w-20 h-1 bg-blue-600 mx-auto mb-8"></div>
+      </div>
+
       <!-- Cartes de fonctionnalités -->
-      <div class="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
         <div
           v-for="(feature, index) in features"
           :key="index"
-          class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+          class="group bg-white p-8 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
         >
-          <div class="h-12 w-12 text-blue-600 mb-4">
-            <component :is="feature.icon" class="h-full w-full" />
+          <div class="w-14 h-14 flex items-center justify-center rounded-xl mb-6" :class="feature.bgColor">
+            <Icon :name="feature.icon" class="w-8 h-8" :class="feature.textColor" />
           </div>
-          <h3 class="text-lg font-medium text-gray-900">{{ feature.title }}</h3>
-          <p class="mt-2 text-gray-500">{{ feature.description }}</p>
+          <h3 class="text-xl font-semibold text-gray-900 mb-3">{{ feature.title }}</h3>
+          <p class="text-gray-600">{{ feature.description }}</p>
         </div>
       </div>
     </main>
-  </div>
 
-  <!-- <div
-    class="fixed top-4 right-6 left-6 lg:left-auto bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-lg z-50 animate-fade-in-down"
-  >
-    <div class="flex items-center">
-      <Icon name="heroicons:x-mark" class="h-5 w-5 mr-2 text-white" />
-      <span>{{ "message" }}</span>
-    </div>
-  </div> -->
+  </div>
 </template>
 
 <script setup lang="ts">
-import { AppUrl } from "@/composables/appUrl";
 import { useAuthStore } from "@/stores/authStore";
 import Alert from "@/components/partials/Alert.vue";
 
@@ -39,35 +36,45 @@ import Alert from "@/components/partials/Alert.vue";
 const features = [
   {
     title: "Gestion des appels d'offres",
-    description:
-      "Créez et gérez facilement vos appels d'offres en quelques clics.",
-    icon: "svg",
+    description: "Créez, gérez et suivez vos appels d'offres en temps réel avec une interface intuitive.",
+    icon: "heroicons:document-chart-bar",
+    bgColor: "bg-blue-100",
+    textColor: "text-blue-600"
   },
   {
     title: "Suivi des tâches",
-    description: "Organisez et suivez l'avancement de vos projets.",
-    icon: "svg",
+    description: "Organisez vos projets avec des tableaux Kanban et des échéances claires.",
+    icon: "heroicons:check-circle",
+    bgColor: "bg-green-100",
+    textColor: "text-green-600"
   },
   {
     title: "Tableaux de bord",
-    description: "Visualisez vos indicateurs clés en un coup d'œil.",
-    icon: "svg",
+    description: "Visualisez vos indicateurs clés avec des graphiques personnalisables.",
+    icon: "heroicons:chart-bar",
+    bgColor: "bg-purple-100",
+    textColor: "text-purple-600"
   },
   {
-    title: "Documents",
-    description:
-      "Gérez tous vos documents importants en un seul endroit sécurisé.",
-    icon: "svg",
+    title: "Gestion documentaire",
+    description: "Stockez et gérez tous vos documents en un seul endroit sécurisé.",
+    icon: "heroicons:folder",
+    bgColor: "bg-yellow-100",
+    textColor: "text-yellow-600"
   },
   {
-    title: "Collaboration",
-    description: "Travaillez en équipe de manière efficace et organisée.",
-    icon: "svg",
+    title: "Gestion des lots",
+    description: "Gérez efficacement vos lots d'appels d'offres.",
+    icon: "heroicons:user-group",
+    bgColor: "bg-pink-100",
+    textColor: "text-pink-600"
   },
   {
-    title: "Rapports",
-    description: "Générez des rapports détaillés sur votre activité.",
-    icon: "svg",
+    title: "Rapports avancés",
+    description: "Générez et exportez des rapports détaillés sur votre activité.",
+    icon: "heroicons:presentation-chart-bar",
+    bgColor: "bg-indigo-100",
+    textColor: "text-indigo-600"
   },
 ];
 
