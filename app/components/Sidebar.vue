@@ -172,9 +172,9 @@
               <transition name="slide-down">
                 <div v-show="expandedSections.sales" class="mt-2 space-y-1">
                   <NuxtLink
-                    :to="AppUrl.QUOTES"
+                    :to="AppUrl.INFOPROPO"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.QUOTES }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.INFOPROPO }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,42 +182,92 @@
                       </svg>
                     </div>
                     <div class="flex-1">
-                      <p class="nav-label">Devis</p>
-                      <p class="nav-description">Propositions commerciales</p>
+                      <p class="nav-label">Proforma</p>
+                      <p class="nav-description">Propositions</p>
                     </div>
                   </NuxtLink>
 
-                  <NuxtLink
-                    :to="AppUrl.ORDERS"
+                   <NuxtLink
+                    :to="AppUrl.ORDERINFO"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.ORDERS }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.ORDERINFO }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                       </svg>
                     </div>
                     <div class="flex-1">
                       <p class="nav-label">Commandes</p>
-                      <p class="nav-description">Suivi des ventes</p>
+                      <p class="nav-description">Suivi des commandes</p>
                     </div>
                   </NuxtLink>
 
-                  <NuxtLink
-                    :to="AppUrl.INVOICES"
+                   <NuxtLink
+                    :to="AppUrl.INVOICEINFO"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.INVOICES }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.INVOICEINFO }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                       </svg>
                     </div>
                     <div class="flex-1">
                       <p class="nav-label">Factures</p>
-                      <p class="nav-description">Facturation client</p>
+                      <p class="nav-description">Recap facture</p>
                     </div>
                   </NuxtLink>
+
+                   <NuxtLink
+                    :to="AppUrl.DELIVERYINFO"
+                    class="nav-item nav-item-nested"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.DELIVERYINFO }"
+                  >
+                    <div class="nav-icon">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                    </div>
+                    <div class="flex-1">
+                      <p class="nav-label">Livraison</p>
+                      <p class="nav-description">Bordereau de livraison</p>
+                    </div>
+                  </NuxtLink>
+
+                   <NuxtLink
+                    :to="AppUrl.SCHEDULEINFO"
+                    class="nav-item nav-item-nested"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.SCHEDULEINFO }"
+                  >
+                    <div class="nav-icon">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                    </div>
+                    <div class="flex-1">
+                      <p class="nav-label">Echéanciers</p>
+                      <p class="nav-description">Suivre les paiements</p>
+                    </div>
+                  </NuxtLink>
+
+                  
+                   <NuxtLink
+                    :to="AppUrl.BALANCE"
+                    class="nav-item nav-item-nested"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.BALANCE }"
+                  >
+                    <div class="nav-icon">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                    </div>
+                    <div class="flex-1">
+                      <p class="nav-label">Bilan</p>
+                      <p class="nav-description">$$</p>
+                    </div>
+                  </NuxtLink>
+
                 </div>
               </transition>
             </div>
