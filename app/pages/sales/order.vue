@@ -96,16 +96,15 @@
               <input
                 type="number"
                 min="0"
-                step="0.01"
                 v-model.number="item.price"
                 class="w-full text-center"
                 
               />
             </td>
-            <td class="border text-center">{{ (item.qty * item.price).toFixed(2) }}</td>
+            <td class="border text-center">{{ (item.qty * item.price) }}</td>
             <td class="border text-center">
               <button @click="removeItem(index)" class="text-red-500" :disabled="selectedQuote !== ''" title="Supprimer cet article">
-                &times;
+                <i class="fas fa-trash"></i>
               </button>
             </td>
           </tr>
@@ -114,16 +113,15 @@
       <button
         @click="addItem"
         class="mt-2 bg-blue-500 text-white px-3 py-1 rounded"
-       
-      >+ Ajouter</button>
+       ><i class="fas fa-add"></i> Ajouter</button>
       <p v-if="itemsError" class="text-red-500 mt-2">{{ itemsError }}</p>
     </div>
 
     <!-- Totaux -->
     <div class="p-4 rounded-lg text-right">
-      <p>Sous-total : <span class="font-semibold">{{ subtotal.toFixed(2) }} FCFA</span></p>
-      <p>TVA ({{ taux }}%) : <span class="font-semibold">{{ tvaAmount.toFixed(2) }} FCFA</span></p>
-      <p class="text-lg font-bold">Total TTC : {{ total.toFixed(2) }} FCFA</p>
+      <p>Sous-total : <span class="font-semibold">{{ formatCurrency(subtotal) }} FCFA</span></p>
+      <p>TVA ({{ taux }}%) : <span class="font-semibold">{{ formatCurrency(tvaAmount) }}</span></p>
+      <p class="text-lg font-bold">Total TTC : {{ formatCurrency(total)}}</p>
     </div>
 
     <!-- Boutons -->
@@ -147,7 +145,7 @@ import { useProformaStore } from '#imports'
 import { useArticleStore } from '#imports'
 import { useOrderStore } from '#imports'
 import { useRouter } from 'vue-router'
-import { AppUrl } from '#imports'
+import Swal from 'sweetalert2'
 
 definePageMeta({ layout: 'default' })
 
@@ -279,6 +277,13 @@ const removeFile = () => {
   file.value = null
 }
 
+function formatCurrency(amount){
+  return new Intl.NumberFormat('fr-FR',{
+    style:'currency',
+    currency:'XOF',
+  }).format(amount)
+}
+
 // Calculs des totaux
 const subtotal = computed(() =>
   form.value.items.reduce((acc, i) => acc + (i.qty * i.price), 0)
@@ -295,27 +300,54 @@ const submitOrder = async () => {
 
   // Validation client obligatoire si pas de proforma
   if (!selectedQuote.value && !selectedClient.value) {
-    alert('Veuillez sélectionner un client.')
+    // alert('Veuillez sélectionner un client.')
+    Swal.fire({
+      icon:'error',
+      title:'Attention',
+      text:'Veuillez sélectionner un client ou une proforma.'
+    })
     return
   }
 
   // Validation articles
   if (form.value.items.length === 0) {
-    itemsError.value = 'Veuillez ajouter au moins un article.'
+    // itemsError.value = 'Veuillez ajouter au moins un article.'
+    Swal.fire({
+      icon:'warning',
+      title:'Erreur',
+      text:'Veuillez ajouter au moins un article.'
+    })
     return
   }
 
   for (const item of form.value.items) {
     if (!item.article_id || item.error) {
-      alert('Veuillez ajouter au moins un article.')
+      // alert('Veuillez ajouter au moins un article.')
+      Swal.fire({
+      icon:'warning',
+      title:'Erreur',
+      text:'Veuillez ajouter au moins un article.'
+    })
+      
     return
     }
     if (item.qty < 1) {
-      alert('Quantité doit etre au moins 1.')
+      // alert('Quantité doit etre au moins 1.')
+       Swal.fire({
+      icon:'warning',
+      title:'Erreur',
+      text:'Quantité doit etre positive (>1).'
+    })
+      
     return
     }
     if (item.price < 0) {
-      alert('Le prix doit etre positif')
+      // alert('Le prix doit etre positif')
+      Swal.fire({
+      icon:'warning',
+      title:'Erreur',
+      text:'Le prix doit etre positive (>1).'
+      })
     return
     }
   }
@@ -335,14 +367,36 @@ const submitOrder = async () => {
   }
 
   try {
+    // Chargement
+    // Swal.fire({
+    //   title: 'Enregistrement...',
+    //   text: 'Veuillez patienter',
+    //   allowOutsideClick: false,
+    //   didOpen: () => {
+    //     Swal.showLoading()
+    //   }
+    // })
     const response = await orderStore.addOrder(payload)
     console.log('Commande enregistrée:', response)
-    alert('Votre commande a été enregistrée avec succès !')
+    // alert('Votre commande a été enregistrée avec succès !')
+    Swal.fire({
+      icon:'success',
+      title:'Succès',
+      text:'Votre commande a été enregistrée avec succès !',
+      timer:2000,
+      showConfirmButton:false
+
+    })
      router.push(AppUrl.ORDERINFO)  
     resetForm()
   } catch (error) {
     console.error('Erreur lors de la soumission:', error)
-     alert('Erreur lors de l\'enregistrement de la commande. Veuillez réessayer.')
+    //  alert('Erreur lors de l\'enregistrement de la commande. Veuillez réessayer.')
+    Swal.fire({
+      icon:'error',
+      title:'Erreur',
+      text:error
+      })
   } finally {
     isSubmitting.value = false
   }

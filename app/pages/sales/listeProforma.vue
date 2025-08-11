@@ -12,6 +12,7 @@
     <!-- STATS -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <div class="bg-gray-300 shadow rounded p-4 text-center">
+        <i class="fas fa-info-circle text-gray-500 text-3xl"></i>
         <p class="text-sm text-gray-500">Total Proformas</p>
         <p class="text-2xl font-bold">{{ stats.total }}</p>
       </div>
@@ -62,6 +63,7 @@
               <button v-if="proforma.status === 'draft'" @click="updateStatus(proforma.id, 'validated')" class="bg-green-500 text-white px-2 py-1 rounded text-xs">Valider</button>
               <button v-if="proforma.status === 'draft'" @click="updateStatus(proforma.id, 'rejected')" class="bg-red-500 text-white px-2 py-1 rounded text-xs">Rejeter</button>
               <button @click="viewProforma(proforma)" title="Voir" class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100 transition duration-150 ease-in-out">  <i class="fas fa-eye"></i></button>
+              <button @click="downloadProforma(proforma)" title="Telecharger" class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 transition duration-150 ease-in-out">  <i class="fas fa-download"></i></button>
             </td>
           </tr>
         </tbody>
@@ -199,6 +201,11 @@ function closeModal(){
   showModal.value=false
   selectedProforma.value=null
 }
+
+function downloadProforma(proforma) {
+  proformaStore.downloadProforma(proforma)
+}
+
 function formatCurrency(amount){
   return new Intl.NumberFormat('fr-FR',
     {

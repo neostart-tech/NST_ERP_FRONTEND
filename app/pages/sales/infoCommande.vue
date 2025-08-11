@@ -77,7 +77,7 @@
 
                   <!--Télécharger -->
                   <div class="relative group">
-                    <button @click="downloadOrder(order.id)" class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 transition duration-150 ease-in-out">
+                    <button @click="downloadOrder(order)" class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 transition duration-150 ease-in-out">
                       <i class="fas fa-download"></i>
                        
                        <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="24" height="24" fill="currentColor">
@@ -278,6 +278,9 @@ function viewOrder(order) {
 function closeModal() {
   showModal.value = false
   selectedOrder.value = null
+}
+function downloadOrder(order){
+  orderStore.downloadOrder(order)
 }
 
 // Fonction pour la classe CSS du statut 

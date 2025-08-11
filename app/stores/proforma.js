@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
  export const useProformaStore= defineStore('proforma',{
     state:()=>({
         proforma:[],
+        
     }),
     actions:{
         async addProforma(payload){
@@ -58,6 +59,24 @@ import { defineStore } from "pinia";
 
             }
 
-         }  
+         } ,
+        async downloadProforma(proforma){
+            try {
+                const res = await fetch(`http://localhost:8000/api/proforma/download/${proforma.id}`)
+
+                const blob = await res.blob()
+                const urlBlob = window.URL.createObjectURL(blob)
+
+                const a = document.createElement('a')
+                a.href = urlBlob
+                a.download = `proforma_${proforma.reference}.pdf`
+                a.click()
+
+                 window.URL.revokeObjectURL(urlBlob)
+             } catch (error) {
+            console.error('Erreur lors du téléchargement du PDF', error)
+            }
+        
+        }
     }
  })

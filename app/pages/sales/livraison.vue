@@ -305,7 +305,7 @@ const generateBordereau = async () => {
       title: 'Succès',
       text: 'Bordereau enregister avec succès.'
     })
-    // router.push('/listelivraison')
+    router.push(AppUrl.DELIVERYINFO)
   } catch (error) {
     Swal.fire({
       icon: 'error',

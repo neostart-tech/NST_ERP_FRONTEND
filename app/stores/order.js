@@ -67,6 +67,22 @@ export const useOrderStore=defineStore('commande',{
             }catch(error){
                 console.error("Erreur lors de l'affichage des informations",error)
             }
+        },
+        async downloadOrder(order){
+            try{
+                const res=await fetch(`http://127.0.0.1:8000/api/order/download/${order.id}`)
+                const blob=await res.blob() // Extraire le contenu binaire (blob) du PDF
+                const urlBlob = window.URL.createObjectURL(blob) // Créer une URL temporaire locale qui pointe sur ce blob
+                const a=document.createElement('a') // Créer un lien <a> en mémoire
+                a.href=urlBlob // Assigner l'URL temporaire à href du lien
+                a.download=`order_${order.id}.pdf` // Donner un nom au fichier téléchargé (ex: order_123.pdf)
+                a.click() // Simuler un clic sur le lien pour déclencher le téléchargement
+                window.URL.revokeObjectURL(urlBlob) // Libérer la mémoire en supprimant l'URL temporaire
+
+
+            }catch(error){
+                console.error("Erreur lors du téléchargement",error)
+            }
         }
     }
 })

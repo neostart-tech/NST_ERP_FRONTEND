@@ -28,6 +28,22 @@ export const useInvoiceStore=defineStore('facture',{
             }catch(error){
                 console.error("Erreur lors de l'affichage de la facture")
             }
+         },
+         async downloadInvoice(invoice){
+            try{
+              const res=await fetch(`http://127.0.0.1:8000/api/invoice/download/${invoice.id}`) 
+              const blob =await res.blob()
+              const urlBlob=window.URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href=urlBlob
+              a.download=`invoice_${invoice.id}.pdf`
+              a.click()
+              window.URL.revokeObjectURL(urlBlob)
+
+            }catch(error){
+                console.error("Erreur lors du téléchargement de la facture")
+
+            }
          }
     }
 })

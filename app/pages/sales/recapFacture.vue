@@ -65,7 +65,7 @@
                 </div> -->
                 <!-- Télécharger -->
                 <div class="relative group">
-                    <button @click="downloadFacture(invoice.id) "class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 transition duration-150 ease-in-out">
+                    <button @click="downloadInvoice(invoice) "class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 transition duration-150 ease-in-out">
                     <i class="fas fa-download"></i></button>
                         <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">Télécharger facture(pdf)</span>
                 </div>
@@ -78,27 +78,46 @@
   </div>
   <!-- Modal -->
   <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-xl shadow-lg p-6 w-1/2 max-w-3xl relative">
+    <div class="bg-white rounded-xl shadow-lg p-6 w-1/2 max-w-3xl  w-full relative max-h-[100vh] overflow-y-auto">
       <h2 class="text-2xl font-bold mb-4">Détails de la facture</h2>
-      <div class="mb-4">
-        <p><strong>Référence :</strong> {{selectedInvoice.reference }}</p>
-        <p><strong>Date :</strong> {{ selectedInvoice.date }}</p>
-        <p><strong>Total TTC :</strong>{{ formatCurrency(selectedInvoice.total) }} </p>
+      <div v-if="selectedInvoice" class="mb-6 flex flex-col md:flex-row md:justify-between md:space-x-8">
+  
+  <!-- Infos Facture à gauche -->
+  <div class="md:w-1/2 bg-gray-50 p-4 rounded shadow-sm">
+    <h3 class="font-semibold text-lg mb-2">Infos Facture</h3>
+    <p><strong>Référence :</strong> {{ selectedInvoice.reference }}</p>
+    <p><strong>Date :</strong> {{ selectedInvoice.date }}</p>
+    <p><strong>Total TTC :</strong> {{ formatCurrency(selectedInvoice.total) }}</p>
+    <div class="mt-4">
+      <h4 class="font-semibold mb-1">Client</h4>
+      <p>{{ selectedInvoice.order.client.last_name }} {{ selectedInvoice.order.client.first_name }}</p>
+    </div>
+  </div>
+  
+  <!-- Infos Proforma à droite -->
+  <div
+    v-if="selectedInvoice.order.proforma"
+    class="md:w-1/2 bg-gray-50 p-4 rounded shadow-sm mt-6 md:mt-0"
+  >
+    <h3 class="font-semibold text-lg mb-2">Proforma associée</h3>
+    <div class="grid grid-cols-2 gap-x-6 text-gray-700">
+      <div class="space-y-1 font-medium text-gray-900">
+        <p>Référence :</p>
+        <p>Objet :</p>
+        <p>Total HT :</p>
+        <p>Total TTC :</p>
       </div>
+      <div class="space-y-1 text-right">
+        <p>{{ selectedInvoice.order.proforma.reference }}</p>
+        <p>{{ selectedInvoice.order.proforma.object }}</p>
+        <p>{{ formatCurrency(selectedInvoice.order.proforma.total_ht) }}</p>
+        <p>{{ formatCurrency(selectedInvoice.order.proforma.total_ttc) }}</p>
+      </div>
+    </div>
+  </div>
+  
+</div>
 
-      <div class="mb-4">
-        <h3 class="font-semibold text-lg mb-2">Informations client</h3>
-        <p>{{ selectedInvoice.order.client.last_name }} {{ selectedInvoice.order.client.first_name }}</p>
-      </div>
-
-      <div v-if="selectedInvoice.order.proforma" class="mb-4">
-        
-        <h3 class="font-semibold text-lg mb-2">Proforma associée</h3>
-        <p><strong>Référence :</strong> {{ selectedInvoice.order.proforma.reference }}</p>
-        <p><strong>Objet :</strong> {{ selectedInvoice.order.proforma.object }}</p>
-        <p><strong>Total HT :</strong> {{ formatCurrency(selectedInvoice.order.proforma.total_ht) }}</p>
-        <p><strong>Total TTC :</strong> {{ formatCurrency(selectedInvoice.order.proforma.total_ttc) }}</p>
-      </div>
 
       <div v-if="selectedInvoice.order.proforma.articles?.length" class="overflow-x-auto mt-4">
         <h3 class="font-semibold text-lg mb-2">Articles de la proforma</h3>
@@ -174,6 +193,9 @@ function viewInvoice(invoice){
 function closeModal(){
  showModal.value=false
  selectedInvoice.value=null
+}
+function downloadInvoice(invoice){
+  invoiceStore.downloadInvoice(invoice)
 }
  console.log('selectedInvoice')
 
