@@ -29,14 +29,16 @@ export const useDeliveryStore=defineStore('livraison',{
         },
         async downloadDelivery(delivery){
             try{
-                const res=await fetch(`http://127.0.0.1:8000/api/livraison/download/${delivery.id}`)
-                const blob=res.blob()
-                const urlBlob=window.URL.createObjectURL(blob)
-                const a = document.createElement('a')
-                a.href=urlBlob
-                a.download=`livraison${delivery.id}.pdf`
-                a.click()
-                window.URL.revokeObjectURL(urlBlob)
+                window.open(`http://127.0.0.1:8000/api/livraison/download/${delivery.id}`,'_blank')//Affichage 
+                // const res=await fetch(`http://127.0.0.1:8000/api/livraison/download/${delivery.id}`)
+                // const blob= await res.blob()
+                // const urlBlob=window.URL.createObjectURL(blob)
+                // window.open(urlBlob,'_blank) //Ouvrir avant de telecharger
+                // const a = document.createElement('a')
+                // a.href=urlBlob
+                // a.download=`livraison${delivery.id}.pdf`
+                // a.click()
+                // window.URL.revokeObjectURL(urlBlob)
 
             }catch(error){
                 console.error("Erreur lors du téléchargement",error)
