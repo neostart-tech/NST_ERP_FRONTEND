@@ -5,7 +5,8 @@ import { resolve } from 'path'
 // Configuration Nuxt
 export default defineNuxtConfig({
   css: [
-    '~/assets/css/main.css'
+    '~/assets/css/main.css','@fortawesome/fontawesome-free/css/all.css'
+   
   ],
   modules: [
 		'@nuxtjs/tailwindcss',

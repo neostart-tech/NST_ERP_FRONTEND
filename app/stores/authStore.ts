@@ -5,7 +5,6 @@ import { useApi } from '@/composables/useApi';
 import { ApiUrls } from '#imports';
 import { defineStore } from 'pinia';
 
-
 export const useAuthStore = defineStore('AuthStore', {
 	state: () => ({
 		user: null as User | null,
@@ -19,7 +18,6 @@ export const useAuthStore = defineStore('AuthStore', {
 		fullName: (state) => {
 			return `${state.user?.firstName} ${state.user?.lastName}`;
 		}
-
 	},
 
 	actions: {
@@ -35,7 +33,7 @@ export const useAuthStore = defineStore('AuthStore', {
 
 				useAlert().showAlert("Login successful", "success");
 				localStorage.setItem('token', this.token);
-				localStorage.setItem('user',JSON.stringify(this.user))
+				localStorage.setItem('user', JSON.stringify(this.user));
 			} catch (error: any) {
 				console.log("Login error:", error);
 				throw new Error(error.data?.message || error.message);
