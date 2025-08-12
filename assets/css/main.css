@@ -3,3 +3,63 @@
 @tailwind utilities;
 
 /* Custom styles can be added below */
+
+/* Augmentation de la taille de police globale */
+html {
+  font-size: 16px;
+}
+
+body {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Classes utilitaires pour les tailles de police */
+.text-xs {
+  font-size: 0.875rem !important;
+}
+
+.text-sm {
+  font-size: 1rem !important;
+}
+
+.text-base {
+  font-size: 1.125rem !important;
+}
+
+.text-lg {
+  font-size: 1.25rem !important;
+}
+
+.text-xl {
+  font-size: 1.5rem !important;
+}
+
+.text-2xl {
+  font-size: 1.75rem !important;
+}
+
+.text-3xl {
+  font-size: 2rem !important;
+}
+
+.text-4xl {
+  font-size: 2.5rem !important;
+}
+
+/* Ajustement des espacements pour les boutons */
+.btn {
+  font-size: 1rem !important;
+  padding: 0.75rem 1.5rem !important;
+}
+
+/* Ajustement des inputs */
+input, textarea, select {
+  font-size: 1rem !important;
+  padding: 0.75rem 1rem !important;
+}
+
+/* Ajustement des labels */
+label {
+  font-size: 1rem !important;
+}

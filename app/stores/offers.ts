@@ -15,7 +15,7 @@ import type {
   offerStatus,
   offerPriority,
   TaskStatus,
-} from '@/types/offers'
+} from '../models/offers'
 
 export const useoffersStore = defineStore('offers', () => {
   // State

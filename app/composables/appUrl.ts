@@ -23,7 +23,6 @@ export const AppUrl ={
 	OFFERS_TASK_FORM: "/offers/task-form",
 	OFFERS_SUBMISSION_FORM: "/offers/submission-form",
 	OFFERS_DOCUMENTS: "/offers/documents",
-	OFFERS_SUBMISSIONS: "/offers/submissions",
 	OFFERS_PROJECTS: "/offers/projects",
 	OFFERS_QUICK_STAT: "/offers/offer-quick-stat",
 	

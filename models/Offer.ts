@@ -20,6 +20,7 @@ export interface Offer {
     batch_number: string;
     execution_batch_duration: string;
     execution_duration: string;
+    metaData: Metadata
 }
 
 export interface OfferForm {
@@ -47,20 +48,22 @@ export interface OfferForm {
 
 export interface Metadata {
     id: string;
-    bank_guarentee: string;
-    offer_project: string;
-    sponsor: string;
-    clarification_instruction: string;
-    is_free: boolean;
-    offer_opening_date: string;
-    offer_pickup_address: string;
-    comment: string;
+    bank_guarentee?: string;
+    bank_guarentee_amount?: number;
+    offer_project?: string;
+    sponsor?: string;
+    clarification_instruction?: string;
+    is_free?: boolean;
+    offer_opening_date?: string;
+    offer_pickup_address?: string;
+    comment?: string;
     updated_at: string;
     created_at: string;
 }
 
 export interface MetadataForm {
     bank_guarentee?: string;
+    bank_guarentee_amount?: number;
     offer_project?: string;
     sponsor?: string;
     clarification_instruction?: string;
@@ -95,6 +98,7 @@ export const defaultOfferFormData = (): OfferForm => ({
 
 export const defaultMetadataFormData = (): MetadataForm => ({
     bank_guarentee: "",
+    bank_guarentee_amount: 0,
     offer_project: "",
     sponsor: "",
     clarification_instruction: "",

@@ -254,7 +254,7 @@
                   <NuxtLink
                     :to="AppUrl.OFFERS_QUICK_STAT"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.OFFERS_QUICK_STAT }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.OFFERS_SUBMISSION_FORM}"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -284,9 +284,9 @@
                   </NuxtLink>
 
                   <NuxtLink
-                    :to="AppUrl.OFFERS_SUBMISSIONS"
+                    :to="AppUrl.OFFERS_SUBMISSION_FORM"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.OFFERS_SUBMISSIONS }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.OFFERS_SUBMISSION_FORM }"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -504,7 +504,7 @@
               </div>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-semibold text-white truncate">{{ useAuthStore().user?.name || 'Utilisateur' }}</p>
+              <p class="text-sm font-semibold text-white truncate">{{ useAuthStore().user?.firstName + ' ' + useAuthStore().user?.lastName || 'Utilisateur' }}</p>
               <p class="text-xs text-sky-200 truncate">{{ useAuthStore().user?.role || 'Rôle' }}</p>
             </div>
             <div class="flex-shrink-0">

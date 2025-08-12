@@ -7,7 +7,7 @@
           {{ submission ? "Modifier l'appel d'offre" : "Nouvel appel d'offre" }}
         </h2>
         <button
-          @click="$router.push('/offers/offer-quick-stat')"
+          @click="navigateTo('/offers/offer-quick-stat')"
           class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -60,7 +60,7 @@
                     Référence de l'appel d'offre <RequiredField />
                   </label>
                   <input
-                    v-model="offerFormData.reference"
+                    v-model="offerFormData.number"
                     type="text"
                     required
                     class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -96,10 +96,21 @@
                     Date de publication
                   </label>
                   <input
-                    v-model="offerFormData.submission_deadline"
+                    v-model="offerFormData.publication_date"
                     type="date"
                     class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     placeholder="Date de publication de l'appel d'offre"
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Date limite de soumission
+                  </label>
+                  <input
+                    v-model="offerFormData.submission_deadline"
+                    type="datetime-local"
+                    class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   />
                 </div>
 
@@ -107,7 +118,7 @@
                 <div>
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">
-                      Autorité Contractante
+                      Autorité contractante / Bailleur
                     </label>
                     <input
                       v-model="metadataFormData.sponsor"
@@ -123,7 +134,7 @@
                     Montant du budget estimé
                   </label>
                   <input
-                    v-model="offerFormData.amount"
+                    v-model="offerFormData.estimated_budget"
                     type="number"
                     class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     placeholder="50000"
@@ -171,10 +182,10 @@
                     Adresse d'obtention du dossier
                   </label>
                   <input
-                    v-model="offerFormData.file_obtaining_deadline"
+                    v-model="metadataFormData.offer_pickup_address"
                     type="text"
                     class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    placeholder="50000"
+                    placeholder="Adresse"
                   />
                 </div>
 
@@ -195,11 +206,51 @@
                     Date et heure de dépouillement du dossier <RequiredField />
                   </label>
                   <input
-                    v-model="offerFormData.submission_address"
+                    v-model="metadataFormData.offer_opening_date"
                     type="datetime-local"
                     class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                     placeholder="50000"
                   />
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Garantie bancaire <RequiredField />
+                  </label>
+                  <div class="flex items-center space-x-6">
+                    <label class="inline-flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        value="yes"
+                        v-model="metadataFormData.bank_guarentee"
+                        name="bank_guarantee"
+                      />
+                      <span class="text-sm text-gray-700">Oui</span>
+                    </label>
+                    <label class="inline-flex items-center space-x-2">
+                      <input
+                        type="radio"
+                        class="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        value="no"
+                        v-model="metadataFormData.bank_guarentee"
+                        name="bank_guarantee"
+                      />
+                      <span class="text-sm text-gray-700">Non</span>
+                    </label>
+                  </div>
+                  <div v-if="metadataFormData.bank_guarentee === 'yes'" class="mt-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                      Montant de la garantie <RequiredField />
+                    </label>
+                    <input
+                      v-model.number="metadataFormData.bank_guarentee_amount"
+                      type="number"
+                      min="0"
+                      class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      placeholder="Ex: 500000"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -234,27 +285,7 @@
                     placeholder="Projet lié à l'offre"
                   />
                 </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Bailleur de l'offre
-                  </label>
-                  <input
-                    v-model="metadataFormData.sponsor"
-                    type="text"
-                    class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    placeholder="Bailleur de l'offre"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    DeadLine de soumission (Date et heure)
-                  </label>
-                  <input
-                    v-model="submissionDate"
-                    type="datetime-local"
-                    class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500"
-                  />
-                </div>
+                
               </div>
             </div>
 
@@ -276,20 +307,16 @@
                     placeholder="Nom de la source"
                   />
                 </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Référence de la source
-                  </label>
-                  <input
-                    v-model="offerFormData.reference"
-                    type="text"
-                    required
-                    class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500"
-                    placeholder="Référence de la source"
-                  />
-                </div>
+                
               </div>
             </div>
+            
+
+           
+          </div>
+
+          <!-- Information Tab -->
+          <div v-if="activeTab === 'information'" class="space-y-6">
             <!-- Submission Status -->
             <div class="bg-gray-50 rounded-lg p-4">
               <h4 class="text-sm font-medium text-gray-900 mb-4">
@@ -311,402 +338,109 @@
                     <option value="under_review">En évaluation</option>
                   </select>
                 </div>
-                <!-- <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Date de soumission
-                  </label>
-                  <input
-                    v-model="submissionDate"
-                    type="datetime-local"
-                    class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-gray-500 focus:ring-gray-500"
-                  />
-                </div> -->
               </div>
             </div>
 
-            <!-- Validity Period -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Période de validité (jours) *
-              </label>
-              <input
-                v-model="formData.validityPeriod"
-                type="number"
-                min="1"
-                max="365"
-                required
-                class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                placeholder="30"
-              />
-              <p class="mt-2 mb-2 text-xs text-gray-500">
-                Durée pendant laquelle notre offre reste valable
-              </p>
-            </div>
-          </div>
-
-          <div class="md:col-span-2 mb-2 md:mb-4 ">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Exigences de l'appel d'offre
-            </label>
-            <textarea
-              v-model="formData.description"
-              rows="3"
-              required
-              class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Description de l'appel d'offre"
-            >
-            </textarea>
-          </div>
-
-          <div class="md:col-span-2 mb-2 md:mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Consignes d'empilation de l'appel d'offre
-            </label>
-            <textarea
-              v-model="formData.stacking_instructions"
-              rows="3"
-              required
-              class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Consignes d'empilation de l'appel d'offre"
-            >
-            </textarea>
-          </div>
-
-          <div class="md:col-span-2 mb-2 md:mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Consignes de clarification
-            </label>
-            <textarea
-              v-model="formData.clarification_instructions"
-              rows="3"
-              required
-              class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Consignes d'empilation de l'appel d'offre"
-            >
-            </textarea>
-          </div>
-
-          <div class="md:col-span-2 mb-2 md:mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Commentaires
-            </label>
-            <textarea
-              v-model="formData.clarification_instructions"
-              rows="3"
-              required
-              class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              placeholder="Consignes d'empilation de l'appel d'offre"
-            >
-            </textarea>
-          </div>
-
-
-          <!-- Financial Tab -->
-          <div v-if="activeTab === 'financial'" class="space-y-6">
-            <!-- Total Amount -->
-            <div class="bg-blue-50 rounded-lg p-4">
-              <h4 class="text-sm font-medium text-gray-900 mb-4">
-                Montant total
-              </h4>
+            <!-- Informations complémentaires spécifiques -->
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="text-sm font-medium text-gray-900 mb-4">Informations complémentaires</h4>
               <div class="grid grid-cols-2 gap-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Montant total (€) *
-                  </label>
-                  <input
-                    v-model="formData.financialOffer.totalAmount"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    required
-                    class="w-full px-3 py-2 border rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    @input="calculateTotal"
-                  />
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Validité de l'offre</label>
+                  <input v-model="offerFormData.offer_validity" type="text" class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Ex: 90 jours" />
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    TVA incluse
-                  </label>
-                  <select
-                    v-model="formData.financialOffer.taxIncluded"
-                    class="w-full px-3 py-2 border rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  >
-                    <option :value="false">HT (Hors Taxe)</option>
-                    <option :value="true">TTC (Toutes Taxes Comprises)</option>
-                  </select>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Entreprise</label>
+                  <input v-model="offerFormData.entreprise" type="text" class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Nom de l'entreprise" />
                 </div>
               </div>
             </div>
 
-            <!-- Cost Breakdown -->
-            <div class="bg-blue-50 rounded-lg p-4">
-              <h4 class="text-sm font-medium text-gray-900 mb-4">
-                Détail des coûts
-              </h4>
-              <div class="space-y-3">
-                <div
-                  v-for="(item, index) in formData.costBreakdown"
-                  :key="index"
-                  class="grid grid-cols-12 gap-2 items-center bg-white p-3 rounded-lg"
-                >
-                  <div class="col-span-3">
-                    <input
-                      v-model="item.category"
-                      type="text"
-                      placeholder="Catégorie"
-                      class="w-full text-sm px-3 py-2 border rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div class="col-span-3">
-                    <input
-                      v-model="item.description"
-                      type="text"
-                      placeholder="Description"
-                      class="w-full text-sm px-3 py-2 border rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    />
-                  </div>
-                  <div class="col-span-2">
-                    <input
-                      v-model="item.quantity"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      placeholder="Qté"
-                      class="w-full text-sm px-3 py-2 border rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                      @input="calculateLineTotal(index)"
-                    />
-                  </div>
-                  <div class="col-span-2">
-                    <input
-                      v-model="item.unitPrice"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      placeholder="Prix unitaire"
-                      class="w-full text-sm px-3 py-2 border rounded-md border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                      @input="calculateLineTotal(index)"
-                    />
-                  </div>
-                  <div class="col-span-1">
-                    <span class="text-sm font-medium text-gray-900">
-                      {{ formatCurrency(item.totalPrice) }}
-                    </span>
-                  </div>
-                  <div class="col-span-1">
-                    <button
-                      @click="removeCostItem(index)"
-                      type="button"
-                      class="text-red-500 hover:text-red-700"
-                    >
-                      <svg
-                        class="h-4 w-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        ></path>
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                <button
-                  @click="addCostItem"
-                  type="button"
-                  class="w-full px-4 py-2 border border-dashed border-blue-300 rounded-lg text-sm text-blue-600 hover:text-blue-800 hover:border-blue-400"
-                >
-                  + Ajouter une ligne
-                </button>
-              </div>
-            </div>
-
-            <!-- Payment Terms -->
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">
-                Conditions de paiement *
-              </label>
-              <select
-                v-model="formData.financialOffer.paymentTerms"
-                class="w-full px-3 py-2 border rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-              >
-                <option value="">Sélectionner des conditions</option>
-                <option value="Paiement à 30 jours">Paiement à 30 jours</option>
-                <option value="50% à la commande, 50% à la livraison">
-                  50% à la commande, 50% à la livraison
-                </option>
-                <option
-                  value="30% à la signature, 40% à la livraison, 30% après recette"
-                >
-                  30% à la signature, 40% à la livraison, 30% après recette
-                </option>
-                <option value="Paiement comptant">Paiement comptant</option>
-                <option value="Autres conditions">Autres conditions</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Planning Tab -->
-          <div v-if="activeTab === 'planning'" class="space-y-6">
-            <!-- Delivery Duration -->
-            <div class="bg-purple-50 rounded-lg p-4">
-              <h4 class="text-sm font-medium text-gray-900 mb-4">
-                Délai de livraison
-              </h4>
-              <div class="grid grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Durée totale (jours) *
-                  </label>
-                  <input
-                    v-model="formData.deliveryPlan.totalDuration"
-                    type="number"
-                    min="1"
-                    required
-                    class="w-full px-3 py-2 border rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Date de début prévue
-                  </label>
-                  <input
-                    v-model="plannedStartDate"
-                    type="date"
-                    class="w-full px-3 py-2 border rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <!-- Phases (simplified for this example) -->
-            <div>
-              <h4 class="text-sm font-medium text-gray-900 mb-3">
-                Phases du projet
-              </h4>
-              <div class="bg-gray-50 rounded-lg p-4">
-                <p class="text-sm text-gray-600 mb-4">
-                  Décrivez les principales phases de votre projet :
-                </p>
-                <textarea
-                  v-model="projectPhases"
-                  rows="6"
-                  class="w-full px-3 py-2 border rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
-                  placeholder="Ex:
-Phase 1 (30 jours): Analyse et conception
-Phase 2 (60 jours): Développement
-Phase 3 (20 jours): Tests et recette
-Phase 4 (10 jours): Mise en production"
-                ></textarea>
-              </div>
-            </div>
-          </div>
-
-          <!-- Team Tab -->
-          <div v-if="activeTab === 'team'" class="space-y-6">
-            <div class="bg-indigo-50 rounded-lg p-4">
-              <h4 class="text-sm font-medium text-gray-900 mb-4">
-                Équipe assignée
-              </h4>
+            <!-- Exigences et consignes -->
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="text-sm font-medium text-gray-900 mb-4">Exigences et consignes</h4>
               <div class="space-y-4">
-                <div
-                  v-for="(member, index) in formData.team"
-                  :key="index"
-                  class="grid grid-cols-12 gap-3 items-center bg-white p-4 rounded-lg"
-                >
-                  <div class="col-span-3">
-                    <label class="block text-xs font-medium text-gray-700 mb-1"
-                      >Nom *</label
-                    >
-                    <input
-                      v-model="member.name"
-                      type="text"
-                      required
-                      class="w-full text-sm px-3 py-2 border rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                      placeholder="Nom complet"
-                    />
-                  </div>
-                  <div class="col-span-2">
-                    <label class="block text-xs font-medium text-gray-700 mb-1"
-                      >Rôle *</label
-                    >
-                    <input
-                      v-model="member.role"
-                      type="text"
-                      required
-                      class="w-full text-sm px-3 py-2 border rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                      placeholder="Ex: Chef de projet"
-                    />
-                  </div>
-                  <div class="col-span-2">
-                    <label class="block text-xs font-medium text-gray-700 mb-1"
-                      >Expérience</label
-                    >
-                    <input
-                      v-model="member.experience"
-                      type="text"
-                      class="w-full text-sm px-3 py-2 border rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                      placeholder="Ex: 5 ans"
-                    />
-                  </div>
-                  <div class="col-span-2">
-                    <label class="block text-xs font-medium text-gray-700 mb-1"
-                      >Allocation (%)</label
-                    >
-                    <input
-                      v-model="member.allocation"
-                      type="number"
-                      min="0"
-                      max="100"
-                      class="w-full text-sm px-3 py-2 border rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                      placeholder="50"
-                    />
-                  </div>
-                  <div class="col-span-2">
-                    <label class="block text-xs font-medium text-gray-700 mb-1"
-                      >Compétences</label
-                    >
-                    <input
-                      v-model="member.skillsText"
-                      type="text"
-                      class="w-full text-sm px-3 py-2 border rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
-                      placeholder="Vue.js, Node.js"
-                    />
-                  </div>
-                  <div class="col-span-1">
-                    <button
-                      @click="removeTeamMember(index)"
-                      type="button"
-                      class="mt-5 text-red-500 hover:text-red-700"
-                    >
-                      <svg
-                        class="h-4 w-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        ></path>
-                      </svg>
-                    </button>
-                  </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Exigences de l'appel d'offre
+                  </label>
+                  <textarea
+                    v-model="offerFormData.requirement"
+                    rows="3"
+                    required
+                    class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Exigences, critères obligatoires, etc."
+                  >
+                  </textarea>
                 </div>
 
-                <button
-                  @click="addTeamMember"
-                  type="button"
-                  class="w-full px-4 py-2 border border-dashed border-indigo-300 rounded-lg text-sm text-indigo-600 hover:text-indigo-800 hover:border-indigo-400"
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Consignes d'empilation de l'appel d'offre
+                  </label>
+                  <textarea
+                    v-model="offerFormData.stacking_instruction"
+                    rows="3"
+                    required
+                    class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Consignes d'empilation de l'appel d'offre"
+                  >
+                  </textarea>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Consignes de clarification
+                  </label>
+                  <textarea
+                    v-model="metadataFormData.clarification_instruction"
+                    rows="3"
+                    required
+                    class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    placeholder="Consignes de clarification (questions, modalités, délais)"
+                  >
+                  </textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Période de validité -->
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="text-sm font-medium text-gray-900 mb-4">Période de validité</h4>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Période de validité (jours) *
+                </label>
+                <input
+                  v-model="formData.validityPeriod"
+                  type="number"
+                  min="1"
+                  max="365"
+                  required
+                  class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="30"
+                />
+                <p class="mt-2 mb-2 text-xs text-gray-500">
+                  Durée pendant laquelle notre offre reste valable
+                </p>
+              </div>
+            </div>
+
+            <!-- Commentaires -->
+            <div class="bg-gray-50 rounded-lg p-4">
+              <h4 class="text-sm font-medium text-gray-900 mb-4">Commentaires</h4>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Commentaires
+                </label>
+                <textarea
+                  v-model="metadataFormData.comment"
+                  rows="3"
+                  required
+                  class="w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  placeholder="Commentaires"
                 >
-                  + Ajouter un membre d'équipe
-                </button>
+                </textarea>
               </div>
             </div>
           </div>
@@ -751,46 +485,50 @@ Phase 4 (10 jours): Mise en production"
           >
             Annuler
           </button>
+        </div>
+        <div class="flex space-x-3">
           <button
-            @click="saveDraft"
+            v-if="activeTab === 'general'"
+            @click="nextTab"
             type="button"
             class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
           >
-            Enregistrer brouillon
+            Suivant
+          </button>
+          <button
+            v-if="activeTab === 'information'"
+            @click="handleSubmit"
+            :disabled="isLoading"
+            type="button"
+            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+          >
+            <span v-if="isLoading" class="flex items-center">
+              <svg
+                class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Enregistrement...
+            </span>
+            <span v-else>
+              {{ submission ? "Mettre à jour" : "Créer l'appel d'offre" }}
+            </span>
           </button>
         </div>
-        <button
-          @click="handleSubmit"
-          :disabled="isLoading"
-          type="button"
-          class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
-        >
-          <span v-if="isLoading" class="flex items-center">
-            <svg
-              class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            Enregistrement...
-          </span>
-          <span v-else>
-            {{ submission ? "Mettre à jour" : "Créer l'appel d'offre" }}
-          </span>
-        </button>
       </div>
   </div>
 </template>
@@ -802,14 +540,16 @@ definePageMeta({
 });
 
 import { ref, computed, reactive, onMounted } from "vue";
-import { useofferStore } from "@/stores/offerStore";
+import { useRouter } from '#app';
+import { useOfferStore } from "~/app/stores/offerStore";
+import { useProjectTypeStore } from "~/app/stores/ProjectType";
 import RequiredField from "~/app/components/partials/RequiredField.vue";
 import type { ProjectType } from "~/models/ProjectType";
-import { defaultMetadataFormData, defaultOfferFormData, type MetadataForm, type OfferForm } from "~/models/Offer";
+import { defaultMetadataFormData, defaultOfferFormData, type MetadataForm, type OfferForm, type Offer } from "~/models/Offer";
 
 interface Emits {
   (e: "close"): void;
-  (e: "save", data): void;
+  (e: "save", data: { offer: OfferForm; metadata: MetadataForm }): void;
 }
 
 const props = defineProps<{
@@ -819,9 +559,12 @@ const props = defineProps<{
 const router = useRouter();
 const emit = defineEmits<Emits>();
 
+// Navigation
+const navigateTo = useRouter().push;
+
 const projectTypes = ref<ProjectType[]>([]);
 
-const offerStore = useofferStore();
+const offerStore = useOfferStore();
 
 // State
 const activeTab = ref("general");
@@ -829,6 +572,27 @@ const isLoading = ref(false);
 const errors = ref<string[]>([]);
 
 // Form data
+interface ExtendedOfferForm extends OfferForm {
+  number: string;
+  file_price: number;
+  file_obtaining_deadline: string;
+  execution_batch_duration: string;
+  publication_date: string;
+}
+
+const defaultExtendedOfferForm = (): ExtendedOfferForm => ({
+  ...defaultOfferFormData(),
+  number: "",
+  file_price: 0,
+  file_obtaining_deadline: "",
+  execution_batch_duration: "",
+  publication_date: new Date().toISOString()
+});
+
+const offerFormData = reactive<ExtendedOfferForm>(defaultExtendedOfferForm());
+
+const metadataFormData = reactive<MetadataForm>(defaultMetadataFormData());
+
 const formData = reactive({
   offerId: "",
   technicalOffer: "",
@@ -859,10 +623,6 @@ const formData = reactive({
   validityPeriod: 30,
 });
 
-const metadataFormData = ref<MetadataForm>(defaultMetadataFormData());
-const offerFormData = ref<OfferForm>(defaultOfferFormData());
-    
-
 // Additional form fields
 const submissionStatus = ref("draft");
 const submissionDate = ref("");
@@ -872,18 +632,15 @@ const projectPhases = ref("");
 // Tab configuration
 const tabs = [
   { id: "general", name: "Général", required: true },
-  { id: "information", name: "Technique", required: true },
-  { id: "financial", name: "Financier", required: true },
-  { id: "planning", name: "Planning", required: true },
-  { id: "team", name: "Équipe", required: true },
+  { id: "information", name: "Information", required: true },
 ];
 
 // Computed
 const availableoffers = computed(() =>
   offerStore.offers.filter(
-    (t) =>
+    (t: Offer) =>
       ["draft", "active"].includes(t.status) ||
-      t.id === props.submission?.offerId
+      t.id === props.submission?.id
   )
 );
 
@@ -900,11 +657,11 @@ onMounted(() => {
 onMounted(() => {
   if (props.submission) {
     // Load existing submission data
-    formData.offerId = props.submission.offerId;
+    formData.offerId = props.submission.id;
     formData.technicalOffer = props.submission.proposal.technicalOffer;
     formData.financialOffer = { ...props.submission.proposal.financialOffer };
     formData.deliveryPlan = { ...props.submission.proposal.deliveryPlan };
-    formData.team = props.submission.proposal.team.map((member) => ({
+    formData.team = props.submission.proposal.team.map((member: { id: string; role: string; name: string; experience?: string; allocation?: number; skills: string[] }) => ({
       ...member,
       skillsText: member.skills.join(", "),
     }));
@@ -920,22 +677,17 @@ onMounted(() => {
 const isTabValid = (tabId: string): boolean => {
   switch (tabId) {
     case "general":
-      return !!(formData.offerId && formData.validityPeriod);
-    case "technical":
-      return !!formData.technicalOffer.trim();
-    case "financial":
-      return !!(
-        formData.financialOffer.totalAmount &&
-        formData.financialOffer.paymentTerms
-      );
-    case "planning":
-      return !!formData.deliveryPlan.totalDuration;
-    case "team":
-      return formData.team.some(
-        (member) => member.name.trim() && member.role.trim()
-      );
+      return !!(offerFormData.title && offerFormData.submission_deadline);
+    case "information":
+      return !!offerFormData.offer_type;
     default:
       return true;
+  }
+};
+
+const nextTab = () => {
+  if (activeTab.value === 'general') {
+    activeTab.value = 'information';
   }
 };
 
@@ -958,8 +710,10 @@ const removeCostItem = (index: number) => {
 
 const calculateLineTotal = (index: number) => {
   const item = formData.costBreakdown[index];
-  item.totalPrice = item.quantity * item.unitPrice;
-  calculateTotal();
+  if (item && 'quantity' in item && 'unitPrice' in item) {
+    item.totalPrice = item.quantity * item.unitPrice;
+    calculateTotal();
+  }
 };
 
 const calculateTotal = () => {
@@ -1000,72 +754,75 @@ const removeGuarantee = (index: number) => {
 
 const validateForm = (): boolean => {
   errors.value = [];
-
-  if (!formData.offerId) {
-    errors.value.push("L'appel d'offres est obligatoire");
+  
+  // Validation des champs obligatoires
+  if (!offerFormData.title?.trim()) {
+    errors.value.push("Le titre de l'offre est requis");
+  }
+  
+  if (!offerFormData.description?.trim()) {
+    errors.value.push("La description de l'offre est requise");
+  }
+  
+  if (!offerFormData.submission_deadline) {
+    errors.value.push("La date limite de soumission est requise");
+  }
+  
+  if (!offerFormData.offer_type) {
+    errors.value.push("Le type d'offre est requis");
   }
 
-  if (!formData.technicalOffer.trim()) {
-    errors.value.push("L'offre technique est obligatoire");
+  // Garantie bancaire obligatoire (Oui/Non)
+  if (!metadataFormData.bank_guarentee || !['yes','no'].includes(metadataFormData.bank_guarentee)) {
+    errors.value.push("Veuillez indiquer si une garantie bancaire est requise (Oui/Non)");
   }
-
-  if (
-    !formData.financialOffer.totalAmount ||
-    formData.financialOffer.totalAmount <= 0
-  ) {
-    errors.value.push("Le montant total doit être supérieur à 0");
+  if (metadataFormData.bank_guarentee === 'yes') {
+    if (
+      metadataFormData.bank_guarentee_amount === undefined ||
+      metadataFormData.bank_guarentee_amount === null ||
+      isNaN(Number(metadataFormData.bank_guarentee_amount)) ||
+      Number(metadataFormData.bank_guarentee_amount) <= 0
+    ) {
+      errors.value.push("Le montant de la garantie doit être un nombre positif");
+    }
   }
-
-  if (!formData.financialOffer.paymentTerms) {
-    errors.value.push("Les conditions de paiement sont obligatoires");
+  
+  // Validation des montants numériques
+  if (isNaN(Number(offerFormData.estimated_budget)) || Number(offerFormData.estimated_budget) <= 0) {
+    errors.value.push("Le budget estimé doit être un nombre positif");
   }
-
-  if (
-    !formData.deliveryPlan.totalDuration ||
-    formData.deliveryPlan.totalDuration <= 0
-  ) {
-    errors.value.push("La durée de livraison doit être supérieure à 0");
+  
+  if (isNaN(Number(offerFormData.amount)) || Number(offerFormData.amount) < 0) {
+    errors.value.push("Le montant doit être un nombre positif ou zéro");
   }
-
-  if (
-    !formData.team.some((member) => member.name.trim() && member.role.trim())
-  ) {
-    errors.value.push(
-      "Au moins un membre d'équipe avec nom et rôle est obligatoire"
-    );
+  
+  // Validation de l'équipe
+  if (formData.team.length === 0) {
+    errors.value.push("Au moins un membre d'équipe est requis");
+  } else {
+    formData.team.forEach((member, index) => {
+      if (!member.name?.trim()) {
+        errors.value.push(`Le nom du membre d'équipe #${index + 1} est requis`);
+      }
+      if (!member.role?.trim()) {
+        errors.value.push(`Le rôle du membre d'équipe #${index + 1} est requis`);
+      }
+    });
   }
-
-  if (!formData.validityPeriod || formData.validityPeriod <= 0) {
-    errors.value.push("La période de validité doit être supérieure à 0");
+  
+  // Si des erreurs sont détectées, on les affiche
+  if (errors.value.length > 0) {
+    useAlert().showAlert("Veuillez corriger les erreurs dans le formulaire", "error");
+    return false;
   }
-
-  // Clean up empty guarantees
-  formData.guarantees = formData.guarantees.filter((g) => g.trim() !== "");
-  if (formData.guarantees.length === 0) {
-    formData.guarantees = [""];
-  }
-
-  return errors.value.length === 0;
+  
+  return true;
 };
 
-const prepareSubmissionData = () => {
-  // Process team skills
-  const processedTeam = formData.team
-    .filter((member) => member.name.trim() && member.role.trim())
-    .map((member) => ({
-      ...member,
-      skills: member.skillsText
-        ? member.skillsText
-            .split(",")
-            .map((s) => s.trim())
-            .filter((s) => s)
-        : [],
-    }));
-
+const prepareSubmissionData = (): { offer: ExtendedOfferForm; metadata: MetadataForm } => {
   return {
-    ...formData,
-    team: processedTeam,
-    guarantees: formData.guarantees.filter((g) => g.trim() !== ""),
+    offer: { ...offerFormData },
+    metadata: { ...metadataFormData }
   };
 };
 
@@ -1082,20 +839,56 @@ const saveDraft = async () => {
 };
 
 const handleSubmit = async () => {
-  if (!validateForm()) {
-    return;
-  }
+  if (validateForm()) {
+    try {
+      // Préparer les données du formulaire
+      const offerData: OfferForm = {
+        title: offerFormData.title || "",
+        description: offerFormData.description || "",
+        estimated_budget: offerFormData.estimated_budget || 0,
+        amount: offerFormData.amount || 0,
+        status: offerFormData.status || "draft",
+        offer_type: offerFormData.offer_type || "",
+        offer_source: offerFormData.offer_source || "",
+        entreprise: offerFormData.entreprise || "",
+        submission_deadline: offerFormData.submission_deadline || "",
+        offer_validity: offerFormData.offer_validity || "",
+        submission_address: offerFormData.submission_address || "",
+        requirement: offerFormData.requirement || "",
+        stacking_instruction: offerFormData.stacking_instruction || "",
+        batch_number: offerFormData.batch_number || "",
+        execution_duration: offerFormData.execution_duration || "",
+        // Champs optionnels
+        number: offerFormData.number,
+        file_price: offerFormData.file_price,
+        file_obtaining_deadline: offerFormData.file_obtaining_deadline,
+        execution_batch_duration: offerFormData.execution_batch_duration,
+        // Champs de date
+        publication_date: offerFormData.publication_date || new Date().toISOString()
+      };
 
-  isLoading.value = true;
+      // Préparer les métadonnées
+      const metadata: MetadataForm = {
+        ...metadataFormData,
+        comment: metadataFormData.comment || ""
+      };
 
-  try {
-    const data = prepareSubmissionData();
-    emit("save", data);
-  } catch (error) {
-    console.error("Erreur lors de la soumission:", error);
-    errors.value.push("Une erreur est survenue lors de l'enregistrement");
-  } finally {
-    isLoading.value = false;
+      // Sauvegarder l'offre via le store
+      await offerStore.storeOffer(offerData, metadata);
+      
+      // Afficher un message de succès et fermer le formulaire
+      useAlert().showAlert("Offre enregistrée avec succès", "success");
+      emit("close");
+      
+      // Rafraîchir les données si nécessaire
+      if (router) {
+        await router.push('/offers');
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'enregistrement de l'offre :", error);
+      const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue est survenue";
+      useAlert().showAlert(`Erreur lors de l'enregistrement : ${errorMessage}`, "error");
+    }
   }
 };
 
