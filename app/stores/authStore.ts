@@ -34,7 +34,8 @@ export const useAuthStore = defineStore('AuthStore', {
 				this.token = response.data.token;
 
 				useAlert().showAlert("Login successful", "success");
-
+				localStorage.setItem('token', this.token);
+				localStorage.setItem('user',JSON.stringify(this.user))
 			} catch (error: any) {
 				console.log("Login error:", error);
 				throw new Error(error.data?.message || error.message);
