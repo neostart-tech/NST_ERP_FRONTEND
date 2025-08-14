@@ -2,7 +2,7 @@
   <div class="p-6 space-y-6 max-w-7xl mx-auto">
     <div class="flex justify-between items-center">
       <h1 class="text-3xl font-extrabold text-gray-900">Gestion des Factures</h1>
-      <NuxgittLink :to="AppUrl.INVOICE" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">
+      <NuxtLink :to="AppUrl.INVOICE" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">
         <i class="fas fa-add"></i> Nouvelle facture
       </NuxtLink>
     </div>
