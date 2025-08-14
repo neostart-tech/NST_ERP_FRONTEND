@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6">
+  <div class="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6 mt-8">
     <h2 class="text-2xl font-bold text-gray-800 mb-4">Enregistrer une commande</h2>
 
     <!-- Sélection Proforma -->

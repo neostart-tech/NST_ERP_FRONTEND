@@ -1,205 +1,246 @@
 <template>
-  <div class="p-6 space-y-6">
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold text-gray-800">Gestion des Factures</h1>
-     <NuxtLink :to="AppUrl.INVOICE" class="items-center px-6 py-3 font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 ">
-      <i class="fas fa-add"> </i>  Nouvelle facture 
-     </NuxtLink>
+  <div class="p-6 space-y-6 max-w-7xl mx-auto">
+    <div class="flex justify-between items-center">
+      <h1 class="text-3xl font-extrabold text-gray-900">Gestion des Factures</h1>
+      <NuxgittLink :to="AppUrl.INVOICE" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">
+        <i class="fas fa-add"></i> Nouvelle facture
+      </NuxtLink>
     </div>
 
-    <!-- Statistiques -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <div class=" flex gap-4 bg-indigo-100 p-4  justify-center rounded-lg shadow text-center">
-        <i class="fas fa-file-invoice text-blue-600 text-2xl mb-2"></i><p class="text-center text-gray-500 text-sm">Total Factures</p>
-        
+      <div class="bg-gray-300 shadow rounded p-4 text-center">
+        <i class="fas fa-file-invoice text-gray-500 text-3xl"></i>
+        <p class="text-sm text-gray-500">Total Factures</p>
+        <p class="text-2xl font-bold">{{ stats.total }}</p>
       </div>
-      <div class="flex gap-4 bg-green-100 p-4  justify-center rounded-lg shadow text-center">
-        <i class="fas fa-check-circle text-green-600 text-2xl mb-2"></i>
-        <p class="text-gray-500 text-sm">Payées</p>
-      
+      <div class="bg-green-200 shadow rounded p-4 text-center">
+        <i class="fas fa-check-circle text-green-600 text-3xl"></i>
+        <p class="text-sm text-gray-600">Payées</p>
+        <p class="text-2xl font-bold text-green-700">{{ formatCurrency(stats.paidAmount) }}</p>
       </div>
-      <div class="flex gap-4 bg-yellow-100 p-4 justify-center rounded-lg shadow text-center">
-        <i class="fas fa-clock text-yellow-500 text-2xl mb-2"></i>
-        <p class="text-gray-500 text-sm">En attente</p>
-       
+      <div class="bg-yellow-200 shadow rounded p-4 text-center">
+        <i class="fas fa-clock text-yellow-500 text-3xl"></i>
+        <p class="text-sm text-gray-600">En attente</p>
+        <p class="text-2xl font-bold text-yellow-700">{{ formatCurrency(stats.pendingAmount) }}</p>
       </div>
-      <div class="flex gap-4 bg-purple-100 p-4 justify-center rounded-lg shadow text-center">
-        <i class="fas fa-xof-sign text-purple-600 text-2xl mb-2"></i>
-        <p class="text-gray-500 text-sm">Montant Total</p>
-       
+      <div class="bg-purple-200 shadow rounded p-4 text-center">
+        <i class="fas fa-xof-sign text-purple-600 text-3xl"></i>
+        <p class="text-sm text-gray-600">Montant Total</p>
+        <p class="text-2xl font-bold text-purple-700">{{ formatCurrency(stats.totalAmount) }}</p>
       </div>
     </div>
     
+    <div class="flex flex-col md:flex-row gap-4 items-center mb-6">
+      <div class="relative w-full md:w-1/2">
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <i class="fas fa-search text-gray-400"></i>
+        </div>
+        <input type="text" v-model="searchQuery" placeholder="Rechercher par référence, client..."
+          class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" />
+      </div>
+      <div class="w-full md:w-1/4">
+        <label for="status-filter" class="sr-only">Filtrer par statut</label>
+        <select id="status-filter" v-model="selectedStatus"
+          class="block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+          <option value="">Tous les statuts</option>
+          <option value="paid">Payée</option>
+          <option value="pending">En attente</option>
+          <option value="partially_paid">Partiellement payée</option>
+        </select>
+      </div>
+    </div>
 
-    <!-- Tableau des factures -->
-    <div class="bg-white shadow overflow-x-auto">
-      <table class="w-full  border border-black text-sm">
-        <thead class="bg-gray-50">
-          <tr class="bg-gray-200">
-            <th class=" border border-gray-500 px-4 py-2 text-center uppercase">Facture</th>
-            <th class="border border-gray-500 px-4 py-2 text-center uppercase">Client</th>
-            <th class="border border-gray-500 px-4 py-2 text-center uppercase">Montant TTC</th>
-            <th class="border border-gray-500 px-4 py-2 text-center uppercase">Date</th>
-            <th class="border border-gray-500 px-4 py-2 text-center uppercase">Actions</th>
+    <div class="bg-white shadow rounded overflow-x-auto">
+      <table class="w-full text-sm border border-gray-200">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-3 py-2 border text-center">Facture</th>
+            <th class="px-3 py-2 border  text-center">Client</th>
+            <th class="px-3 py-2 border   text-center">Montant TTC</th>
+            <th class="px-3 py-2 border   text-center">Date</th>
+            <th class="px-3 py-2 border text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="invoice in invoiceStore.facture" :key="invoice.id" :value="invoice.id" class=" bg-indigo-50 hover:bg-gray-50">
-            <td class="border border-gray-500 text-center uppercase px-4 py-2">{{invoice.reference}}</td> 
-            <td class="border border-gray-500 text-center uppercase px-4 py-2">{{invoice.order.client.first_name}} {{invoice.order.client.last_name}}</td>
-            <td class="border border-gray-500 text-center uppercase px-4 py-2 font-semibold">{{ formatCurrency(invoice.total)}}</td>
-            <td class="border border-gray-500 text-center uppercase px-4 py-2 font-semibold">{{invoice.date}}</td>
-            <td class="border border-gray-300 px-4 py-2 text-center space-x-3 flex justify-center">
-                <!-- Voir -->
-                 <div class="relative group">
-                    <button @click="viewInvoice(invoice)" class="text-blue-500 hover:text-blue-700 p-1 rounded-full hover:bg-blue-100 transition duration-150 ease-in-out">
-                        <i class="fas fa-eye"></i><span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">Voir</span>
-                    </button>
-                 </div>
-                <!-- Supprimer -->
-                 <!-- <div class="relative group ">
-                    <button @click="deleteFacture(invoice.id)" class="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-100 transition duration-150 ease-in-out">
-                        <i class="fas fa-trash"></i><span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">Supprimer</span>
-                    </button>
-                </div> -->
-                <!-- Télécharger -->
-                <div class="relative group">
-                    <button @click="downloadInvoice(invoice) "class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 transition duration-150 ease-in-out">
-                    <i class="fas fa-download"></i></button>
-                        <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-800 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">Télécharger facture(pdf)</span>
-                </div>
+          <tr v-for="invoice in filteredInvoices" :key="invoice.id" class="hover:bg-gray-50">
+            <td class="border px-3 py-2   text-center">{{ invoice.reference }}</td>
+            <td class="border px-3 py-2  text-center">{{ invoice.order.client.first_name }} {{ invoice.order.client.last_name }}</td>
+            <td class="border px-3 py-2  text-center">{{ formatCurrency(invoice.total) }}</td>
+            <td class="border px-3 py-2  text-center">{{ formatDate(invoice.date) }}</td>
+            <td class="border px-3 py-2 flex justify-center gap-2">
+              <button @click="viewInvoice(invoice)" title="Voir"
+                class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100 transition duration-150 ease-in-out">
+                <i class="fas fa-eye"></i>
+              </button>
+              <button @click="downloadInvoice(invoice)" title="Télécharger"
+                class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 transition duration-150 ease-in-out">
+                <i class="fas fa-download"></i>
+              </button>
             </td>
           </tr>
-          
         </tbody>
       </table>
-    </div>
-  </div>
-  <!-- Modal -->
-  <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-xl shadow-lg p-6 w-1/2 max-w-3xl  w-full relative max-h-[100vh] overflow-y-auto">
-      <h2 class="text-2xl font-bold mb-4">Détails de la facture</h2>
-      <div v-if="selectedInvoice" class="mb-6 flex flex-col md:flex-row md:justify-between md:space-x-8">
-  
-  <!-- Infos Facture à gauche -->
-  <div class="md:w-1/2 bg-gray-50 p-4 rounded shadow-sm">
-    <h3 class="font-semibold text-lg mb-2">Infos Facture</h3>
-    <p><strong>Référence :</strong> {{ selectedInvoice.reference }}</p>
-    <p><strong>Date :</strong> {{ selectedInvoice.date }}</p>
-    <p><strong>Total TTC :</strong> {{ formatCurrency(selectedInvoice.total) }}</p>
-    <div class="mt-4">
-      <h4 class="font-semibold mb-1">Client</h4>
-      <p>{{ selectedInvoice.order.client.last_name }} {{ selectedInvoice.order.client.first_name }}</p>
-    </div>
-  </div>
-  
-  <!-- Infos Proforma à droite -->
-  <div
-    v-if="selectedInvoice.order.proforma"
-    class="md:w-1/2 bg-gray-50 p-4 rounded shadow-sm mt-6 md:mt-0"
-  >
-    <h3 class="font-semibold text-lg mb-2">Proforma associée</h3>
-    <div class="grid grid-cols-2 gap-x-6 text-gray-700">
-      <div class="space-y-1 font-medium text-gray-900">
-        <p>Référence :</p>
-        <p>Objet :</p>
-        <p>Total HT :</p>
-        <p>Total TTC :</p>
-      </div>
-      <div class="space-y-1 text-right">
-        <p>{{ selectedInvoice.order.proforma.reference }}</p>
-        <p>{{ selectedInvoice.order.proforma.object }}</p>
-        <p>{{ formatCurrency(selectedInvoice.order.proforma.total_ht) }}</p>
-        <p>{{ formatCurrency(selectedInvoice.order.proforma.total_ttc) }}</p>
+      <div v-if="filteredInvoices.length === 0" class="text-center py-8 text-gray-500">
+        <p>Aucune facture trouvée.</p>
       </div>
     </div>
   </div>
-  
-</div>
 
-
-      <div v-if="selectedInvoice.order.proforma.articles?.length" class="overflow-x-auto mt-4">
-        <h3 class="font-semibold text-lg mb-2">Articles de la proforma</h3>
-        <table class="min-w-full bg-white border">
-          <thead>
-            <tr class="bg-gray-100 text-left text-sm font-medium text-gray-700">
-              <th class="py-2 px-4">Article</th>
-              <th class="py-2 px-4">Description</th>
-              <th class="py-2 px-4">Quantité</th>
-              <th class="py-2 px-4">Prix unitaire</th>
-              <th class="py-2 px-4">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="article in selectedInvoice.order.proforma.articles" :key="article.id" class="text-sm border-t">
-              <td class="py-2 px-4">{{ article.label }}</td>
-              <td class="py-2 px-4">{{ article.description }}</td>
-              <td class="py-2 px-4">{{ article.pivot.quantity }}</td>
-              <td class="py-2 px-4">{{ formatCurrency(article.pivot.unit_price) }}</td>
-              <td class="py-2 px-4">
-                {{ formatCurrency(article.pivot.quantity * article.pivot.unit_price) }}
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr class="bg-gray-100 text-sm font-semibold">
-              <td colspan="4" class="py-2 px-4 text-right">Total HT :</td>
-              <td class="py-2 px-4">{{ formatCurrency(selectedInvoice.order.proforma.total_ht) }}</td>
-            </tr>
-            <tr class="text-sm font-semibold">
-              <td colspan="4" class="py-2 px-4 text-right">Total TTC :</td>
-              <td class="py-2 px-4">{{ formatCurrency(selectedInvoice.order.proforma.total_ttc) }}</td>
-            </tr>
-           
-          </tfoot>
-        </table>
-      </div>
-
-      <div v-else class="text-red-500 font-semibold mt-4">
-        Aucune proforma associée à cette commande.
-      </div>
-      <div class="mt-6 text-right">
-      <button @click="closeModal" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded shadow-sm">
-        Fermer
+  <div v-if="showModal && selectedInvoice"
+    class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
+    <div class="bg-white rounded-lg shadow-xl max-w-3xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
+      <button @click="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
+        <i class="fas fa-times"></i>
       </button>
+      <h2 class="text-2xl font-bold mb-4 text-indigo-700">Détails de la Facture</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 mb-6">
+        <p><strong>Référence :</strong> {{ selectedInvoice.reference }}</p>
+        <p><strong>Date :</strong> {{ formatDate(selectedInvoice.date) }}</p>
+        <p><strong>Client :</strong> {{ selectedInvoice.order.client.first_name }} {{
+          selectedInvoice.order.client.last_name }}</p>
+        <p><strong>Commande concernée:</strong> {{ selectedInvoice.order.reference }}</p>
+        <p><strong>Montant TTC:</strong> {{ formatCurrency(selectedInvoice.total) }}</p>
+      </div>
+
+      <div v-if="selectedInvoice.order.articles">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm border">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-4 py-2 text-left border">Article</th>
+                <th class="px-4 py-2 text-left border">Description</th>
+                <th class="px-4 py-2 text-right border">Quantité</th>
+                <th class="px-4 py-2 text-right border">Prix Unitaire</th>
+                <th class="px-4 py-2 text-right border">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="article in selectedInvoice.order.articles" :key="article.id" class="border-t">
+                <td class="px-4 py-2 border">{{ article.label }}</td>
+                <td class="px-4 py-2 border">{{ article.description }}</td>
+                <td class="px-4 py-2 text-right border">{{ article.pivot.quantity }}</td>
+                <td class="px-4 py-2 text-right border">{{ formatCurrency(article.pivot.unit_price) }}</td>
+                <td class="px-4 py-2 text-right border">{{ formatCurrency(article.pivot.quantity * article.pivot.unit_price) }}</td>
+              </tr>
+            </tbody>
+            <tfoot v-if="selectedInvoice">
+              <tr>
+                <td colspan="4" class="py-2 px-4 text-right font-bold border">Total HT</td>
+                <td class="py-2 px-4 text-right font-bold border">
+                  {{ formatCurrency(totalHT) }}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4" class="py-2 px-4 text-right font-bold border">TVA (18%)</td>
+                <td class="py-2 px-4 text-right font-bold border">
+                  {{ formatCurrency(totalHT * 0.18) }}
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4" class="py-2 px-4 text-right font-bold border">Total TTC</td>
+                <td class="py-2 px-4 text-right font-bold border">
+                  {{ formatCurrency(totalHT * 1.18) }}
+                </td>
+              </tr>
+            </tfoot>
+
+          </table>
+        </div>
+      </div>
+      <div v-else class="text-sm text-gray-500 italic">
+        Aucune proforma enregistrée.
+      </div>
+
+      <div class="mt-6 text-right">
+        <button @click="closeModal" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow">
+          Fermer
+        </button>
+      </div>
     </div>
-    </div>
-    
   </div>
 </template>
-
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useInvoiceStore } from '#imports'
-import { onMounted } from 'vue'
+import Swal from 'sweetalert2'
 
-const selectedInvoice=ref()
-const showModal=ref(false)
+const invoiceStore = useInvoiceStore()
+const selectedInvoice = ref()
+const showModal = ref(false)
+const isLoading = ref(true)
 
+// New state for filtering and search
+const searchQuery = ref('')
+const selectedStatus = ref('')
 
-const invoiceStore=useInvoiceStore()
-onMounted(()=> {
-  invoiceStore.fetchInvoice()
-  
-} )
+onMounted(async () => {
+  isLoading.value = true
+  await invoiceStore.fetchInvoice()
+  isLoading.value = false
+})
 
-//Details de la facture
-function viewInvoice(invoice){
-  selectedInvoice.value=invoice
-  showModal.value=true
+const stats = computed(() => {
+  const invoices = invoiceStore.facture
+  const paidInvoices = invoices.filter(i => i.status === 'paid')
+  const pendingInvoices = invoices.filter(i => i.status === 'pending')
+
+  const paidAmount = paidInvoices.reduce((sum, invoice) => sum + invoice.total, 0)
+  const pendingAmount = pendingInvoices.reduce((sum, invoice) => sum + invoice.total, 0)
+  const totalAmount = paidAmount + pendingAmount;
+
+  return {
+    total: invoices.length,
+    paidAmount,
+    pendingAmount,
+    totalAmount,
+  }
+})
+
+const filteredInvoices = computed(() => {
+  const query = searchQuery.value.toLowerCase().trim()
+  const status = selectedStatus.value
+
+  return invoiceStore.facture.filter(invoice => {
+    const matchesSearch = !query ||
+      invoice.reference.toLowerCase().includes(query) ||
+      invoice.order.client.first_name.toLowerCase().includes(query) ||
+      invoice.order.client.last_name.toLowerCase().includes(query)
+
+    const matchesStatus = !status || invoice.status === status
+
+    return matchesSearch && matchesStatus
+  })
+})
+ 
+const totalHT = computed(() => {
+  if (!selectedInvoice.value) return 0;
+  return selectedInvoice.value.order.articles.reduce(
+    (sum, article) => sum + article.pivot.quantity * article.pivot.unit_price,
+    0
+  );
+});
+
+const viewInvoice = (invoice) => {
+  selectedInvoice.value = invoice
+  showModal.value = true
 }
 
-function closeModal(){
- showModal.value=false
- selectedInvoice.value=null
+const closeModal = () => {
+  showModal.value = false
+  selectedInvoice.value = null
 }
-function downloadInvoice(invoice){
+
+const downloadInvoice = (invoice) => {
   invoiceStore.downloadInvoice(invoice)
 }
- console.log('selectedInvoice')
+
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'XOF'
+  }).format(amount)
+}
 
 const formatDate = (date) => new Date(date).toLocaleDateString('fr-FR')
-const formatCurrency = (amount) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(amount)
-
 </script>
