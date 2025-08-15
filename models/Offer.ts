@@ -32,7 +32,7 @@ export interface OfferForm {
     submission_deadline: string;
     status: string;
     offer_type: string;
-    offer_source: string;
+    source_label: string;
     entreprise: string;
     number?: string;
     file_price?: number;
@@ -62,7 +62,7 @@ export interface Metadata {
 }
 
 export interface MetadataForm {
-    bank_guarentee?: string;
+    bank_guarentee?: boolean;
     bank_guarentee_amount?: number;
     offer_project?: string;
     sponsor?: string;
@@ -82,7 +82,7 @@ export const defaultOfferFormData = (): OfferForm => ({
     submission_deadline: "",
     status: "",
     offer_type: "",
-    offer_source: "",
+    source_label: "",
     entreprise: "",
     number: "",
     file_price: 0,

@@ -33,4 +33,5 @@ export const ApiUrl = {
   DOCUMENT_TYPES: "/document-types",
   ENTREPRISES: "/entreprises",
   OFFER_TYPES: "/offer-types",
-};
+  OFFERS: "/offers",
+} as const;

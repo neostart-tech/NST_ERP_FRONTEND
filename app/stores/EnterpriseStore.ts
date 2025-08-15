@@ -1,17 +1,18 @@
 import { defineStore } from "pinia";
-import type { Entreprise } from "~/models/Entreprise";
+import type { Entreprise } from "~/models/Enterprise";
 import { ApiUrl } from "@/composables/apiUrl";
 
-export const entrepriseStore = defineStore("EntrepriseStore", {
+export const useEnterpriseStore = defineStore("EnterpriseStore", {
   state: () => ({
-    entreprises: [] as Entreprise[],
+    enterprises: [] as Entreprise[],
   }),
   actions: {
-    async fetchEntreprises() {
+    async fetchEnterprises() {
       try {
         const response = await useApi().get<Entreprise[]>(ApiUrl.ENTREPRISES);
-        this.entreprises = response.data;
+        this.enterprises = response.data;
       } catch (error) {
+        console.log("Error fetching enterprise:", error);
         useAlert().showAlert("Une erreur est survenue lors de la récupération des entreprises", "error");
       }
     },
