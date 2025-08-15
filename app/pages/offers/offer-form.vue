@@ -389,7 +389,9 @@
                   required
                   :class="[
                     'w-full rounded-md px-3 py-2 border shadow-sm focus:border-gray-500 focus:ring-gray-500',
-                    validationErrors.source_label ? 'border-red-500' : 'border-gray-500',
+                    validationErrors.source_label
+                      ? 'border-red-500'
+                      : 'border-gray-500',
                   ]"
                   placeholder="Reference de la source"
                 />
@@ -578,33 +580,15 @@
         <button
           v-if="activeTab === 'information'"
           @click="handleSubmit"
-          :disabled="isLoading"
+          :disabled="isSubmitting"
           type="button"
           class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
         >
-          <span v-if="isLoading" class="flex items-center">
-            <svg
-              class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            Enregistrement...
-          </span>
-          <span v-else>
+          <Spinner
+            :isLoading="isSubmitting"
+            text="Enregistrement en cours ..."
+          />
+          <span v-if="!isSubmitting">
             {{ submission ? "Mettre à jour" : "Créer l'appel d'offre" }}
           </span>
         </button>
@@ -637,6 +621,7 @@ import {
   type EnterpriseForm,
   type Entreprise,
 } from "~/models/Enterprise";
+import Spinner from "~/app/components/partials/Spinner.vue";
 
 interface Emits {
   (e: "close"): void;
@@ -658,6 +643,7 @@ const enterpriseStore = useEnterpriseStore();
 const projectTypes = ref<ProjectType[]>([]);
 const offerTypes = ref<OfferType[]>([]);
 const enterprises = ref<Entreprise[]>([]);
+const isSubmitting = ref(false);
 
 const offerStore = useOfferStore();
 const validationErrors = ref<ValidationErrors>({});
@@ -960,6 +946,7 @@ const saveDraft = async () => {
 };
 
 const handleSubmit = async () => {
+  isSubmitting.value = true;
   // if (validateForm()) {
   try {
     // Préparer les données du formulaire
@@ -1012,7 +999,14 @@ const handleSubmit = async () => {
     validationErrors.value = offerStore.validationErrors;
 
     const errorsSize = Object.keys(validationErrors.value).length;
-    useAlert().showAlert(`${errorsSize} erreur${errorsSize > 1 ? "s" : ""} sont survenues lors de l'enregistrement`, "error");
+    useAlert().showAlert(
+      `${errorsSize} erreur${
+        errorsSize > 1 ? "s" : ""
+      } sont survenues lors de l'enregistrement`,
+      "error"
+    );
+  } finally {
+    isSubmitting.value = false;
   }
 };
 // };
