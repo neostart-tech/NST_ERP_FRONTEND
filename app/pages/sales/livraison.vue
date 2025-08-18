@@ -17,7 +17,7 @@
         <select v-model="selectedCommande" @change="loadCommande" class="border border-black w-full p-2 rounded-lg">
           <option value="">-- Sélectionner une commande --</option>
           <option v-for="(cmd, index) in orderStore.commande" :key="cmd.id" :value="cmd.id">
-            CMD-{{ String(index + 1).padStart(3, '0') }} - {{ cmd.client.last_name }} {{ cmd.client.first_name }} 
+            {{ cmd.reference }} - {{ cmd.client.last_name }} {{ cmd.client.first_name }} 
           </option>
         </select>
       </div>
@@ -72,7 +72,7 @@
               >
                 Qté à livrer
               </th>
-              <th class="p-2 text-center">Supp</th>
+              <!-- <th class="p-2 text-center">Supp</th> -->
             </tr>
           </thead>
           <tbody>
@@ -112,12 +112,12 @@
                 <input type="number" v-model.number="item.qtyToDeliver"   :max="Math.max(item.qtyCommandee - item.qtyAlreadyDelivered, 0)"
                   min="0" class="border border-black text-center w-full p-1 rounded-md" />
               </td>
-         <!-- Bouton supprimer -->
-              <td class="text-center">
+                     <!-- Bouton supprimer -->
+              <!-- <td class="text-center">
                 <button class="text-red-500 hover:text-red-700" @click="removeItem(index)"type="button" >               
                   <i class="fas fa-trash"></i>
                 </button>
-              </td>
+              </td> -->
             </tr>
           </tbody>
         </table>

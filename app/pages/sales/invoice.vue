@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto bg-indigo-50 shadow-lg rounded-lg p-6 space-y-6">
+  <div class="max-w-4xl mx-auto bg-indigo-50 shadow-lg rounded-lg p-6 space-y-6 mt-8">
     <h1 class="text-2xl font-bold mb-4 flex items-center gap-2">
       <i class="fas fa-file-invoice"></i> Générer une facture
     </h1>
@@ -11,7 +11,10 @@
           <select v-model="selectedCommande"class="text-center border border-black w-full p-2 rounded-lg">
           <option value="">Sélectionner la commande</option>
           <option v-for="(cmd,index) in orderStoreValidate.commande" :key="cmd.id" :value="cmd.id">
-            CMD-{{ String(index + 1).padStart(3, '0') }} - {{ cmd.client.name}}
+
+=======
+           {{ cmd.reference }} - {{ cmd.client.name }} 
+
           </option>
         </select>
 
@@ -46,7 +49,7 @@
               <th class="border px-2 text-center">Qté</th>
               <th class="border px-2 text-center">PU</th>
               <th class="border px-2 text-center">Total</th>
-              <th class="border px-2 text-center">Supp</th>
+              <!-- <th class="border px-2 text-center">Supp</th> -->
             </tr>
           </thead>
           <tbody>
@@ -55,11 +58,11 @@
             <td><input v-model.number="item.qty" type="number" class="border w-full text-center" /></td>
             <td><input v-model.number="item.price" type="number" class="border w-full text-center" /></td>
             <td class="text-center">{{ (item.qty * item.price).toFixed(2) }}FCFA</td>
-            <td class="text-center">
+            <!-- <td class="text-center">
               <button class="text-red-500" @click="removeItem(index)">
                 <i class="fas fa-trash"></i>
               </button>
-            </td>
+            </td> -->
           </tr>
         </tbody>
 

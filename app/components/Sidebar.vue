@@ -174,7 +174,7 @@
                   <NuxtLink
                     :to="AppUrl.INFOPROPO"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.INFOPROPO }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.INFOPROPO  || $route.path===AppUrl.PROPO}"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -195,7 +195,7 @@
                    <NuxtLink
                     :to="AppUrl.ORDERINFO"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.ORDERINFO }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.ORDERINFO  || $route.path===AppUrl.ORDER}"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -216,7 +216,7 @@
                    <NuxtLink
                     :to="AppUrl.INVOICEINFO"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.INVOICEINFO }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.INVOICEINFO  || $route.path===AppUrl.INVOICE}"
                   >
                     <div class="nav-icon">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -252,7 +252,7 @@
                    <NuxtLink
                     :to="AppUrl.SCHEDULEINFO"
                     class="nav-item nav-item-nested"
-                    :class="{ 'nav-item-active': $route.path === AppUrl.SCHEDULEINFO }"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.SCHEDULEINFO  || $route.path===AppUrl.SCHEDULE}"
                   >
                     <div class="nav-icon">
                       <i class="fas fa-calendar-alt w-6 text-center"></i>

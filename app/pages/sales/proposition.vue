@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
+  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 mt-8">
     <h2 class="text-2xl font-semibold text-indigo-700 mb-6 flex items-center gap-2">
       <i class="fas fa-file-invoice"></i> Enregistrer une Facture Proforma
     </h2>
