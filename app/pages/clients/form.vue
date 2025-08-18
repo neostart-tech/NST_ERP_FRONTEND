@@ -229,7 +229,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useClientStore } from '../../stores/client'
+import { useClientStore } from '#imports'
 
 
 const router = useRouter()
@@ -351,52 +351,9 @@ const submitForm = async (e) => {
       client_contacts: client.value.contacts,
       salesman_id: "0198851a-39af-7371-bf71-c277b2f9a15c",
     };
+    clientStore.createClient(payload)
 
-    const response = await fetch('http://127.0.0.1:8000/api/clients', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        // Si vous utilisez l'authentification :
-        // 'Authorization': `Bearer ${localStorage.getItem('token-col')}`
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      // Gestion des erreurs de validation Laravel
-      if (data.errors) {
-        // Réinitialiser les erreurs
-        errors.value = { client: {}, contacts: [] };
-        
-        // Traiter les erreurs du client
-        for (const [field, messages] of Object.entries(data.errors)) {
-          if (field.startsWith('client_contacts.')) {
-            // Erreurs pour les contacts
-            const parts = field.split('.');
-            const contactIndex = parseInt(parts[1]);
-            const contactField = parts[2];
-            
-            if (!errors.value.contacts[contactIndex]) {
-              errors.value.contacts[contactIndex] = {};
-            }
-            errors.value.contacts[contactIndex][contactField] = messages[0];
-          } else {
-            // Erreurs pour le client
-            errors.value.client[field] = messages[0];
-          }
-        }
-      }
-      throw new Error(data.message || 'Erreur lors de la création du client');
-    }
-
-    // Succès - redirection avec message
-    router.push({
-      path: '/clients',
-      query: { success: 'Client créé avec succès' }
-    });
+    router.push(AppUrl.CLIENTS);
   } catch (error) {
     console.error('Erreur:', error);
     alert(`Erreur: ${error.message}`);

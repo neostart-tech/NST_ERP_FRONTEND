@@ -2,6 +2,9 @@
 import { defineStore } from 'pinia';
 
 export const useClientStore = defineStore('client', {
+  state:()=>({
+    clients:[]
+  }),
   actions: {
     async createClient(clientData) {
       try {
@@ -26,6 +29,16 @@ export const useClientStore = defineStore('client', {
         console.error("Erreur création client:", error);
         throw error;
       }
-    }
+    },
+    async fetchClients() {
+      try {
+        // this.loading = true;
+        this.clients = await $fetch("http://127.0.0.1:8000/api/clients");
+
+        // this.loading = false;
+      } catch (error) {
+        console.error("Erreur lors du chargement des clients:", error);
+      }
+    },
   }
 });

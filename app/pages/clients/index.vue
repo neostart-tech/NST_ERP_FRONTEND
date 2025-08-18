@@ -160,23 +160,23 @@
               </thead>
               <tbody class="bg-white divide-y divide-gray-100">
                 <tr
-                  v-for="client in filteredClients"
+                  v-for="client in clientStore.clients"
                   :key="client.id"
                   class="hover:bg-gradient-to-r hover:from-sky-50 hover:to-blue-50 transition-all duration-300 group"
                 >
                   <td class="px-8 py-6 whitespace-nowrap">
                     <div class="flex items-center">
                       <div class="ml-0">
-                        <div class="text-sm font-bold text-gray-900">{{ client.nom }}</div>
+                        <div class="text-sm font-bold text-gray-900">{{ client.name}}</div>
                       </div>
                     </div>
                   </td>
                   <td class="px-6 py-6 whitespace-nowrap">
                     <span
                       class="px-3 py-1.5 inline-flex text-xs leading-5 font-bold rounded-full"
-                      :class="typeClass(client.type)"
+                     
                     >
-                      {{ client.type }}
+                      {{ client.client_type }}
                     </span>
                   </td>
                   <td class="px-6 py-6 whitespace-nowrap">
@@ -202,7 +202,7 @@
                           d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                         />
                       </svg>
-                      {{ client.telephone }}
+                      {{ client.phone }}
                     </div>
                   </td>
                   <td class="px-6 py-6 whitespace-nowrap text-sm font-medium">
@@ -258,7 +258,7 @@
                     </div>
                   </td>
                 </tr>
-                <tr v-if="filteredClients.length === 0">
+                <tr v-if="clientStore.clients.length === 0">
                   <td colspan="5" class="px-6 py-12 text-center">
                     <div class="flex flex-col items-center justify-center">
                       <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -286,6 +286,8 @@
 <script setup>
 import DefaultLayout from '@/layouts/default.vue';
 import { ref, reactive, computed } from 'vue';
+import { useClientStore } from '#imports';
+import { onMounted } from 'vue';
 
 // KPIs data
 const kpis = reactive({
@@ -298,50 +300,12 @@ const kpis = reactive({
 const searchTerm = ref('');
 
 // Clients data
-const clients = ref([
-  {
-    id: 1,
-    nom: 'Entreprise ABC',
-    type: 'Morale',
-    email: 'abc@entreprise.com',
-    telephone: '+228 90 12 34 56',
-  },
-  {
-    id: 2,
-    nom: 'Jean Dupont',
-    type: 'Particulier',
-    email: 'jean.dupont@email.com',
-    telephone: '+228 91 23 45 67',
-  },
-  {
-    id: 3,
-    nom: 'SARL Martin',
-    type: 'Entreprise',
-    email: 'contact@sarl-martin.com',
-    telephone: '+228 92 34 56 78',
-  },
-  {
-    id: 4,
-    nom: 'Cabinet Digital',
-    type: 'Morale',
-    email: 'info@digital.com',
-    telephone: '+228 93 45 67 89',
-  },
-  {
-    id: 5,
-    nom: 'Sophie Laurent',
-    type: 'Particulier',
-    email: 'sophie.l@email.com',
-    telephone: '+228 94 56 78 90',
-  },
-  {
-    id: 6,
-    nom: 'Ets. Dubois',
-    type: 'Entreprise',
-    email: 'ets.dubois@email.com',
-    telephone: '+228 95 67 89 01',
-  },
-]);
+const clients = ref([]);
+//Clients
+const clientStore=useClientStore()
+onMounted(()=>{
+  clientStore.fetchClients()
+})
 
 // Computed properties
 const filteredClients = computed(() => {

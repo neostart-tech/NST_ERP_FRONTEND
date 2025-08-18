@@ -140,14 +140,12 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import { useClientStore } from '~/app/stores/sale/client'
+import { useClientStore } from '#imports'
 import { useProformaStore } from '#imports'
 import { useArticleStore } from '#imports'
 import { useOrderStore } from '#imports'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
-
-definePageMeta({ layout: 'default' })
 
 const selectedQuote = ref('')
 const selectedClient = ref('')

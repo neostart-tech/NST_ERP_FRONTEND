@@ -56,7 +56,7 @@
         </thead>
         <tbody>
           <tr v-for="delivery in filteredDeliveries" :key="delivery.id" class="hover:bg-gray-100 border-t text-sm">
-            <td class="p-3"> {{ delivery.order.client.last_name }} {{ delivery.order.client.first_name }} </td>
+            <td class="p-3"> {{ delivery.order.client.name }}  </td>
             <td class="p-3 text-center">{{ delivery.delivery_type }}</td>
             <td class="p-3 text-center">{{ formatDate(delivery.delivery_date) }}</td>
             <td class="p-3 text-center">{{ delivery.delivery_address }}</td>

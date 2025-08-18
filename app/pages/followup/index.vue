@@ -163,17 +163,17 @@
       <tr>
         <th class="px-4 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">Référence</th>
         <th class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">Client</th>
-        <th class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">Commercial</th>
-        <th class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">Module</th>
-        <th class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">Échéance</th>
+        <!-- <th class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">Commercial</th> -->
+        <!-- <th class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">Module</th> -->
+        <!-- <th class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">Échéance</th> -->
         <th class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">Montant</th>
-        <th class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">Statut</th>
+        <!-- <th class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">Statut</th> -->
         <th class="px-3 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider whitespace-nowrap">Actions</th>
       </tr>
     </thead>
     <tbody class="bg-white divide-y divide-gray-100">
       <tr 
-        v-for="facture in filteredFactures" 
+        v-for="facture in invoiceStore.facture" 
         :key="facture.id" 
         class="hover:bg-gradient-to-r hover:from-red-50 hover:to-orange-50 transition-all duration-300"
       >
@@ -181,38 +181,13 @@
           {{ facture.reference }}
         </td>
         <td class="px-3 py-4 whitespace-nowrap text-gray-700 text-sm truncate max-w-[120px]">
-          {{ facture.client }}
+          {{ facture.order.client.name}}
         </td>
-        <td class="px-3 py-4 whitespace-nowrap text-gray-700 text-sm truncate max-w-[100px]">
-          {{ facture.commercial }}
-        </td>
-        <td class="px-3 py-4 whitespace-nowrap text-gray-700 text-sm">
-          <span :class="{
-            'bg-blue-100 text-blue-800 border border-blue-200': facture.module === 'vente',
-            'bg-purple-100 text-purple-800 border border-purple-200': facture.module === 'ao',
-            'bg-green-100 text-green-800 border border-green-200': facture.module === 'maintenance'
-          }" class="px-2 py-1 text-xs font-semibold rounded-full whitespace-nowrap">
-            {{ formatModule(facture.module) }}
-          </span>
-        </td>
-        <td class="px-3 py-4 whitespace-nowrap text-gray-700 text-sm">
-          <div>{{ formatDate(facture.echeance) }}</div>
-          <div v-if="facture.statut === 'retard'" class="text-xs text-red-500">
-            (+{{ daysLate(facture.echeance) }}j)
-          </div>
-        </td>
+       
         <td class="px-3 py-4 whitespace-nowrap font-semibold text-gray-700 text-sm">
-          {{ formatCurrency(facture.montant) }}
+          {{ formatCurrency(facture.total) }}
         </td>
-        <td class="px-3 py-4 whitespace-nowrap text-sm">
-          <span :class="{
-            'bg-green-100 text-green-800 border border-green-200': facture.statut === 'paye',
-            'bg-yellow-100 text-yellow-800 border border-yellow-200': facture.statut === 'attente',
-            'bg-red-100 text-red-800 border border-red-200': facture.statut === 'retard'
-          }" class="px-2 py-1 text-xs font-semibold rounded-full whitespace-nowrap">
-            {{ formatStatut(facture.statut) }}
-          </span>
-        </td>
+      
         <td class="px-3 py-4 whitespace-nowrap text-sm">
           <div class="flex items-center gap-1">
             <button 
@@ -269,7 +244,8 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import DefaultLayout from '@/layouts/default.vue'
+import { useInvoiceStore } from '#imports'
+import { onMounted } from 'vue'
 
 // KPIs
 const kpis = reactive({
@@ -290,75 +266,15 @@ const filters = reactive({
 
 // Données factures
 const factures = ref([
-  {
-    id: 1,
-    reference: 'FACT-2024-001',
-    client: 'Entreprise ABC',
-    clientAdresse: '123 Rue des Exemples, Lomé',
-    commercial: 'Jean Dupont',
-    commercialEmail: 'j.dupont@example.com',
-    module: 'vente',
-    description: 'Vente de matériel informatique',
-    emission: '2024-06-01',
-    echeance: '2024-07-15',
-    montant: 1200000,
-    statut: 'retard',
-    relances: [
-      {
-        id: 1,
-        type: 'email',
-        date: '2024-07-16T10:30:00',
-        auteur: 'Paul Compta',
-        commentaire: 'Relance envoyée par email, client promet paiement sous 8 jours'
-      },
-      {
-        id: 2,
-        type: 'appel',
-        date: '2024-07-20T14:15:00',
-        auteur: 'Sophie Recouvrement',
-        commentaire: 'Appel téléphonique, le client dit avoir des problèmes de trésorerie'
-      }
-    ]
-  },
-  {
-    id: 2,
-    reference: 'FACT-2024-002',
-    client: 'SARL Martin',
-    clientAdresse: '456 Avenue des Tests, Kara',
-    commercial: 'Marie Martin',
-    commercialEmail: 'm.martin@example.com',
-    module: 'maintenance',
-    description: 'Contrat maintenance annuelle',
-    emission: '2024-06-10',
-    echeance: '2024-07-20',
-    montant: 750000,
-    statut: 'paye',
-    datePaiement: '2024-07-18',
-    relances: []
-  },
-  {
-    id: 3,
-    reference: 'FACT-2024-003',
-    client: 'Cabinet Digital',
-    clientAdresse: '789 Boulevard des Essais, Sokodé',
-    commercial: 'Luc Bernard',
-    commercialEmail: 'l.bernard@example.com',
-    module: 'ao',
-    description: 'Projet digitalisation - Appel d\'offres',
-    emission: '2024-06-15',
-    echeance: '2024-07-25',
-    montant: 3500000,
-    statut: 'attente',
-    relances: []
-  }
 ])
 
+//Affichage des factures
+const invoiceStore=useInvoiceStore()
+onMounted(()=>{
+  invoiceStore.fetchInvoice()
+})
 // Commerciaux
-const commerciaux = ref([
-  { id: 1, nom: 'Jean Dupont' },
-  { id: 2, nom: 'Marie Martin' },
-  { id: 3, nom: 'Luc Bernard' }
-])
+const commerciaux = ref([])
 
 // Sélections et modals
 const selectedFacture = ref(null)

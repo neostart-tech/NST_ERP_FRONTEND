@@ -11,7 +11,7 @@
           <select v-model="selectedCommande"class="text-center border border-black w-full p-2 rounded-lg">
           <option value="">Sélectionner la commande</option>
           <option v-for="(cmd,index) in orderStoreValidate.commande" :key="cmd.id" :value="cmd.id">
-            CMD-{{ String(index + 1).padStart(3, '0') }} - {{ cmd.client.last_name }} {{ cmd.client.first_name }}
+            CMD-{{ String(index + 1).padStart(3, '0') }} - {{ cmd.client.name}}
           </option>
         </select>
 

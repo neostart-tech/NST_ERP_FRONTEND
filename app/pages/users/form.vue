@@ -223,8 +223,8 @@
                       class="h-4 w-4 text-sky-600 focus:ring-sky-500 border-gray-300"
                     >
                     <label for="role-user" class="ml-3 block text-sm font-medium text-gray-700">
-                      <span class="font-semibold">Utilisateur standard</span>
-                      <p class="text-xs text-gray-500 mt-1">Accès limité aux fonctionnalités de base</p>
+                      <span class="font-semibold">Responsable Recouvrement</span>
+                      <p class="text-xs text-gray-500 mt-1">Accès à la gestion du recouvrement</p>
                     </label>
                   </div>
                 </div>

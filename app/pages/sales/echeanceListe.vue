@@ -63,7 +63,7 @@
           </td>
         </tr> -->
         <tr v-for="schedule in scheduleStore.echeancier" :key="schedule.id" class="border-t hover:bg-gray-50 transition duration-100 ease-in-out">
-          <td class="border border-gray-300 p-3 font-medium text-center  text-gray-800">{{schedule.invoice.order.client.last_name}} {{schedule.invoice.order.client.first_name_name}}</td>
+          <td class="border border-gray-300 p-3 font-medium text-center  text-gray-800">{{schedule.invoice.order.client.name}} </td>
           <td class="border border-gray-300 p-3 text-center text-gray-700">{{ schedule.invoice.order.id}}</td>
           <td class="border border-gray-300 p-3 text-center text-gray-700">{{ schedule.invoice.reference }}</td>
           <!-- <td class="p-3 text-center font-semibold text-green-700"> </td>
@@ -98,7 +98,7 @@
   <p><strong>Date facture :</strong> {{ selectedSchedule.invoice.date }}</p>
   <p><strong>Total :</strong> {{ formatCurrency(selectedSchedule.invoice.total) }}</p>
   <p><strong>Client :</strong> 
-    {{ selectedSchedule.invoice.order.client.last_name }} {{ selectedSchedule.invoice.order.client.first_name }}
+    {{ selectedSchedule.invoice.order.client.name }} 
   </p>
 </div>
 

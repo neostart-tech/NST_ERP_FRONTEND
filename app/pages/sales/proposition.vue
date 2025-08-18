@@ -17,7 +17,7 @@
           >
             <option value="">-- Sélectionner un client --</option>
             <option v-for="client in clientStore.clients" :key="client.id" :value="client.id">
-              {{client.first_name}} {{client.last_name}}
+              {{client.name}} 
             </option>
             <!-- Options dynamiques ici -->
           </select>
@@ -133,7 +133,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useClientStore } from '~/app/stores/sale/client'
+import { useClientStore } from '#imports'
 import { useArticleStore } from '#imports'
 import { useProformaStore } from '#imports'
 import { onMounted } from 'vue'

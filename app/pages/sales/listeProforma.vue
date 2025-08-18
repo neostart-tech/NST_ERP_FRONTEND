@@ -50,7 +50,7 @@
         <tbody>
           <tr v-for="proforma in proformas" :key="proforma.id" class="hover:bg-gray-50">
             <td class="border px-3 py-2">{{ proforma.reference }}</td>
-            <td class="border px-3 py-2">{{ proforma.client?.last_name }} {{ proforma.client?.first_name }}</td>
+            <td class="border px-3 py-2">{{ proforma.client.name}} </td>
             <td class="border px-3 py-2">{{ proforma.object }}</td>
             <td class="border px-3 py-2">{{ proforma.total_ttc.toLocaleString() }} FCFA</td>
             <td class="border px-3 py-2">
@@ -85,7 +85,7 @@
       <!-- Client -->
       <div class="mb-4 text-sm text-gray-700">
         <h3 class="font-semibold text-lg mb-2">Client</h3>
-        <p>{{ selectedProforma.client.last_name }} {{ selectedProforma.client.first_name }}</p>
+        <p>{{ selectedProforma.client.name }} </p>
       </div>
 
       <!-- Articles -->
@@ -136,7 +136,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useProformaStore } from '~/app/stores/proforma'
+import { useProformaStore } from '#imports'
 
 const proformaStore = useProformaStore()
 const proformas = ref([])
