@@ -19,7 +19,11 @@ export default defineNuxtConfig({
     '@': resolve(__dirname, './app'),
     '~': resolve(__dirname, './'),
   },
-  
+   runtimeConfig: {
+    public: {
+      apiBaseUrl: process.env.API_BASE_URL || 'http://localhost:8000/api'
+    }
+  },
   vite: {
     resolve: {
       alias: {

@@ -47,11 +47,9 @@
           </tr>
         </thead>
         <tbody>
-
-=======
           <tr v-for="delivery in filteredDeliveries" :key="delivery.id" class="hover:bg-gray-50 border-b border-gray-200">
-            <td class="p-3  text-center border border-gray-200">{{ delivery.order.client.name }} </td>
-            <td class="p-3  text-center border border-gray-200">{{ delivery.order.reference }}</td>
+            <td class="p-3  text-center border border-gray-200"> </td>
+            <td class="p-3  text-center border border-gray-200"></td>
             <td class="p-3 text-center  border border-gray-200">
               <span  class="px-2 py-1 rounded text-xs font-bold">
                 {{ translateDeliveryType(delivery.delivery_type) }}
@@ -61,7 +59,6 @@
             <td class="p-3 text-center  border border-gray-200">{{ delivery.delivery_address }}</td>
             <td class="p-3 text-center space-x-2">
               <button @click="viewDetails(delivery)" title="Voir" class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100 transition duration-150 ease-in-out">
->>>>>>> origin/melchior_sale_management
                 <i class="fas fa-eye"></i>
               </button>
               <button @click="downloadDelivery(delivery)" title="Télécharger" class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 transition duration-150 ease-in-out">
@@ -86,8 +83,8 @@
         <h2 class="text-2xl font-bold mb-4 text-indigo-700">Détails du Bordereau</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 mb-6">
-          <p><strong>Commande :</strong> {{ selectedDelivery.order.reference }}</p>
-          <p><strong>Client :</strong> {{ selectedDelivery.order.client.last_name }} {{ selectedDelivery.order.client.first_name }}</p>
+          <!-- <p><strong>Commande :</strong> {{ selectedDelivery.order.reference }}</p> -->
+          <!-- <p><strong>Client :</strong> {{ selectedDelivery.order.client.name }} </p> -->
           <p><strong>Date :</strong> {{ formatDate(selectedDelivery.delivery_date) }}</p>
           <p><strong>Adresse :</strong> {{ selectedDelivery.delivery_address }}</p>
           <p><strong>Type :</strong>
@@ -108,13 +105,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="article in selectedDelivery.articles" :key="article.id" class="border-t">
+            <tr v-for="article in selectedDelivery.items" :key="article.id" class="border-t">
               <td class="p-2 border  text-center">{{ article.designation }}</td>
-              <td class="p-2 border  text-center">{{ article.code }}</td>
+              <td class="p-2 border  text-center">{{ article.product_code }}</td>
               <td class="p-2 border  text-center">{{ article.serial_number }}</td>
               <td class="p-2 text-center border  text-center">{{ article.quantity_delivered }}</td>
             </tr>
-            <tr v-if="!selectedDelivery.articles || selectedDelivery.articles.length === 0">
+            <tr v-if="!selectedDelivery.items || selectedDelivery.items.length === 0">
               <td colspan="4" class="text-center p-4 text-gray-500">
                 Aucun article livré.
               </td>

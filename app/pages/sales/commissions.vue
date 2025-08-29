@@ -1,22 +1,12 @@
 <template>
   <main class="flex-1 p-6 bg-gray-50 min-h-screen">
     <div class="max-w-7xl mx-auto">
-      <!-- Header avec bouton d'export -->
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <h1 class="text-2xl font-bold text-gray-800">Calcul des Commissions</h1>
         
-        <button 
-          @click="exportCommissions"
-          class="px-5 py-2.5 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition-colors duration-200 flex items-center gap-2"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-          </svg>
-          Exporter les données
-        </button>
+        
       </div>
 
-      <!-- Statistiques rapides -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
           <div class="flex items-center justify-between">
@@ -61,7 +51,6 @@
         </div>
       </div>
 
-      <!-- Filtres -->
       <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 mb-6">
         <div class="px-6 py-5 border-b border-gray-100">
           <h2 class="text-lg font-semibold text-gray-900">Filtrer les résultats</h2>
@@ -107,7 +96,6 @@
             </div>
           </div>
           
-          <!-- Période personnalisée -->
           <div v-if="filters.period === 'custom'" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
             <div>
               <label for="start-date" class="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
@@ -132,7 +120,6 @@
         </div>
       </div>
 
-      <!-- Tableau des commissions -->
       <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
@@ -142,19 +129,18 @@
                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">CA Simulé</th>
                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Taux</th>
                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Commission</th>
-                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Période</th>
+                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-100">
               <tr 
                 v-for="commission in filteredCommissions" 
-                :key="commission.id" 
+                :key="commission.id + commission.date" 
                 class="hover:bg-sky-50 transition-colors duration-150"
               >
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10">
-                      <!-- Avatar avec initiales -->
                       <div class="h-10 w-10 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white font-bold">
                         {{ getInitials(commission.first_name, commission.last_name) }}
                       </div>
@@ -177,12 +163,11 @@
                   {{ formatCurrency(commission.commission) }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                  {{ commission.period }}
+                  {{ commission.date }}
                 </td>
               </tr>
               
-              <!-- Ligne de total -->
-              <tr class="bg-gray-50 font-semibold">
+              <tr v-if="filteredCommissions.length > 0" class="bg-gray-50 font-semibold">
                 <td class="px-6 py-4 whitespace-nowrap">Total</td>
                 <td class="px-6 py-4 whitespace-nowrap text-gray-900">{{ formatCurrency(totalRevenue) }}</td>
                 <td class="px-6 py-4 whitespace-nowrap"></td>
@@ -190,7 +175,6 @@
                 <td class="px-6 py-4 whitespace-nowrap"></td>
               </tr>
               
-              <!-- Message si aucun résultat -->
               <tr v-if="filteredCommissions.length === 0">
                 <td colspan="5" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
                   Aucune commission trouvée avec les filtres actuels
@@ -210,7 +194,7 @@ import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 
-// Filtres
+const allCommissions = ref([])
 const filters = reactive({
   salesperson: '',
   period: 'month',
@@ -218,50 +202,37 @@ const filters = reactive({
   endDate: ''
 })
 
-// Computed pour obtenir les commerciaux
 const commercials = computed(() => {
-  if (!userStore.users?.users) return []
-  return userStore.users.users.filter(user => 
-    user.role.toLowerCase() === 'commercial'
+  if (!userStore.users || !Array.isArray(userStore.users)) return []
+  return userStore.users.filter(user => 
+    user.role && user.role.toLowerCase() === 'commercial'
   )
 })
 
-// Générer des commissions simulées basées sur les vrais commerciaux
-const simulatedCommissions = computed(() => {
-  return commercials.value.map((commercial, index) => {
-    // Simulation de données de CA et commission
-    const baseRevenue = 30000 + (index * 15000) + Math.random() * 20000
-    const rate = 5 // Taux de commission fixe à 5%
-    const commission = baseRevenue * (rate / 100)
-    
-    return {
-      id: commercial.id,
-      first_name: commercial.first_name,
-      last_name: commercial.last_name,
-      email: commercial.email,
-      simulatedRevenue: Math.round(baseRevenue),
-      rate: rate,
-      commission: Math.round(commission),
-      period: getCurrentPeriod()
-    }
-  })
-})
-
-// Commissions filtrées
+// Les commissions filtrées sont basées sur les filtres appliqués
 const filteredCommissions = computed(() => {
-  let result = [...simulatedCommissions.value]
+  let result = [...allCommissions.value]
   
   // Filtre par commercial
   if (filters.salesperson) {
     result = result.filter(c => c.id === parseInt(filters.salesperson))
   }
   
-  // Ici vous pouvez ajouter d'autres filtres selon vos besoins
+  // Filtre par période
+  const startDate = filters.startDate ? new Date(filters.startDate) : null
+  const endDate = filters.endDate ? new Date(filters.endDate) : null
+
+  result = result.filter(c => {
+    const commissionDate = new Date(c.date)
+    const isAfterStart = !startDate || commissionDate >= startDate
+    const isBeforeEnd = !endDate || commissionDate <= endDate
+    return isAfterStart && isBeforeEnd
+  })
   
   return result
 })
 
-// Totaux calculés
+// Fonctions de calcul des totaux
 const totalRevenue = computed(() => {
   return filteredCommissions.value.reduce((sum, c) => sum + c.simulatedRevenue, 0)
 })
@@ -270,18 +241,70 @@ const totalCommissions = computed(() => {
   return filteredCommissions.value.reduce((sum, c) => sum + c.commission, 0)
 })
 
+// Fonction pour générer des commissions simulées
+const generateSimulatedCommissions = () => {
+  const commissions = []
+  if (!commercials.value.length) return []
+
+  const today = new Date()
+  const oneYearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate())
+
+  for (let d = oneYearAgo; d <= today; d.setDate(d.getDate() + 1)) {
+    commercials.value.forEach(commercial => {
+      if (Math.random() > 0.9) { 
+        const simulatedRevenue = Math.round(500 + Math.random() * 5000)
+        const rate = 5
+        const commission = simulatedRevenue * (rate / 100)
+        
+        commissions.push({
+          id: parseInt(commercial.id), // <-- Correction ici pour s'assurer que l'ID est un nombre
+          first_name: commercial.first_name,
+          last_name: commercial.last_name,
+          email: commercial.email,
+          simulatedRevenue,
+          rate,
+          commission: Math.round(commission),
+          date: d.toISOString().split('T')[0]
+        })
+      }
+    })
+  }
+  return commissions
+}
+
+// Gérer la logique de mise à jour des dates
+const applyFilters = () => {
+  if (filters.period === 'custom') {
+    return; // Pas de changement de date si c'est une période personnalisée
+  }
+  
+  const today = new Date()
+  const start = new Date()
+  const end = new Date()
+
+  switch (filters.period) {
+    case 'month':
+      start.setDate(1)
+      break
+    case 'quarter':
+      const currentMonth = today.getMonth()
+      const startMonthOfQuarter = Math.floor(currentMonth / 3) * 3
+      start.setMonth(startMonthOfQuarter, 1)
+      break
+    case 'year':
+      start.setMonth(0, 1)
+      break
+  }
+  
+  filters.startDate = start.toISOString().split('T')[0]
+  filters.endDate = end.toISOString().split('T')[0]
+}
+
 // Fonctions utilitaires
 const getInitials = (firstName, lastName) => {
   const firstInitial = firstName ? firstName.charAt(0).toUpperCase() : ''
   const lastInitial = lastName ? lastName.charAt(0).toUpperCase() : ''
   return firstInitial + lastInitial
-}
-
-const getCurrentPeriod = () => {
-  const now = new Date()
-  const monthNames = ["Jan", "Fév", "Mar", "Avr", "Mai", "Jun", 
-                     "Jul", "Aoû", "Sep", "Oct", "Nov", "Déc"]
-  return `${monthNames[now.getMonth()]} ${now.getFullYear()}`
 }
 
 const formatCurrency = (amount) => {
@@ -293,18 +316,15 @@ const formatCurrency = (amount) => {
   }).format(amount)
 }
 
-const applyFilters = () => {
-  console.log('Filtres appliqués:', filters)
-}
-
 const exportCommissions = () => {
   alert('Export des commissions en cours...')
-  // Ici vous implémenteriez la logique d'export réel
 }
 
-// Charger les utilisateurs au montage
-onMounted(() => {
-  userStore.fetchUsers()
+// Initialisation des données au chargement
+onMounted(async () => {
+  await userStore.fetchUsers()
+  allCommissions.value = generateSimulatedCommissions()
+  applyFilters() // Appliquer les filtres initiaux (Ce mois) au chargement
 })
 </script>
 

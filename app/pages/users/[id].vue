@@ -48,35 +48,8 @@
               </div>
 
               <div class="flex flex-wrap gap-3">
-                <button 
-                  @click="$router.push(`/users/form?id=${user?.id}`)"
-                  class="px-6 py-3 bg-white text-sky-700 font-semibold rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2"
-                >
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                  </svg>
-                  Modifier le profil
-                </button>
-                
-                <button 
-                  @click="adjustObjectives"
-                  class="px-6 py-3 bg-green-500/80 text-white font-semibold rounded-xl shadow-lg hover:bg-green-600 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2"
-                >
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                  </svg>
-                  Ajuster objectifs
-                </button>
-                
-                <button 
-                  @click="resetPassword"
-                  class="px-6 py-3 bg-purple-500/80 text-white font-semibold rounded-xl shadow-lg hover:bg-purple-600 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2"
-                >
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
-                  </svg>
-                  Réinitialiser mot de passe
-                </button>
+              
+               
               </div>
             </div>
           </div>

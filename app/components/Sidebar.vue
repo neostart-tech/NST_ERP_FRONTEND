@@ -25,24 +25,30 @@
     >
       <div class="flex flex-col h-full bg-gradient-to-b from-sky-800 to-sky-900 shadow-xl">
         <!-- Header fixe -->
-        <div class="flex-shrink-0 px-6 py-5 border-b border-sky-700 bg-sky-800 sticky top-0 z-10">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <a href="#" class="flex items-center justify-center w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm">
-                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                </svg>
-              </a>
-              <div>
-                <h1 class="text-lg font-bold text-white">Neo Start Tech</h1>
-                <p class="text-xs font-medium text-sky-200">Business Manager</p>
-              </div>
-            </div>
+       <div class="flex-shrink-0 px-6 py-5 border-b border-sky-700 bg-sky-800 sticky top-0 z-10">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <!-- Lien pour ajouter le logo de l'entreprise -->
+      <a href="#" class="flex items-center justify-center w-16 h-16 rounded-xl bg-white/10 backdrop-blur-sm">
+        <!-- Remplacez cette balise img par votre logo -->
+        <img src="C:\Users\Ambroise ADENYO\Desktop\stage_projet\images\ez426phx.png" alt="Logo de l'entreprise" class="w-13 h-13 object-contain">
+        <!-- Ou utilisez ce SVG par défaut si le logo n'est pas encore disponible -->
+        <!--
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        -->
+      </a>
+      <div>
+        <h1 class="text-lg font-bold text-white">Neo Start Tech</h1>
+        <p class="text-xs font-medium text-sky-200">Business Manager</p>
+      </div>
+    </div>
 
-            <!-- Mobile close button moved to the top left -->
-            <div class="w-8"></div>
-          </div>
-        </div>
+    <!-- Mobile close button moved to the top left -->
+    <div class="w-8"></div>
+  </div>
+</div>
 
 
         
@@ -264,7 +270,7 @@
                   </NuxtLink>
 
                   
-                   <NuxtLink
+                   <!-- <NuxtLink
                     :to="AppUrl.BALANCE"
                     class="nav-item nav-item-nested"
                     :class="{ 'nav-item-active': $route.path === AppUrl.BALANCE }"
@@ -276,7 +282,7 @@
                       <p class="nav-label">Bilan</p>
                       <p class="nav-description">$$</p>
                     </div>
-                  </NuxtLink>
+                  </NuxtLink> -->
 
                 </div>
               </transition>
@@ -555,30 +561,35 @@
 
         <!-- Footer utilisateur -->
         <div class="flex-shrink-0 px-4 py-4 border-t border-sky-700 bg-sky-900">
-          <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
-            <div class="flex-shrink-0">
-              <div class="w-10 h-10 bg-gradient-to-br from-white/20 to-white/10 rounded-full flex items-center justify-center border border-white/20">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 12a5 5 0 015 5v2h-2a3 3 0 00-3-3 3 3 0 00-3 3h-2v-2a5 5 0 015-5z"/>
-                </svg>
-              </div>
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-semibold text-white truncate">{{ useAuthStore().user?.name || 'Utilisateur' }}</p>
-              <p class="text-xs text-sky-200 truncate">{{ useAuthStore().user?.role || 'Rôle' }}</p>
-            </div>
-            <div class="flex-shrink-0">
-              <button 
-                @click="showUserMenu = !showUserMenu"
-                class="p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
-                </svg>
-              </button>
-            </div>
-          </div>
-          
+  <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
+    <div class="flex-shrink-0">
+      <div class="w-10 h-10 bg-gradient-to-br from-white/20 to-white/10 rounded-full flex items-center justify-center border border-white/20">
+        <span class="text-white font-bold text-lg">{{ useAuthStore().fullName?.charAt(0)?.toUpperCase() || 'U' }}</span>
+      </div>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p class="text-sm font-semibold text-white truncate">{{ useAuthStore().fullName || 'Utilisateur' }}</p>
+      <p class="text-xs text-sky-200 truncate">
+        {{ 
+          (() => {
+            const role = useAuthStore().user?.role || '';
+            return role.charAt(0).toUpperCase() + role.slice(1);
+          })()
+        }}
+      </p>
+    </div>
+    <div class="flex-shrink-0">
+      <button 
+        @click="showUserMenu = !showUserMenu"
+        class="p-1.5 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+   
           <!-- Menu utilisateur -->
           <transition name="header-user-menu">
             <div v-if="showUserMenu" class="absolute bottom-20 left-4 right-4 z-50 py-2 bg-white rounded-xl shadow-2xl border border-gray-200 transform transition-all duration-200" @click.stop>
