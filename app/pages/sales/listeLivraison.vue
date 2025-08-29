@@ -77,9 +77,6 @@
 
     <div v-if="showModal && selectedDelivery" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div class="bg-white rounded-lg shadow-xl w-3/4 max-w-3xl p-6 relative max-h-[90vh] overflow-y-auto">
-        <button @click="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-          <i class="fas fa-times"></i>
-        </button>
         <h2 class="text-2xl font-bold mb-4 text-indigo-700">Détails du Bordereau</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 mb-6">
@@ -102,26 +99,30 @@
               <th class="p-2 text-left border   text-center">Code</th>
               <th class="p-2 text-left border   text-center">Numéro Série</th>
               <th class="p-2 text-center border   text-center">Qté Livrée</th>
-            </tr>
+            </tr>        
           </thead>
           <tbody>
-            <tr v-for="article in selectedDelivery.articles" :key="article.id" class="border-t">
+            <tr v-for="article in selectedDelivery.items" :key="article.id" class="border-t">
               <td class="p-2 border  text-center">{{ article.designation }}</td>
-              <td class="p-2 border  text-center">{{ article.code }}</td>
-              <td class="p-2 border  text-center">{{ article.serial_number }}</td>
+              <td class="p-2 border  text-center">{{ article.product_code }}</td>
+              <td class="p-2 border  text-center">{{ article.serial_number }} </td>
               <td class="p-2 text-center border  text-center">{{ article.quantity_delivered }}</td>
             </tr>
-            <tr v-if="!selectedDelivery.articles || selectedDelivery.articles.length === 0">
+            <tr v-if="!selectedDelivery.items || selectedDelivery.items.length === 0">
               <td colspan="4" class="text-center p-4 text-gray-500">
                 Aucun article livré.
               </td>
             </tr>
           </tbody>
         </table>
-        <div class="mt-6 text-right">
+        <div class="mt-6 text-right flex justify-between">
+           <button @click="downloadDelivery(selectedDelivery)" title="Télécharger" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow">
+                <i class="fas fa-download"></i>
+          </button>
           <button @click="closeModal" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow">
             Fermer
           </button>
+          
         </div>
       </div>
     </div>

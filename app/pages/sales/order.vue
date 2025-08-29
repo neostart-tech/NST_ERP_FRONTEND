@@ -21,13 +21,42 @@
 
     <!-- Sélection Client (visible si pas de proforma) -->
     <div v-if="!selectedQuote">
-      <label class="block text-sm font-medium text-gray-700 mb-1">Client <span class="text-red-500">*</span></label>
+      <!-- <label class="block text-sm font-medium text-gray-700 mb-1">Client <span class="text-red-500">*</span></label>
       <select v-model="selectedClient" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500">
         <option value="">-- Sélectionner un client --</option>
         <option v-for="client in clientStore.clients" :key="client.id" :value="client.id">
           {{ client.last_name }} {{ client.first_name }}
         </option>
-      </select>
+      </select> -->
+      <!-- Client -->
+      <div class="w-72 relative">
+        <label for="client" class="block font-medium mb-1">Client</label>
+        <input 
+          id="client"
+          type="text"
+          v-model="searchClient"
+          @input="filterClients"
+          @focus="showClientSuggestions = true"
+          placeholder="Rechercher un client..."
+          class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-indigo-500"
+        />
+
+        <!-- Suggestions -->
+        <ul 
+          v-if="showClientSuggestions && filteredClients.length" 
+          class="absolute bg-white border border-gray-300 rounded w-full mt-1 shadow-lg z-10 max-h-40 overflow-auto"
+        >
+          <li 
+            v-for="client in filteredClients" 
+            :key="client.id" 
+            @click="selectClient(client)" 
+            class="p-2 hover:bg-indigo-100 cursor-pointer"
+          >
+            {{ client.first_name }} {{ client.last_name }}
+          </li>
+        </ul>
+      </div>
+
       <p v-if="clientError" class="text-red-500 text-sm mt-1">{{ clientError }}</p>
     </div>
 
@@ -119,7 +148,7 @@
 
     <!-- Totaux -->
     <div class="p-4 rounded-lg text-right">
-      <p>Sous-total : <span class="font-semibold">{{ formatCurrency(subtotal) }} FCFA</span></p>
+      <p>Sous-total : <span class="font-semibold">{{ formatCurrency(subtotal) }}</span></p>
       <p>TVA ({{ taux }}%) : <span class="font-semibold">{{ formatCurrency(tvaAmount) }}</span></p>
       <p class="text-lg font-bold">Total TTC : {{ formatCurrency(total)}}</p>
     </div>
@@ -194,7 +223,7 @@ watch(selectedQuote, (newVal) => {
     form.value.items = proforma.articles.map(article => ({
       name: article.label,
       qty: article.pivot.quantity,
-      price: article.pivot.unit_price,
+      price:parseInt(article.pivot.unit_price),
       article_id: article.id,
       showSuggestions: false,
       filteredArticles: [],
@@ -223,7 +252,7 @@ const filterArticles = (index) => {
 const selectArticle = (index, article) => {
   form.value.items[index].name = article.label
   form.value.items[index].article_id = article.id
-  form.value.items[index].price = article.price
+  form.value.items[index].price =parseInt(article.price)
   form.value.items[index].showSuggestions = false
   form.value.items[index].error = ''
 }
@@ -401,4 +430,28 @@ const submitOrder = async () => {
     isSubmitting.value = false
   }
 }
+
+const searchClient = ref("")
+const showClientSuggestions = ref(false)
+const filteredClients = ref([])
+
+// Filtrer les clients
+const filterClients = () => {
+  if (!searchClient.value) {
+    filteredClients.value = []
+    return
+  }
+  filteredClients.value = clientStore.clients.filter(c =>
+    `${c.first_name} ${c.last_name}`.toLowerCase().includes(searchClient.value.toLowerCase())
+  )
+}
+
+// Sélection d’un client
+const selectClient = (client) => {
+  form.value.clientId = client.id  // on stocke l'id pour l'enregistrement
+  selectedClient.value = client.id ,
+  searchClient.value = `${client.first_name} ${client.last_name}` // affichage dans le champ
+  showClientSuggestions.value = false
+}
+
 </script>

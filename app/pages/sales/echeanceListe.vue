@@ -4,7 +4,7 @@
       <h1 class="text-3xl font-extrabold text-gray-900 flex items-center gap-2">
         <i class="fas fa-hand-sparkles text-indigo-600"></i> Vos Échéanciers
       </h1>
-      <NuxtLink :to="AppUrl.SCHEDULE" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700 transition duration-150 ease-in-out">
+      <NuxtLink :to="AppUrl.SCHEDULE" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition duration-150 ease-in-out">
         <i class="fas fa-add"></i> Ajouter un nouvel échéancier
       </NuxtLink>
     </div>
@@ -81,7 +81,7 @@
         <p><strong>Référence facture :</strong> {{ selectedSchedule.invoice.reference }}</p>
         <p><strong>Client :</strong> {{ selectedSchedule.invoice.order.client.last_name }} {{ selectedSchedule.invoice.order.client.first_name }}</p>
         <p><strong>Total Facture :</strong> {{ formatCurrency(selectedSchedule.invoice.total) }}</p>
-        <p><strong>Commande :</strong> </p>
+        <p><strong>Commande :{{ selectedSchedule.invoice.order.reference }}</strong> </p>
         <p><strong>Date de création :</strong> {{ formatDate(selectedSchedule.invoice.order.date) }}</p>
       </div>
 

@@ -2,7 +2,7 @@
   <div class="p-6 space-y-6 max-w-7xl mx-auto">
     <div class="flex justify-between items-center">
       <h1 class="text-3xl font-extrabold text-gray-900">Gestion des Factures</h1>
-      <NuxtLink :to="AppUrl.INVOICE" class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700">
+      <NuxtLink :to="AppUrl.INVOICE" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">
         <i class="fas fa-add"></i> Nouvelle facture
       </NuxtLink>
     </div>
@@ -152,7 +152,11 @@
         Aucune proforma enregistrée.
       </div>
 
-      <div class="mt-6 text-right">
+      <div class="mt-6 text-right flex justify-between">
+        <button @click="downloadInvoice(selectedInvoice)" 
+                class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow">
+                <i class="fas fa-download"></i> Imprimer
+        </button>
         <button @click="closeModal" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow">
           Fermer
         </button>

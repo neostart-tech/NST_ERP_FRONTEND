@@ -64,12 +64,12 @@
               <button @click="viewOrder(order)" title="Voir" class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100 transition duration-150 ease-in-out">
                 <i class="fas fa-eye"></i>
               </button>
-              <button @click="downloadOrder(order)" title="Télécharger" class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 transition duration-150 ease-in-out">
+              <!-- <button @click="downloadOrder(order)" title="Télécharger" class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 transition duration-150 ease-in-out">
                 <i class="fas fa-download"></i>
               </button>
               <button @click="editOrder(order.id)" title="Modifier" class="text-yellow-600 hover:text-yellow-900 p-1 rounded-full hover:bg-yellow-100 transition duration-150 ease-in-out">
                 <i class="fas fa-edit"></i>
-              </button>
+              </button> -->
             </td>
             <td class="border px-3 py-2 text-center">
               <select v-model="order.status" @change="updateStatus(order.id, order.status)" class="text-sm border rounded px-2 py-1">

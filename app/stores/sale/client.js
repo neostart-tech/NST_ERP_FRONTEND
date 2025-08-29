@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { useNuxtApp } from "#app";
 export const useClientStore = defineStore("client", {
   state: () => ({
     loading: false,
@@ -11,6 +10,24 @@ export const useClientStore = defineStore("client", {
     }
   }),
   actions: {
+    async createClients(payload){
+      try{
+        const response=await $fetch('http://127.0.0.1:8000/api/client',{
+          method:'POST',
+          headers:{
+            'Accept':'application/json',
+            'Content-Type':'application/json',
+          },
+          body:payload
+        })
+        return response
+
+      }catch(error){
+        console.error("Erreur",error);
+     
+      }
+    },
+
     async fetchClients() {
       try {
         // this.loading = true;
@@ -21,14 +38,31 @@ export const useClientStore = defineStore("client", {
         console.error("Erreur lors du chargement des clients:", error);
       }
     },
+
     async fetchStats(){
       try{
-        this.stat=await $fetch('http://127.0.0.1:8000/api/customers/stats');
+        this.stat=await $fetch('http://127.0.0.1:8000/api/client/stats');
       }catch(error){
         console.error('Erreur lors du chargement des statistiques',error);
 
       }
+    },
+    async updateClient(clientId, payload){
+      try{
+        const response=await $fetch(`http://127.0.0.1:8000/api/client/${clientId}`,{
+          method:'PUT',
+          headers:{
+            'Accept':'appliction/json',
+            'Content-Type':'applicaton/json'
+          },
+          body:payload
+        })
+
+      }catch(error){
+        console.error("Erreur lors de la mise à jour")
+      }
     }
+
     
   }
 

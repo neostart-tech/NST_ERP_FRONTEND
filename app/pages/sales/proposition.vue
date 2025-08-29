@@ -7,21 +7,49 @@
     <form @submit.prevent="handleSubmit" class="space-y-6">
       <!-- Client -->
       <div class="flex items-center justify-between ">
-        <div class="w-72">
-          <label for="client" class="block font-medium mb-1">Client</label>
+        <!-- <div class="w-72"> -->
+          <!-- <label for="client" class="block font-medium mb-1">Client</label>
           <select
             id="client"
             v-model="form.clientId"
             required
             class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-indigo-500"
-          >
-            <option value="">-- Sélectionner un client --</option>
+          > -->
+            <!-- <option value="">-- Sélectionner un client --</option>
             <option v-for="client in clientStore.clients" :key="client.id" :value="client.id">
               {{client.first_name}} {{client.last_name}}
-            </option>
+            </option> -->
             <!-- Options dynamiques ici -->
-          </select>
-        </div>
+          <!-- </select>
+        </div> -->
+        <!-- Client -->
+<div class="w-72 relative">
+  <label for="client" class="block font-medium mb-1">Client</label>
+  <input 
+    id="client"
+    type="text"
+    v-model="searchClient"
+    @input="filterClients"
+    @focus="showClientSuggestions = true"
+    placeholder="Rechercher un client..."
+    class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-indigo-500"
+  />
+
+  <!-- Suggestions -->
+  <ul 
+    v-if="showClientSuggestions && filteredClients.length" 
+    class="absolute bg-white border border-gray-300 rounded w-full mt-1 shadow-lg z-10 max-h-40 overflow-auto"
+  >
+    <li 
+      v-for="client in filteredClients" 
+      :key="client.id" 
+      @click="selectClient(client)" 
+      class="p-2 hover:bg-indigo-100 cursor-pointer"
+    >
+      {{ client.first_name }} {{ client.last_name }}
+    </li>
+  </ul>
+</div>
         <div class=" w-80 block font-medium mb-1">
           <div class="flex flex-col flex-1">
             <label for="object">Objet</label>
@@ -182,7 +210,7 @@ const filterArticles = (query) => {
 
 const selectArticle = (article, idx) => {
   form.value.items[idx].productName = article.label
-  form.value.items[idx].unitPrice = article.price
+  form.value.items[idx].unitPrice = parseInt(article.price)
   showSuggestions.value = false
 }
 
@@ -234,4 +262,26 @@ const handleSubmit = async () => {
   })
   form.value = { clientId: '',object:'', items: [] }; // reset formulaire 
 };
+const searchClient = ref("")
+const showClientSuggestions = ref(false)
+const filteredClients = ref([])
+
+// Filtrer les clients
+const filterClients = () => {
+  if (!searchClient.value) {
+    filteredClients.value = []
+    return
+  }
+  filteredClients.value = clientStore.clients.filter(c =>
+    `${c.first_name} ${c.last_name}`.toLowerCase().includes(searchClient.value.toLowerCase())
+  )
+}
+
+// Sélection d’un client
+const selectClient = (client) => {
+  form.value.clientId = client.id  // on stocke l'id pour l'enregistrement
+  searchClient.value = `${client.first_name} ${client.last_name}` // affichage dans le champ
+  showClientSuggestions.value = false
+}
+
 </script>

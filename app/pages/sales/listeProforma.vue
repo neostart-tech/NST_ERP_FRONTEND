@@ -125,10 +125,15 @@
         </table>
       </div>
 
-      <div class="mt-6 flex justify-end">
+      <div class="mt-6 flex justify-between">
+         <button @click="downloadProforma(selectedProforma)"  class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow"> 
+           <i class="fas fa-download"></i> Imprimer
+        </button>
+
         <button @click="closeModal" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow">
           Fermer
         </button>
+       
       </div>
     </div>
   </div>

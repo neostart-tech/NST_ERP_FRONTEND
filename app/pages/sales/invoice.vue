@@ -51,10 +51,10 @@
           </thead>
           <tbody>
           <tr v-for="(item, index) in form.items" :key="index" >
-            <td><input v-model="item.name" class="border border-gray-300 w-full" /></td>
+            <td><input v-model="item.name" class="border border-gray-300 text-center w-full" /></td>
             <td><input v-model.number="item.qty" type="number" class="border w-full text-center" /></td>
             <td><input v-model.number="item.price" type="number" class="border w-full text-center" /></td>
-            <td class="text-center">{{ (item.qty * item.price).toFixed(2) }}FCFA</td>
+            <td class="text-center">{{ formatCurrency(item.qty * item.price) }}FCFA</td>
             <!-- <td class="text-center">
               <button class="text-red-500" @click="removeItem(index)">
                 <i class="fas fa-trash"></i>
@@ -68,10 +68,10 @@
           <i class="fas fa-plus"></i> Ajouter
         </button>
       </div>
-       <div v-if="factureType ==='definitive'" class="flex flex-col items-center ">
+       <!-- <div v-if="factureType ==='definitive'" class="flex flex-col items-center ">
           <label class="block mb-1 font-semibold">Remise (%)</label>
           <input type="number" v-model.number="remisePercent"  max="100" class="border p-2 rounded w-24 text-center" />
-      </div>
+      </div> -->
 
       <!-- Cas spécifique : Acompte -->
       <div v-if="factureType === 'acompte'" class=" flex  space-x-14 items-center mt-4 bg-yellow-50 p-3 rounded-lg">
@@ -79,31 +79,31 @@
           <label class="block mb-1 font-semibold">Pourcentage d’acompte (%)</label>
           <input type="number" v-model.number="acomptePercent"  max="100" class="border p-2 rounded w-24 text-center" />
         </div>
-        <div class="flex flex-col items-center ">
+        <!-- <div class="flex flex-col items-center ">
           <label class="block mb-1 font-semibold">Remise (%)</label>
           <input type="number" v-model.number="acompteRemisePercent"  max="100" class="border p-2 rounded w-24 text-center" />
-        </div>
+        </div> -->
       </div>
 
       <!-- Totaux -->
       <div class="text-right space-y-2 mt-4">
         <!-- Si Définitive -->
         <div v-if="factureType === 'definitive'">
-          <p class="text-lg font-bold">Total HT : <strong>{{ subtotal.toFixed(2) }}</strong>FCFA</p>
-          <p class="text-lg font-bold">Remise({{ remisePercent }}%): <strong>{{ totalRemise.toFixed(2) }}</strong>FCFA</p>
-          <p class="text-lg font-bold">Total Net HT : <strong>{{ totalNet.toFixed(2) }}</strong>FCFA</p>
-          <p class="text-lg font-bold">TVA ({{ tvaRate }}%) : <strong>{{ tvaAmount.toFixed(2) }}</strong>FCFA</p>
-          <p class="text-lg font-bold">Total TTC : {{ total.toFixed(2) }}FCFA</p>
+          <p class="text-lg font-bold">Total HT : <strong>{{ formatCurrency(subtotal)}}</strong></p>
+          <!-- <p class="text-lg font-bold">Remise({{ remisePercent }}%): <strong>{{ formatCurrency(totalRemise) }}</strong>/p> -->
+          <p class="text-lg font-bold">Total Net HT : <strong>{{ formatCurrency(totalNet)}}</strong></p>
+          <p class="text-lg font-bold">TVA ({{ tvaRate }}%) : <strong>{{formatCurrency(tvaAmount) }}</strong></p>
+          <p class="text-lg font-bold">Total TTC : {{ formatCurrency(total)}}</p>
         </div>
 
         <!-- Si Acompte -->
         <div v-if="factureType === 'acompte'">
-          <p class="text-lg ">Total HT : <strong>{{ subtotal.toFixed(2) }}</strong>FCFA</p>
-          <p class="text-lg ">Remise HT({{ acompteRemisePercent }}%) : <strong>{{ acompteRemise.toFixed(2) }}</strong>FCFA</p>
-          <p class="text-lg ">Total HT Net : <strong>{{acompteNet.toFixed(2) }}</strong>FCFA</p>
-          <p class="text-lg ">Acompte HT ({{ acomptePercent }}%) : <strong>{{ acompteHT.toFixed(2) }}FCFA</strong></p>
-          <p class="text-lg ">TVA ({{ tvaRate }}%) sur acompte : <strong>{{ acompteTVA.toFixed(2) }}FCFA</strong></p>
-          <p class="text-lg ">Montant Acompte TTC : {{ acompteTTC.toFixed(2) }}FCFA</p>
+          <p class="text-lg ">Total HT : <strong>{{ formatCurrency(subtotal) }}</strong></p>
+          <!-- <p class="text-lg ">Remise HT({{ acompteRemisePercent }}%) : <strong>{{ acompteRemise.toFixed(2) }}</strong>FCFA</p> -->
+          <!-- <p class="text-lg ">Total HT Net : <strong>{{acompteNet.toFixed(2) }}</strong>FCFA</p> -->
+          <p class="text-lg ">Acompte HT ({{ acomptePercent }}%) : <strong>{{ formatCurrency(acompteHT )}}</strong></p>
+          <p class="text-lg ">TVA ({{ tvaRate }}%) sur acompte : <strong>{{ formatCurrency(acompteTVA) }}</strong></p>
+          <p class="text-lg ">Montant Acompte TTC : {{ formatCurrency(acompteTTC) }}</p>
         </div>
       </div>
     </div>
@@ -111,7 +111,7 @@
     <!-- Actions -->
     <div class="flex justify-end gap-2 mt-6 border-t pt-4">
       <button @click="goback" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-800 hover:text-black">Annuler</button>
-      <button @click="submitInvoice" class="px-4 py-2 bg-green-600 text-white rounded-lg hove:bg-green-800 hover:text-black">Enregistrer</button>
+      <button @click="submitInvoice" class="px-4 py-2 bg-blue-600 text-white rounded-lg hove:bg-blue-800 hover:text-black">Enregistrer</button>
     </div>
   </div>
 </template>
@@ -157,7 +157,7 @@ watch(selectedCommande, (newVal) => {
     form.value.items = cmd.articles.map(article => ({
       name: article.label,
       qty: article.pivot.quantity,
-      price: parseFloat(article.price)
+      price: parseFloat(article.pivot.unit_price)
     }))
   } else {
     form.value.items = []
@@ -260,4 +260,5 @@ const acompteTTC = computed(() => acompteHT.value + acompteTVA.value)
 // Méthodes
 const addItem = () => form.value.items.push({ name: '', qty: 1, price: 0 })
 const removeItem = (index) => form.value.items.splice(index, 1)
+const formatCurrency = (amount) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(amount)
 </script>

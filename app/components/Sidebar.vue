@@ -171,6 +171,20 @@
 
               <transition name="slide-down">
                 <div v-show="expandedSections.sales" class="mt-2 space-y-1">
+
+                  <NuxtLink :to="AppUrl.CLIENTS" class="nav-item nav-item-nested" :class="{ 'nav-item-active': $route.path === AppUrl.CLIENTS || $route.path===AppUrl.CLIENTS }">
+              <div class="nav-icon">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+              </div>
+              <div class="flex-1">
+                <p class="nav-label">Gestion client</p>
+                
+              </div>
+            </NuxtLink>
+
+
                   <NuxtLink
                     :to="AppUrl.INFOPROPO"
                     class="nav-item nav-item-nested"
@@ -273,8 +287,22 @@
                       <i class="fas fa-file-invoice-dollar text-center w-6"></i>
                     </div>
                     <div class="flex-1">
-                      <p class="nav-label">Bilan</p>
+                      <p class="nav-label">Bilans</p>
                       <p class="nav-description">$$</p>
+                    </div>
+                  </NuxtLink>
+
+                  <NuxtLink
+                    :to="AppUrl.STATS"
+                    class="nav-item nav-item-nested"
+                    :class="{ 'nav-item-active': $route.path === AppUrl.STATS }"
+                  >
+                    <div class="nav-icon">
+                      <i class="fas fa-file-invoice-dollar text-center w-6"></i>
+                    </div>
+                    <div class="flex-1">
+                      <p class="nav-label">Statistiqes</p>
+                      <p class="nav-description"></p>
                     </div>
                   </NuxtLink>
 

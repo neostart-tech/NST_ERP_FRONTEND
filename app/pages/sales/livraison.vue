@@ -3,10 +3,6 @@
     <!-- Titre -->
     <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2 border-b pb-3">
       <i class="fas fa-truck text-indigo-600"></i>
-      <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 100 4 2 2 0 000-4zm9 0a2 2 0 100 4 2 2 0 000-4zm-9 0h9M3 17h2M16 13h5l-1.405-4.215A1 1 0 0018.66 8H16V5a1 1 0 00-1-1H3v13h2"/>
-      </svg> -->
-
       Générer un bordereau de livraison
     </h1>
 
@@ -39,7 +35,8 @@
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block mb-1">Date de livraison</label>
-          <input type="date" v-model="form.date" class="w-full border border-black p-2 rounded-md" />
+          <!-- ✅ min = today -->
+          <input type="date" v-model="form.date" :min="today" class="w-full border border-black p-2 rounded-md" />
         </div>
         <div>
           <label class="block mb-1">Adresse de livraison</label>
@@ -57,112 +54,60 @@
               <th class="p-2 text-center">Code Produit</th>
               <th class="p-2 text-center">N° Série</th>
               <th class="p-2 text-center">Qté commandée</th>
-
-              <!-- Colonnes spécifiques à la livraison partielle -->
-              <th v-if="livraisonType === 'partielle'" class="p-2 text-center"> Qté déjà livrée</th>
-              <th
-                v-if="livraisonType === 'partielle'"
-                class="p-2 text-center"
-              >
-                Qté restante
-              </th>
-              <th
-                v-if="livraisonType === 'partielle'"
-                class="p-2 text-center"
-              >
-                Qté à livrer
-              </th>
-              <!-- <th class="p-2 text-center">Supp</th> -->
+              <th v-if="livraisonType === 'partielle'" class="p-2 text-center">Qté déjà livrée</th>
+              <th v-if="livraisonType === 'partielle'" class="p-2 text-center">Qté restante</th>
+              <th v-if="livraisonType === 'partielle'" class="p-2 text-center">Qté à livrer</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, index) in form.items" :key="index" class="border-t">
-              <!-- Code produit (bloqué) -->
-              <td><input v-model="item.designation"  class="border border-black text-center w-full p-1 rounded-md bg-gray-100 "/></td>
-              <td><input v-model="item.code" class="border border-black text-center w-full p-1 rounded-md " placeholder="Saisir le code"/></td>
-              <!-- Numéro de série (modifiable) -->
-              <td><input v-model="item.serial" class="border border-black text-center w-full p-1 rounded-md"placeholder="Saisir numéro série"/>
-              </td>
-              <!-- Qté commandée (bloquée) -->
-              <td> <input type="number" v-model.number="item.qtyCommandee" readonly class="border border-black text-center w-full p-1 rounded-md bg-gray-100 cursor-not-allowed"/>
-              </td>
-              <!-- Livraison partielle : qté déjà livrée -->
+              <td><input v-model="item.designation" class="border border-black text-center w-full p-1 rounded-md bg-gray-100" /></td>
+              <td><input v-model="item.code" class="border border-black text-center w-full p-1 rounded-md" placeholder="Saisir le code" /></td>
+              <td><input v-model="item.serial" class="border border-black text-center w-full p-1 rounded-md" placeholder="Saisir numéro série" /></td>
+              <td><input type="number" v-model.number="item.qtyCommandee" readonly class="border border-black text-center w-full p-1 rounded-md bg-gray-100 cursor-not-allowed" /></td>
+
               <td v-if="livraisonType === 'partielle'">
-                <input
-                  type="number"
-                  :value="item.qtyAlreadyDelivered"
-                  readonly
-                  class="border border-black text-center w-full p-1 rounded-md bg-gray-100 cursor-not-allowed"
-                />
+                <input type="number" :value="item.qtyAlreadyDelivered" readonly class="border border-black text-center w-full p-1 rounded-md bg-gray-100 cursor-not-allowed" />
               </td>
 
-              <!-- Livraison partielle : qté restante -->
               <td v-if="livraisonType === 'partielle'">
-                <input
-                  type="number"
-                  :value="Math.max(item.qtyCommandee - (item.qtyAlreadyDelivered + item.qtyToDeliver), 0)"
-
-                  readonly
-                  class="border border-black text-center w-full p-1 rounded-md bg-gray-100 cursor-not-allowed"
-                />
+                <input type="number" :value="Math.max(item.qtyCommandee - (item.qtyAlreadyDelivered + item.qtyToDeliver), 0)" readonly class="border border-black text-center w-full p-1 rounded-md bg-gray-100 cursor-not-allowed" />
               </td>
 
-              <!-- Livraison partielle : qté à livrer (modifiable, max = restante) -->
               <td v-if="livraisonType === 'partielle'">
-                <input type="number" v-model.number="item.qtyToDeliver"   :max="Math.max(item.qtyCommandee - item.qtyAlreadyDelivered, 0)"
-                  min="0" class="border border-black text-center w-full p-1 rounded-md" />
+                <input type="number" v-model.number="item.qtyToDeliver" :max="Math.max(item.qtyCommandee - item.qtyAlreadyDelivered, 0)" min="0" class="border border-black text-center w-full p-1 rounded-md" />
               </td>
-                     <!-- Bouton supprimer -->
-              <!-- <td class="text-center">
-                <button class="text-red-500 hover:text-red-700" @click="removeItem(index)"type="button" >               
-                  <i class="fas fa-trash"></i>
-                </button>
-              </td> -->
             </tr>
           </tbody>
         </table>
-
-        <button
-          @click="addItem"
-          type="button"
-          class="mt-2 px-3 py-1 bg-indigo-300 text-blue-700 rounded-md hover:bg-blue-800 hover:text-white"
-        >
-          <i class="fas fa-plus"></i> Ajouter un article
-        </button>
       </div>
     </div>
 
     <!-- Actions -->
     <div class="flex justify-end gap-4 border-t pt-4">
-      <button
-        class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
-        type="button"
-        @click="resetForm"
-      >
+      <button class="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400" type="button" @click="resetForm">
         Annuler
       </button>
-      <button
-        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-        type="button"
-        @click="generateBordereau"
-      >
-        Générer le bordereau
+      <button class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700" type="button" @click="generateBordereau">
+        Enregistrer 
       </button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { useOrderStore } from '#imports'
-import {useDeliveryStore} from '#imports'
-import { onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
+import { useOrderStore, useDeliveryStore } from '#imports'
 import Swal from 'sweetalert2'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
 const livraisonType = ref('')
 const selectedCommande = ref('')
+
+// ✅ today = date du jour formatée pour l’input date
+const today = new Date().toISOString().split('T')[0]
+
 const form = ref({
   client: '',
   date: '',
@@ -171,51 +116,36 @@ const form = ref({
 })
 
 const orderStore = useOrderStore()
+const deliveryStore = useDeliveryStore()
 
-// Chargement des commandes au montage du composant
+// Chargement des commandes au montage
 onMounted(() => {
-  orderStore.fetchOrder()
+  orderStore.fetchOrderValidate()
 })
 
-// Quand une commande est sélectionnée, on prépare le formulaire
+// Quand une commande est sélectionnée
 watch(selectedCommande, (newVal) => {
   if (!newVal) {
     form.value.items = []
     return
   }
-const cmd = orderStore.commande.find(c => c.id === newVal)
+  const cmd = orderStore.commande.find(c => c.id === newVal)
   if (cmd && cmd.articles) {
-    // Ici on mappe les articles de la commande
-    // IMPORTANT : on suppose que tu as une fonction / store qui calcule qtyAlreadyDelivered (livraisons précédentes cumulées)
     form.value.items = cmd.articles.map(article => ({
-      article_id: article.id,  // ✅
-      designation: article.label,           
-      code: '',            // code produit (bloqué en input)
-      serial: '',                     // numéro série à saisir
-      qtyCommandee: article.pivot.quantity,  // quantité commandée (bloqué)
-      qtyAlreadyDelivered: article.pivot.qtyAlreadyDelivered || 0,  // quantité déjà livrée (tu dois gérer ça)
-      qtyToDeliver: livraisonType.value === 'complete' 
-                    ? article.pivot.quantity
-                    : 0   // si livraison complète on met toute la quantité, sinon 0 à saisir
+      article_id: article.id,
+      designation: article.label,
+      code: '',
+      serial: '',
+      qtyCommandee: article.pivot.quantity,
+      qtyAlreadyDelivered: article.pivot.qtyAlreadyDelivered || 0,
+      qtyToDeliver: livraisonType.value === 'complete' ? article.pivot.quantity : 0
     }))
   } else {
     form.value.items = []
   }
 })
 
-//Affichage des livraisone
-
-// Ajout et suppression d'articles dans le formulaire (optionnel selon ton besoin)
-const addItem = () => form.value.items.push({
-  code: '',
-  serial: '',
-  qtyCommandee: 1,
-  qtyAlreadyDelivered: 0,
-  qtyToDeliver: 0
-})
-const removeItem = (index) => form.value.items.splice(index, 1)
-
-// Réinitialiser formulaire
+// Reset form
 const resetForm = () => {
   selectedCommande.value = ''
   livraisonType.value = ''
@@ -226,38 +156,45 @@ const resetForm = () => {
     items: []
   }
 }
-// REnregistre le bordereau*
-const deliveryStore=useDeliveryStore()
+
+// Générer bordereau
 const generateBordereau = async () => {
-  // Vérification des champs requis
+  // Vérification champs requis
   if (!selectedCommande.value || !livraisonType.value) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Attention',
-      text: 'Veuillez sélectionner une commande et un type de livraison.'
-    })
+    Swal.fire({ icon: 'warning', title: 'Attention', text: 'Veuillez sélectionner une commande et un type de livraison.' })
     return
   }
 
   if (!form.value.date || !form.value.address) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Champs manquants',
-      text: 'Veuillez renseigner la date et l’adresse de livraison.'
-    })
+    Swal.fire({ icon: 'warning', title: 'Champs manquants', text: 'Veuillez renseigner la date et l’adresse de livraison.' })
+    return
+  }
+
+  // ✅ Vérification date >= aujourd’hui
+  if (form.value.date < today) {
+    Swal.fire({ icon: 'error', title: 'Date invalide', text: 'La date de livraison ne peut pas être antérieure à aujourd’hui.' })
     return
   }
 
   if (form.value.items.length === 0) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Aucun article',
-      text: 'Veuillez ajouter au moins un article.'
-    })
+    Swal.fire({ icon: 'warning', title: 'Aucun article', text: 'Veuillez ajouter au moins un article.' })
     return
   }
 
-  // Préparer le payload
+  // ✅ Vérification des quantités
+  for (const item of form.value.items) {
+    const restante = item.qtyCommandee - item.qtyAlreadyDelivered
+    if (item.qtyToDeliver < 0) {
+      Swal.fire({ icon: 'error', title: 'Quantité invalide', text: `La quantité à livrer pour ${item.designation} ne peut pas être négative.` })
+      return
+    }
+    if (item.qtyToDeliver > restante) {
+      Swal.fire({ icon: 'error', title: 'Quantité invalide', text: `La quantité à livrer pour ${item.designation} ne peut pas dépasser la quantité restante (${restante}).` })
+      return
+    }
+  }
+
+  // Préparer payload
   const payload = {
     order_id: selectedCommande.value,
     delivery_date: form.value.date,
@@ -269,13 +206,11 @@ const generateBordereau = async () => {
       designation: item.designation,
       serial_number: item.serial,
       quantity_ordered: item.qtyCommandee,
-      quantity_delivered: livraisonType.value === 'complete'
-        ? item.qtyCommandee
-        : item.qtyToDeliver
+      quantity_delivered: livraisonType.value === 'complete' ? item.qtyCommandee : item.qtyToDeliver
     }))
   }
 
-  // Affichage confirmation avant envoi
+  // Confirmation
   const confirmResult = await Swal.fire({
     title: 'Confirmer l\'enregistrement ?',
     text: 'Voulez-vous vraiment enregistrer ce bordereau ?',
@@ -288,33 +223,15 @@ const generateBordereau = async () => {
   if (!confirmResult.isConfirmed) return
 
   try {
-    // Chargement
-    Swal.fire({
-      title: 'Enregistrement...',
-      text: 'Veuillez patienter',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading()
-      }
-    })
+    Swal.fire({ title: 'Enregistrement...', text: 'Veuillez patienter', allowOutsideClick: false, didOpen: () => Swal.showLoading() })
 
     await deliveryStore.addDelivery(payload)
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Succès',
-      text: 'Bordereau enregister avec succès.'
-    })
+    Swal.fire({ icon: 'success', title: 'Succès', text: 'Bordereau enregistré avec succès.' })
     router.push(AppUrl.DELIVERYINFO)
   } catch (error) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Erreur',
-      text:"une erreur est survenue lors de l'enregistrement"
-    })
+    Swal.fire({ icon: 'error', title: 'Erreur', text: "Une erreur est survenue lors de l'enregistrement" })
     console.error(error)
   }
-  
 }
-
 </script>
