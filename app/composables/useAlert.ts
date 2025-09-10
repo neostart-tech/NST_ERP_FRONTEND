@@ -4,14 +4,14 @@ export const useAlert = () => {
   const alert = useState<string | null>('alert', () => null)
   const alertType = useState<'success' | 'error' | 'info'>('alertType', () => 'info')
 
-  const showAlert = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+  const showAlert = (message: string, type: 'success' | 'error' | 'info' = 'info', duration = 3000) => {
     alert.value = message
     alertType.value = type
     
     // Animation de fade-out après 3 secondes
     setTimeout(() => {
       alert.value = null
-    }, 3000);
+    }, duration);
   }
 
   const getAlertClasses = () => {

@@ -1,13 +1,13 @@
 export const AppUrl ={
 	// Url Publiques
 	HOME: "/",
-	LOGIN: "/auth/login",
+	LOGIN: "/auth",
 	REGISTER: "/register",
 	FORGOT_PASSWORD: "/forgot-password",
+	CONFIRM_MY_PASSWORD: "/confirmer-mon-mot-de-passe",
 
 	// Tout le reste a besoin d'authentification
 	DASHBOARD: "/dashboard",
-	WELCOME: "/welcome",
 	ABOUT: "/about",
 	CLIENTS: "/clients",
 	ORDERS: "/orders",
@@ -15,25 +15,27 @@ export const AppUrl ={
 	INVOICES: "/invoices",
 	SALES: "/sales",
 	FOLLOWUP: "/followup",
-	USERS: "/users",
+	USERS: "/utilisateurs",
 
 	// OFFERS
 	OFFERS: "/offers",
 	OFFERS_NEW: "/offers/offer-form",
 	OFFERS_TASK_FORM: "/offers/task-form",
-	OFFERS_SUBMISSION_FORM: "/offers/submission-form",
-	OFFERS_DOCUMENTS: "/offers/documents",
+	OFFERS_APPROVAL: "/offers/:id/approuver",
+	OFFERS_PENDING: "/offers/pending",
+	OFFERS_DOCUMENTS: "/offers/id/documents-availability",
+	OFFERS_LOTS: "/offers/id/lots-configuration",
 	OFFERS_PROJECTS: "/offers/projects",
 	OFFERS_QUICK_STAT: "/offers/offer-quick-stat",
 	
 	//SUPPLIERS
-	SUPPLIERS: "/suppliers",
-	SUPPLIERS_CONTACTS: "/suppliers/contacts",
-	SUPPLIERS_COMMANDS: "/suppliers/commands",
-	SUPPLIERS_CONTRACTS: "/suppliers/contracts",
-	SUPPLIERS_DOCUMENTS: "/suppliers/documents",
-	SUPPLIERS_INVOICES: "/suppliers/invoices",
-	SUPPLIERS_EVALUATIONS: "/suppliers/evaluations",
+	SUPPLIERS: "/fournisseurs",
+	SUPPLIERS_CONTACTS: "/fournisseurs/contacts",
+	SUPPLIERS_COMMANDS: "/fournisseurs/commands",
+	SUPPLIERS_CONTRACTS: "/fournisseurs/contracts",
+	SUPPLIERS_DOCUMENTS: "/fournisseurs/documents",
+	SUPPLIERS_INVOICES: "/fournisseurs/invoices",
+	SUPPLIERS_EVALUATIONS: "/fournisseurs/evaluations",
 
 	//MAINTENANCE
 	MAINTENANCE_TICKETS: "/maintenance/tickets",
@@ -42,5 +44,14 @@ export const AppUrl ={
 	MAINTENANCE_CONTRACTS: "/maintenance/contracts",
 	MAINTENANCE_REPORTS: "/maintenance/reports",
 
+	ENTREPRISE_INDEX: "/entreprises",
+	ENTREPRISE_NEW: "/entreprises/ajouter",
+	ENTREPRISE_EDIT: "/entreprises/:id/modifier",
+	ENTREPRISE_SHOW: "/entreprises/:id",
 
+	USERS_INDEX: "/utilisateurs",
+	USERS_ADD: "/utilisateurs/ajouter",
+	ROLES_INDEX: "/roles",
+
+	parameterize: (item: string, id: string) => item.replace(":id", id)
 } as const;

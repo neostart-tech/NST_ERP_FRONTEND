@@ -50,7 +50,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import SubmissionForm from './submission-form.vue';
+
 
 definePageMeta({
   layout: 'default',

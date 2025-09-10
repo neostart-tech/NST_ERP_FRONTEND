@@ -12,7 +12,7 @@ export const ApiUrl = {
    * Corps: { email: string, password: string }
    * Retour: { token: string, user: User }
    */
-  LOGIN: '/login',
+  LOGIN: '/auth/login',
 
   /**
    * Endpoint pour l'inscription
@@ -28,10 +28,24 @@ export const ApiUrl = {
    * Corps: Vide
    * Retour: Vide
    */
-  LOGOUT: '/logout',
+  LOGOUT: '/auth/logout',
+
+  FORGOT_PASSWORD: "/auth/forgot-password",
+  RESET_PASSWORD: "/auth/reset-password",
+  DEFINE_PASSWORD: "/auth/define-password",
 
   DOCUMENT_TYPES: "/document-types",
-  ENTREPRISES: "/entreprises",
   OFFER_TYPES: "/offer-types",
+  OFFERS_PENDING: "/offers/pending",
+  OFFER_BY_ID: "/offers/:id",
   OFFERS: "/offers",
+
+  ENTREPRISES: "/entreprises",
+  ENTREPRISE_BY_ID: "/entreprises/:id",
+
+  USERS_INDEX: "/users",
+  USER_BY_ID: "/users/:id",
+  USERS_CONFIRM_PASSWORD: "/users/confirm-password",
+
+  parameterize: (item: string, id: string|number ) => item.replace(':id', id.toString()),
 } as const;

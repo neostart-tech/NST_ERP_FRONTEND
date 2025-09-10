@@ -5,6 +5,8 @@ import type { Offer, OfferForm, MetadataForm } from "~/models/Offer";
 export const useOfferStore = defineStore("OfferStore", {
   state: () => ({
     offers: [] as Offer[],
+    pendingOffers: [] as Offer[],
+
     // offer: {} as Offer,
     validationErrors: {} as ValidationErrors,
     isLoading: true
@@ -12,11 +14,20 @@ export const useOfferStore = defineStore("OfferStore", {
   actions: {
     async fetchOffers() {
       try {
-        console.log("Fetching offers from API...");
         const response = await useApi().get<Offer[]>("/offers");
-        console.log("API Response:", response);
         this.offers = response.data || [];
-        console.log("Offers after update:", this.offers);
+      } catch (error) {
+        console.error("Error fetching offers:", error);
+        useAlert().showAlert("Une erreur est survenue lors du chargement des appels d'offres", "error");
+        throw error;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    async fetchPendingOffers() {
+      try {
+        const response = await useApi().get<Offer[]>(ApiUrl.OFFERS);
+        this.offers = response.data || [];
       } catch (error) {
         console.error("Error fetching offers:", error);
         useAlert().showAlert("Une erreur est survenue lors du chargement des appels d'offres", "error");
@@ -26,13 +37,12 @@ export const useOfferStore = defineStore("OfferStore", {
       }
     },
 
-    async storeOffer(offerData: OfferForm, metadata: MetadataForm, enterprise: Entreprise) {
+    async storeOffer(offerData: OfferForm, metadata: MetadataForm) {
       try {
         const formData = {
           ...offerData,
           ...metadata,
-          offer_type_id: offerData.offer_type,
-          enterprise_id: enterprise.id
+          offer_type_id: offerData.offer_type
         };
         console.log("formData:", formData)
         const { data } = await useApi().post<Offer>(ApiUrl.OFFERS, formData);
@@ -43,6 +53,17 @@ export const useOfferStore = defineStore("OfferStore", {
         this.validationErrors = useValidationErrors(error);
         throw error;
       }
+    },
+
+    async getOneOffer(id: string) {
+      try {
+        const { data } = await useApi().get<Offer>(ApiUrl.parameterize(ApiUrl.OFFER_BY_ID, id));
+        return data;
+      } catch (error) {
+        console.error("Error fetching offer:", error);
+        throw error;
+      }
     }
+
   }
 });

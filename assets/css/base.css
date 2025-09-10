@@ -1,0 +1,79 @@
+/* Reset des styles de base pour les éléments de formulaire */
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+/* Styles pour les icônes dans les inputs */
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon input,
+.input-with-icon select,
+.input-with-icon textarea {
+  padding-left: 2.5rem !important;
+}
+
+.input-with-icon .icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af; /* Couleur grise par défaut */
+  pointer-events: none;
+}
+
+/* Styles pour les placeholders */
+::-webkit-input-placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+:-ms-input-placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+/* Correction pour les icônes dans les formulaires */
+.form-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.form-group .icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 2.5rem;
+  transform: translateY(-50%);
+  color: #6b7280;
+  z-index: 10;
+}
+
+/* Ajustement pour les champs avec icônes */
+.pl-icon {
+  padding-left: 2.5rem !important;
+}
+
+/* Correction pour les icônes dans les boutons */
+button .icon,
+.btn .icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Correction pour les icônes dans les menus déroulants */
+.dropdown-item .icon {
+  margin-right: 0.5rem;
+}

@@ -14,7 +14,7 @@
           ></path>
         </svg>
       </button>
-      <h1 class="text-xl font-semibold text-gray-900">{{ pageTitle }}</h1>
+      <h1 class="text-md font-semibold text-gray-900">{{ pageTitle }}</h1>
     </div>
 
     <div class="flex items-center space-x-4">
@@ -37,14 +37,7 @@
 
       <!-- Notifications -->
       <button class="p-2 text-gray-400 hover:text-gray-600 relative">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.586V11a6 6 0 10-12 0v3.586c0 .53-.21 1.04-.595 1.414L4 17h5m6 0a3 3 0 11-6 0h6z"
-          ></path>
-        </svg>
+        <Icon name="heroicons:bell" class="w-6 h-6" />
         <span class="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
       </button>
 
@@ -56,20 +49,14 @@
         >
           <div class="relative">
             <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-medium text-sm">
-              <span v-if="!useAuthStore().user?.avatar">
-                {{ useAuthStore().fullName.charAt(0) || 'U' }}
+              <span>
+                {{ useAuthStore().fullName.charAt(0).toLocaleUpperCase() || 'U' }}
               </span>
-              <img
-                v-else
-                :src="useAuthStore().user?.avatar || '/avatar.png'"
-                :alt="useAuthStore().fullName || 'Utilisateur'"
-                class="w-full h-full rounded-full object-cover"
-              />
             </div>
           </div>
           <div class="text-left">
             <p class="text-sm font-medium text-gray-800">{{ useAuthStore().fullName || 'Utilisateur' }}</p>
-            <p class="text-xs text-gray-500">{{ useAuthStore().user?.role || 'Rôle' }}</p>
+            <p class="text-xs text-gray-500">{{ useAuthStore().user?.loggedInAt }}</p>
           </div>
           <svg class="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -118,7 +105,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/authStore';
 
 const authStore = useAuthStore();
@@ -128,11 +115,12 @@ const emit = defineEmits<{
 }>()
 
 const route = useRoute()
-const router = useRouter()
 
 const showUserMenu = ref(false)
 
 const pageTitle = computed(() => {
+  console.log("route.name:", route.name);
+  
   const titleMap: Record<string, string> = {
     'dashboard': 'Tableau de bord',
     'clients': 'Gestion des Clients',
@@ -140,7 +128,11 @@ const pageTitle = computed(() => {
     'quotes': 'Devis',
     'orders': 'Commandes',
     'invoices': 'Factures',
-    'suppliers': 'Fournisseurs'
+    'suppliers': 'Fournisseurs',
+    'entreprises': 'Entreprises',
+    'entreprises-detail': 'Détail Entreprise',
+    'entreprises-ajouter': 'Ajouter une entreprise',
+    'entreprises-modifier': 'Modifier une entreprise'
   }
   return titleMap[route.name as string] || 'ERP Neo Start Technology'
 })

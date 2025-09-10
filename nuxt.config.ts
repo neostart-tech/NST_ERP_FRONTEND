@@ -4,21 +4,27 @@ import { resolve } from 'path'
 
 // Configuration Nuxt
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: 'NST ERP',
+      titleTemplate: '%s | NST'
+    }
+  },
   css: [
     '~/assets/css/main.css'
   ],
   modules: [
-		'@nuxtjs/tailwindcss',
-		'@pinia/nuxt',
-		'@pinia-plugin-persistedstate/nuxt',
+    '@nuxtjs/tailwindcss',
+    '@pinia/nuxt',
+    '@pinia-plugin-persistedstate/nuxt',
     '@nuxt/icon'
-	],
+  ],
   // Configuration des alias pour les imports
   alias: {
     '@': resolve(__dirname, './app'),
     '~': resolve(__dirname, './'),
   },
-  
+
   vite: {
     resolve: {
       alias: {
@@ -40,4 +46,5 @@ export default defineNuxtConfig({
       global: true,
     },
   ],
+  ssr: false
 })

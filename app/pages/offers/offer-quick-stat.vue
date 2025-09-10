@@ -1,32 +1,113 @@
 <template>
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6" role="main">
-    <!-- Affichage des erreurs -->
-    <div v-if="error" class="mb-4 p-4 bg-red-50 border-l-4 border-red-600" role="alert" aria-live="assertive">
-      <div class="flex">
-        <div class="flex-shrink-0">
-          <i class="h-5 w-5 text-red-500 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+    <!-- Affichage des erreurs avec animation -->
+    <transition name="fade">
+      <div v-if="error" class="mb-4 p-4 bg-red-50 border-l-4 border-red-600" role="alert" aria-live="assertive">
+        <div class="flex">
+          <div class="flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
             </svg>
-          </i>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm text-red-700">
+              Une erreur est survenue: {{ error.message }}
+              <button @click="refreshData" class="ml-2 text-red-600 hover:text-red-500 underline">
+                Réessayer
+              </button>
+            </p>
+          </div>
         </div>
-        <div class="ml-3">
-          <p class="text-sm text-red-700">
-            Une erreur est survenue: {{ error.message }}
-            <button @click="refreshData" class="ml-2 text-red-600 hover:text-red-500 underline">
-              Réessayer
-            </button>
-          </p>
+      </div>
+    </transition>
+
+    <!-- Barre de filtres -->
+    <div class="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <!-- Champ de recherche -->
+        <div class="space-y-1">
+          <label for="search" class="block text-sm font-medium text-gray-700">Recherche</label>
+          <input
+            id="search"
+            v-model="filters.search"
+            type="text"
+            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            placeholder="Titre, référence..."
+            @keyup.enter="currentPage = 1"
+          >
         </div>
+        
+        <!-- Filtre par statut -->
+        <div class="space-y-1">
+          <label for="status" class="block text-sm font-medium text-gray-700">Statut</label>
+          <select
+            id="status"
+            v-model="filters.status"
+            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            @change="currentPage = 1"
+          >
+            <option value="">Tous les statuts</option>
+            <option value="draft">Brouillon</option>
+            <option value="active">Actif</option>
+            <option value="submitted">Soumis</option>
+            <option value="evaluation">En évaluation</option>
+            <option value="won">Gagné</option>
+            <option value="lost">Perdu</option>
+          </select>
+        </div>
+        
+        <!-- Tri par -->
+        <div class="space-y-1">
+          <label for="sort-by" class="block text-sm font-medium text-gray-700">Trier par</label>
+          <select
+            id="sort-by"
+            v-model="filters.sortBy"
+            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            @change="currentPage = 1"
+          >
+            <option value="date">Date de publication</option>
+            <option value="title">Titre</option>
+            <option value="budget">Budget</option>
+          </select>
+        </div>
+        
+        <!-- Ordre de tri -->
+        <div class="space-y-1">
+          <label for="sort-order" class="block text-sm font-medium text-gray-700">Ordre</label>
+          <select
+            id="sort-order"
+            v-model="filters.sortOrder"
+            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            @change="currentPage = 1"
+          >
+            <option value="asc">Croissant</option>
+            <option value="desc">Décroissant</option>
+          </select>
+        </div>
+      </div>
+      
+      <!-- Bouton de réinitialisation -->
+      <div class="mt-3 flex justify-end">
+        <button
+          type="button"
+          @click="resetFilters"
+          class="text-sm text-blue-600 hover:text-blue-800 font-medium"
+          :disabled="!hasActiveFilters"
+          :class="{ 'opacity-50 cursor-not-allowed': !hasActiveFilters }"
+        >
+          Réinitialiser les filtres
+        </button>
       </div>
     </div>
-
+    
     <div class="relative">
-      <!-- Overlay de chargement -->
-      <div v-if="isLoading" class="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-10 rounded-lg" role="status" aria-live="polite" aria-busy="true">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" aria-hidden="true"></div>
-        <span class="sr-only">Chargement en cours...</span>
-      </div>
+      <!-- Overlay de chargement avec animation -->
+      <transition name="fade">
+        <div v-if="isLoading" class="absolute inset-0 bg-white bg-opacity-80 flex items-center justify-center z-10 rounded-lg" role="status" aria-live="polite" aria-busy="true">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" aria-hidden="true"></div>
+          <span class="sr-only">Chargement en cours...</span>
+        </div>
+      </transition>
       
       <div class="flex items-center justify-between mb-6">
         <h1 class="text-lg font-medium text-gray-900">
@@ -35,7 +116,7 @@
         </h1>
         <button
           @click="navigateToNewOffer"
-          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
           aria-label="Créer un nouvel appel d'offres"
         >
           <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -50,7 +131,7 @@
           @click="refreshData"
           :disabled="isLoading"
           :aria-label="isLoading ? 'Actualisation en cours' : 'Actualiser les données'"
-          class="p-2 text-gray-600 hover:text-gray-800 rounded-md hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          class="p-2 text-gray-600 hover:text-gray-800 rounded-md hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           :class="{ 'animate-spin': isLoading, 'opacity-50 cursor-not-allowed': isLoading }"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -59,9 +140,9 @@
         </button>
         
         <NuxtLink
-          to="/offers/submission-form"
+          :to="AppUrl.OFFERS_APPROVAL"
           aria-label="Voir tous les appels d'offres"
-          class="p-2 text-gray-600 hover:text-gray-800 rounded-md hover:bg-gray-100 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          class="p-2 text-gray-600 hover:text-gray-800 rounded-md hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -70,10 +151,10 @@
       </div>
     </div>
 
-    <!-- Metrics Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" role="region" aria-label="Métriques des appels d'offres">
+    <!-- Metrics Grid avec animation d'entrée -->
+    <transition-group name="fade-stagger" tag="div" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8" role="region" aria-label="Métriques des appels d'offres">
       <!-- Carte Total -->
-      <div class="bg-white rounded-lg border border-gray-200 p-4">
+      <div key="total" class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
         <div class="flex items-center">
           <div class="p-3 rounded-lg bg-blue-100 text-blue-600 mr-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -89,7 +170,7 @@
       </div>
 
       <!-- Carte Actifs -->
-      <div class="bg-white rounded-lg border border-gray-200 p-4">
+      <div key="active" class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
         <div class="flex items-center">
           <div class="p-3 rounded-lg bg-green-100 text-green-600 mr-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -105,7 +186,7 @@
       </div>
 
       <!-- Carte Soumissions -->
-      <div class="bg-white rounded-lg border border-gray-200 p-4">
+      <div key="submitted" class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
         <div class="flex items-center">
           <div class="p-3 rounded-lg bg-amber-100 text-amber-600 mr-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -121,7 +202,7 @@
       </div>
 
       <!-- Carte Taux de réussite -->
-      <div class="bg-white rounded-lg border border-gray-200 p-4">
+      <div key="success" class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
         <div class="flex items-center">
           <div class="p-3 rounded-lg bg-purple-100 text-purple-600 mr-4">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -132,13 +213,13 @@
             <p class="text-gray-500 text-sm font-medium">Taux de réussite</p>
             <p class="text-2xl font-semibold text-gray-800">{{ metrics.successRate || 0 }}%</p>
             <div class="mt-1 w-full bg-gray-200 rounded-full h-1.5">
-              <div class="bg-purple-600 h-1.5 rounded-full" :style="{ width: `${Math.min(metrics.successRate || 0, 100)}%` }"></div>
+              <div class="bg-purple-600 h-1.5 rounded-full transition-all duration-500" :style="{ width: `${Math.min(metrics.successRate || 0, 100)}%` }"></div>
             </div>
             <p class="text-xs text-gray-500 mt-1">Taux de gain</p>
           </div>
         </div>
       </div>
-    </div>
+    </transition-group>
 
     <!-- Success Rate Progress Bar -->
     <div class="mb-6">
@@ -207,7 +288,7 @@
               <button
                 @click="refreshData"
                 type="button"
-                class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors duration-200"
                 :disabled="isLoading"
                 :class="{ 'opacity-50 cursor-not-allowed': isLoading }"
                 title="Rafraîchir"
@@ -221,7 +302,7 @@
               <button
                 @click="navigateToNewOffer"
                 type="button"
-                class="inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                class="inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors duration-200"
                 aria-label="Créer un nouvel appel d'offres"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -303,24 +384,26 @@
         </ul>
         
         <!-- Pagination Controls -->
-        <div v-if="recentOffers.length > itemsPerPage" class="mt-4 flex items-center justify-between">
+        <div v-if="recentOffers.length > itemsPerPage" class="mt-4 flex items-center justify-between px-4 py-3 bg-gray-50">
           <div class="text-sm text-gray-600">
-            Page {{ currentPage }} / {{ totalPages }}
+            Affichage de {{ (currentPage - 1) * itemsPerPage + 1 }} à {{ Math.min(currentPage * itemsPerPage, recentOffers.length) }} sur {{ recentOffers.length }} résultats
           </div>
           <div class="inline-flex rounded-md shadow-sm" role="group" aria-label="Pagination">
             <button
               type="button"
-              class="px-3 py-1 text-sm border border-gray-300 rounded-l-md bg-white hover:bg-gray-50 disabled:opacity-50"
+              class="px-3 py-2 text-sm border border-gray-300 rounded-l-md bg-white hover:bg-gray-50 disabled:opacity-50 transition-colors duration-200"
               :disabled="currentPage === 1"
               @click="currentPage = Math.max(1, currentPage - 1)"
+              aria-label="Page précédente"
             >
               Précédent
             </button>
             <button
               type="button"
-              class="px-3 py-1 text-sm border-t border-b border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50"
+              class="px-3 py-2 text-sm border-t border-b border-r border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50 transition-colors duration-200"
               :disabled="currentPage === totalPages"
               @click="currentPage = Math.min(totalPages, currentPage + 1)"
+              aria-label="Page suivante"
             >
               Suivant
             </button>
@@ -352,7 +435,7 @@
           <button
             type="button"
             @click="navigateToNewOffer"
-            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
           >
             <svg
               class="-ml-1 mr-2 h-5 w-5"
@@ -378,7 +461,7 @@
           <h3 class="text-md font-semibold text-gray-900">Échéances à venir</h3>
           <NuxtLink
             to="/offers"
-            class="text-sm text-blue-600 hover:text-blue-800"
+            class="text-sm text-blue-600 hover:text-blue-800 transition-colors duration-200"
             aria-label="Voir la liste des appels d'offres"
           >
             Voir tout
@@ -399,10 +482,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch, shallowRef } from 'vue'
 import { navigateTo } from '#app'
 import { useOfferStore } from '@/stores/offerStore'
-// import type { Offer, OfferStatus } from '@/types/offers'
+import { useDateFormat, useNow } from '@vueuse/core'
+
+// Type simple pour les offres
+interface Offer {
+  id: string;
+  title: string;
+  description?: string;
+  estimated_budget?: number;
+  publication_date?: string;
+  submission_deadline?: string;
+  status?: string;
+  [key: string]: any; // Pour les propriétés supplémentaires
+}
 
 interface Props {
   title?: string
@@ -422,27 +517,135 @@ const props = withDefaults(defineProps<Props>(), {
 
 const offerStore = useOfferStore()
 const isLoading = ref(false)
-const error = ref<Error | null>(null)
+const isInitialLoad = ref(true)
+const error = shallowRef<Error | null>(null)
 let refreshTimer: NodeJS.Timeout | null = null
 
-// Computed properties for metrics
-const activeOffers = computed(() => offerStore.offers.filter((o: any) => o.status === 'active').length)
-const submittedOffers = computed(() => offerStore.offers.filter((o: any) => o.status === 'submitted').length)
-const wonOffers = computed(() => offerStore.offers.filter((o: any) => o.status === 'won').length)
-const lostOffers = computed(() => offerStore.offers.filter((o: any) => o.status === 'lost').length)
-const totalOffers = computed(() => offerStore.offers.length)
-const totalBudget = computed(() => offerStore.offers.reduce((sum: number, o: any) => sum + (o.estimated_budget || 0), 0))
-const wonBudget = computed(() => 
-  offerStore.offers
-    .filter((o: any) => o.status === 'won')
-    .reduce((sum: number, o: any) => sum + (o.estimated_budget || 0), 0)
+// État pour les filtres
+const filters = shallowRef({
+  status: '',
+  search: '',
+  sortBy: 'date',
+  sortOrder: 'desc'
+})
+
+// Utilisation de VueUse pour la date actuelle réactive
+const now = useNow()
+
+// Fonction utilitaire pour filtrer et trier les offres
+const filterAndSortOffers = (rawOffers: any[]): any[] => {
+  try {
+    // Vérifier si les offres sont valides
+    if (!Array.isArray(rawOffers)) {
+      console.warn('filterAndSortOffers: offers is not an array', rawOffers)
+      return []
+    }
+
+    // Créer une copie profonde des offres pour éviter de modifier l'original
+    const offers = JSON.parse(JSON.stringify(rawOffers))
+    
+    // Appliquer les filtres
+    let result = offers.filter((offer: any) => {
+      // Filtre par statut
+      if (filters.value.status && offer.status !== filters.value.status) {
+        return false
+      }
+      
+      // Filtre par recherche
+      if (filters.value.search) {
+        const searchLower = filters.value.search.toLowerCase()
+        const title = String(offer?.title || '').toLowerCase()
+        const description = String(offer?.description || '').toLowerCase()
+        
+        if (!title.includes(searchLower) && !description.includes(searchLower)) {
+          return false
+        }
+      }
+      
+      return true
+    })
+    
+    // Appliquer le tri
+    result.sort((a: any, b: any) => {
+      let comparison = 0
+      
+      switch (filters.value.sortBy) {
+        case 'date': {
+          const dateA = new Date(a.publication_date || a.submission_deadline || 0).getTime()
+          const dateB = new Date(b.publication_date || b.submission_deadline || 0).getTime()
+          comparison = dateA - dateB
+          break
+        }
+        case 'title':
+          comparison = String(a.title || '').localeCompare(String(b.title || ''))
+          break
+        case 'budget':
+          comparison = (Number(a.estimated_budget) || 0) - (Number(b.estimated_budget) || 0)
+          break
+      }
+      
+      return filters.value.sortOrder === 'desc' ? -comparison : comparison
+    })
+    
+    return result
+  } catch (error) {
+    console.error('Error in filterAndSortOffers:', error)
+    return []
+  }
+}
+
+// Offres filtrées et triées
+const filteredOffers = computed<Record<string, any>[]>(() => {
+  if (!offerStore.offers) return []
+  return filterAndSortOffers(offerStore.offers)
+})
+
+// Fonctions utilitaires pour les métriques
+const countOffersByStatus = (status: string): number => {
+  return filteredOffers.value.filter((o: any) => o.status === status).length
+}
+
+const sumBudgetByStatus = (status: string): number => {
+  return filteredOffers.value
+    .filter((o: any) => o.status === status)
+    .reduce((sum: number, o: any) => sum + (Number(o.estimated_budget) || 0), 0)
+}
+
+// Métriques basées sur les offres filtrées
+const activeOffers = computed(() => countOffersByStatus('active'))
+const submittedOffers = computed(() => countOffersByStatus('submitted'))
+const wonOffers = computed(() => countOffersByStatus('won'))
+const lostOffers = computed(() => countOffersByStatus('lost'))
+const totalOffers = computed(() => filteredOffers.value.length)
+const totalBudget = computed(() => 
+  filteredOffers.value.reduce((sum: number, o: any) => sum + (Number(o.estimated_budget) || 0), 0)
 )
+const wonBudget = computed(() => sumBudgetByStatus('won'))
 
 // Calculate success rate based on submitted offers, not total offers
 const successRate = computed(() => {
   const submitted = submittedOffers.value + wonOffers.value + lostOffers.value
   return submitted > 0 ? Math.round((wonOffers.value / submitted) * 100) : 0
 })
+
+// Vérifie s'il y a des filtres actifs
+const hasActiveFilters = computed(() => {
+  return filters.value.status !== '' || 
+         filters.value.search !== '' ||
+         filters.value.sortBy !== 'date' ||
+         filters.value.sortOrder !== 'desc'
+})
+
+// Réinitialise tous les filtres
+const resetFilters = () => {
+  filters.value = {
+    status: '',
+    search: '',
+    sortBy: 'date',
+    sortOrder: 'desc'
+  }
+  currentPage.value = 1
+}
 
 // Reactive metrics object
 const metrics = computed(() => ({
@@ -455,8 +658,8 @@ const metrics = computed(() => ({
   totalValue: totalBudget.value,
   wonValue: wonBudget.value,
   pendingValue: offerStore.offers
-    .filter((o: any) => ['submitted', 'evaluation'].includes(o.status))
-    .reduce((sum: number, o: any) => sum + (o.estimated_budget || 0), 0),
+    .filter((o: Offer) => ['submitted', 'evaluation'].includes(o.status))
+    .reduce((sum: number, o: Offer) => sum + (o.estimated_budget || 0), 0),
 }))
 
 const successRateFormatted = computed(() =>
@@ -466,15 +669,15 @@ const successRateFormatted = computed(() =>
 const currentPage = ref(1)
 const itemsPerPage = ref(5)
 
-const recentOffers = computed<any[]>(() => {
-  return [...offerStore.offers].sort((a, b) => {
+const recentOffers = computed<Offer[]>(() => {
+  return [...filteredOffers.value].sort((a, b) => {
     const bTime = new Date(b.publication_date || b.submission_deadline || '').getTime()
     const aTime = new Date(a.publication_date || a.submission_deadline || '').getTime()
     return bTime - aTime
   })
 })
 
-const paginatedOffers = computed<any[]>(() => {
+const paginatedOffers = computed<Offer[]>(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value
   const end = start + itemsPerPage.value
   return recentOffers.value.slice(start, end)
@@ -485,10 +688,10 @@ const totalPages = computed(() => {
 })
 
 const upcomingDeadlines = computed(() => {
-  if (!offerStore.offers || offerStore.offers.length === 0) return []
+  if (filteredOffers.value.length === 0) return []
   
-  return [...offerStore.offers]
-    .filter((offer: any) => {
+  return filteredOffers.value
+    .filter((offer) => {
       if (!offer.submission_deadline) return false
       try {
         const deadline = new Date(offer.submission_deadline)
@@ -497,7 +700,7 @@ const upcomingDeadlines = computed(() => {
         return false
       }
     })
-    .sort((a: any, b: any) => {
+    .sort((a, b) => {
       try {
         const dateA = a.submission_deadline ? new Date(a.submission_deadline).getTime() : 0
         const dateB = b.submission_deadline ? new Date(b.submission_deadline).getTime() : 0
@@ -595,9 +798,8 @@ const getStatusBadgeClass = (status: string = 'draft'): string => {
 const getDeadlineBadgeClass = (deadline: string | Date): string => {
   if (!deadline) return 'bg-gray-100 text-gray-800'
   
-  const now = new Date()
   const deadlineDate = new Date(deadline)
-  const diffTime = deadlineDate.getTime() - now.getTime()
+  const diffTime = deadlineDate.getTime() - now.value.getTime()
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
   
   if (diffDays < 0) return 'bg-red-100 text-red-800'
@@ -606,9 +808,8 @@ const getDeadlineBadgeClass = (deadline: string | Date): string => {
 }
 
 const getDaysUntilDeadline = (deadline: string): string => {
-  const now = new Date()
   const deadlineDate = new Date(deadline)
-  const diffDays = Math.ceil((deadlineDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+  const diffDays = Math.ceil((deadlineDate.getTime() - now.value.getTime()) / (1000 * 60 * 60 * 24))
 
   if (diffDays === 0) return "Aujourd'hui"
   if (diffDays === 1) return 'Demain'
@@ -634,9 +835,8 @@ const formatDate = (dateString: string): string => {
 }
 
 const formatRelativeDate = (dateString: string): string => {
-  const now = new Date()
   const date = new Date(dateString)
-  const diffDays = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
+  const diffDays = Math.floor((now.value.getTime() - date.getTime()) / (1000 * 60 * 60 * 24))
 
   if (diffDays === 0) return "Aujourd'hui"
   if (diffDays === 1) return 'Hier'
@@ -661,5 +861,85 @@ watch(
   () => {
     setupAutoRefresh()
   },
+  { immediate: true }
 )
 </script>
+
+<style scoped>
+/* Animations de base */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Animation pour les éléments en escalier */
+.fade-stagger-move,
+.fade-stagger-enter-active,
+.fade-stagger-leave-active {
+  transition: all 0.4s ease;
+}
+
+.fade-stagger-enter-from,
+.fade-stagger-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.fade-stagger-leave-active {
+  position: absolute;
+  width: calc(100% - 2rem);
+}
+
+/* Animation du squelette */
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Transition pour les cartes */
+.card-enter-active,
+.card-leave-active {
+  transition: all 0.3s ease;
+}
+
+.card-enter-from,
+.card-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* Amélioration de l'accessibilité */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus visible pour l'accessibilité */
+.focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+</style>

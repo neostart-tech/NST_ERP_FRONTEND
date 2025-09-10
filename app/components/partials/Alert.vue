@@ -1,7 +1,7 @@
 <template>
   <Transition name="alert">
     <div v-if="alert" :class="getAlertClasses()">
-      <div class="flex items-center">
+      <div class="flex items-center alert-enter-active">
         <Icon :name="getIconName()" class="h-5 w-5 mr-2" />
         <span>{{ alertMessage }}</span>
       </div>

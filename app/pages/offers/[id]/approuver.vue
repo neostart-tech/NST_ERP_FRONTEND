@@ -235,8 +235,11 @@ definePageMeta({
   layout: 'default'
 });
 
+
+
 import { ref, computed, reactive, onMounted } from "vue";
 import { useRouter } from '#app';
+import { defaultOfferData, defaultOfferFormData } from "~/models/Offer";
 
 const router = useRouter();
 const navigateTo = useRouter().push;
@@ -252,15 +255,20 @@ const refusalMotif = ref('');
 const isLoading = ref(false);
 const showConfirmationModal = ref(false);
 
+const offerStore = useOfferStore();
 // Mock offer data
-const offerData = reactive({
-  id: '',
-  number: '',
-  title: '',
-  description: '',
-  submission_deadline: '',
-  estimated_budget: 0,
-  status: ''
+const offerData = ref(defaultOfferData());
+
+onMounted(async () => {
+  try {
+    isLoading.value = true;
+    offerData.value = await offerStore.getOneOffer(offerId);
+    console.log("offerData:", offerData.value);
+  } catch (error) {
+    useAlert().showAlert("Une erreur est survenue lors de la récupération de la ressource", "error");
+  } finally {
+    isLoading.value = false;
+  }
 });
 
 // Required documents list

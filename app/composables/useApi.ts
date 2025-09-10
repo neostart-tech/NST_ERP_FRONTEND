@@ -14,7 +14,6 @@ export const useApi = () => {
 	const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 	let XSRFToken = useCookie('XSRF-TOKEN').value;
-	console.log("XSRFToken:", XSRFToken);
 	if (!XSRFToken) {
 		refreshToken().then();
 		XSRFToken = useCookie('XSRF-TOKEN').value;
@@ -36,6 +35,7 @@ export const useApi = () => {
 		try {
 			const response = await fetch(fullUrl, {
 				method,
+				// @ts-ignore
 				headers: getHeaders(headers),
 				body: body ? JSON.stringify(body) : undefined,
 				credentials: 'include',

@@ -1,3 +1,7 @@
+import type { OfferType } from "./ProjectType";
+import type { OfferSource } from "./OfferSource";
+import type { Entreprise } from "./Enterprise";
+
 export interface Offer {
     id: string;
     title: string;
@@ -7,9 +11,9 @@ export interface Offer {
     amount: number;
     submission_deadline: string;
     status: string;
-    offer_type: string;
-    offer_source: string;
-    entreprise: string;
+    offer_type: OfferType;
+    offer_source: OfferSource;
+    entreprise: Entreprise;
     number: string;
     file_price: number;
     file_obtaining_deadline: string;
@@ -33,7 +37,7 @@ export interface OfferForm {
     status: string;
     offer_type: string;
     source_label: string;
-    entreprise: string;
+    enterprise_id: string;
     number?: string;
     file_price?: number;
     file_obtaining_deadline?: string;
@@ -95,6 +99,30 @@ export const defaultOfferFormData = (): OfferForm => ({
     execution_batch_duration: "",
     execution_duration: "",
 });
+
+export const defaultOfferData = (): Offer => ({
+    title: "",
+    description: "",
+    estimated_budget: 0,
+    publication_date: "",
+    amount: 0,
+    submission_deadline: "",
+    status: "",
+    offer_type: "",
+    source_label: "",
+    entreprise: "",
+    number: "",
+    file_price: 0,
+    file_obtaining_deadline: "",
+    offer_validity: "",
+    submission_address: "",
+    requirement: "",
+    stacking_instruction: "",
+    batch_number: "",
+    execution_batch_duration: "",
+    execution_duration: "",
+});
+
 
 export const defaultMetadataFormData = (): MetadataForm => ({
     bank_guarentee: "",
