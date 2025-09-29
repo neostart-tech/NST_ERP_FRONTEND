@@ -4,7 +4,7 @@
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
  };
- 
+
 
  export const formatRelativeDate = (date: Date): string => {
   const now = new Date();
@@ -22,3 +22,33 @@
     return `${formatDate(date)} ${hours}:${minutes}`;
   }
  };
+
+
+export const pickDate = (dateAsString: string |null) => dateAsString?.split('T')[0] || "";
+
+/**
+ * Extrait l'heure (HH:MM:SS) d'une chaîne de date ISO
+ * @param dateAsString Chaîne de date au format ISO
+ * @returns L'heure au format HH:MM:SS ou une chaîne vide si la date est invalide
+ */
+export const extractTime = (dateAsString: string | null): string => {
+  if (!dateAsString) return "";
+  const timePart = dateAsString.split('T')[1];
+  if (!timePart) return "";
+  return timePart.split('.')[0]; // Retire les millisecondes si présentes
+};
+
+/**
+ * Extrait la date et l'heure d'une chaîne de date ISO
+ * @param dateAsString Chaîne de date au format ISO
+ * @returns Un objet avec la date (YYYY-MM-DD) et l'heure (HH:MM:SS)
+ */
+export const extractDateTime = (dateAsString: string | null): string => {
+  if (!dateAsString) return { date: "", time: "" };
+  const [date, timeWithMs] = dateAsString.split('T');
+  const time = timeWithMs ? timeWithMs.split('.')[0] : "";
+  return date + "T" + time;
+
+
+	 
+};

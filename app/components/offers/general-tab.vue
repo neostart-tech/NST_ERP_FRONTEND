@@ -46,7 +46,7 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Date de publication
           </label>
-          <input v-model="offerFormData.publication_date" type="date" :class="[
+          <input v-model="offerFormData.publication_date"  type="date" :class="[
             'w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500',
             validationErrors.publication_date ? 'border-red-500' : '',
           ]" placeholder="Date de publication de l'appel d'offre" />
@@ -141,7 +141,7 @@
           <input v-model="offerFormData.submission_address" type="text" :class="[
             'w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500',
             validationErrors.submission_address ? 'border-red-500' : '',
-          ]" placeholder="50000" />
+          ]" placeholder="Adresse de soumission" />
           <p v-if="validationErrors.submission_address" class="text-red-500 text-sm mt-1">
             {{ validationErrors.submission_address }}
           </p>
@@ -178,7 +178,7 @@
               <span class="text-sm text-gray-700">Non</span>
             </label>
           </div>
-          <div v-if="metadataFormData.bank_guarentee" class="mt-3">
+          <div v-if="metadataFormData.bank_guarentee == 1" class="mt-3">
             <label class="block text-sm font-medium text-gray-700 mb-2">
               Montant de la garantie
               <RequiredField />
@@ -285,14 +285,14 @@
             Reference de la source
             <RequiredField />
           </label>
-          <input v-model="offerFormData.source_label" type="text" required :class="[
+          <input v-model="offerFormData.source_reference" type="text" required :class="[
             'w-full rounded-md px-3 py-2 border shadow-sm focus:border-gray-500 focus:ring-gray-500',
-            validationErrors.source_label
+            validationErrors.source_reference
               ? 'border-red-500'
               : 'border-gray-500',
           ]" placeholder="Reference de la source" />
-          <p v-if="validationErrors.source_label" class="text-red-500 text-sm mt-1">
-            {{ validationErrors.source_label }}
+          <p v-if="validationErrors.source_reference" class="text-red-500 text-sm mt-1">
+            {{ validationErrors.source_reference }}
           </p>
         </div>
       </div>
@@ -326,5 +326,9 @@ onMounted(async () => {
   await useEnterpriseStore().fetchEnterprises();
   enterprises.value = useEnterpriseStore().enterprises;
 });
+
+watch(metadataFormData, () => {
+	console.log(metadataFormData.value.bank_guarentee)
+}, { deep: true })
 
 </script>

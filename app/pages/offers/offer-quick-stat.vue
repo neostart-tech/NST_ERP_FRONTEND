@@ -5,9 +5,7 @@
       <div v-if="error" class="mb-4 p-4 bg-red-50 border-l-4 border-red-600" role="alert" aria-live="assertive">
         <div class="flex">
           <div class="flex-shrink-0">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-            </svg>
+            <Icon name="heroicons:exclamation-circle" class="h-5 w-5 text-red-500" />
           </div>
           <div class="ml-3">
             <p class="text-sm text-red-700">
@@ -36,7 +34,7 @@
             @keyup.enter="currentPage = 1"
           >
         </div>
-        
+
         <!-- Filtre par statut -->
         <div class="space-y-1">
           <label for="status" class="block text-sm font-medium text-gray-700">Statut</label>
@@ -55,7 +53,7 @@
             <option value="lost">Perdu</option>
           </select>
         </div>
-        
+
         <!-- Tri par -->
         <div class="space-y-1">
           <label for="sort-by" class="block text-sm font-medium text-gray-700">Trier par</label>
@@ -70,7 +68,7 @@
             <option value="budget">Budget</option>
           </select>
         </div>
-        
+
         <!-- Ordre de tri -->
         <div class="space-y-1">
           <label for="sort-order" class="block text-sm font-medium text-gray-700">Ordre</label>
@@ -85,7 +83,7 @@
           </select>
         </div>
       </div>
-      
+
       <!-- Bouton de réinitialisation -->
       <div class="mt-3 flex justify-end">
         <button
@@ -99,7 +97,7 @@
         </button>
       </div>
     </div>
-    
+
     <div class="relative">
       <!-- Overlay de chargement avec animation -->
       <transition name="fade">
@@ -108,7 +106,7 @@
           <span class="sr-only">Chargement en cours...</span>
         </div>
       </transition>
-      
+
       <div class="flex items-center justify-between mb-6">
         <h1 class="text-lg font-medium text-gray-900">
           {{ title }}
@@ -119,36 +117,12 @@
           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
           aria-label="Créer un nouvel appel d'offres"
         >
-          <svg class="-ml-1 mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
-          </svg>
+          <Icon name="heroicons:plus" class="-ml-1 mr-2 h-5 w-5" />
           Nouvel appel d'offre
         </button>
       </div>
-      
-      <div class="flex space-x-2">
-        <button
-          @click="refreshData"
-          :disabled="isLoading"
-          :aria-label="isLoading ? 'Actualisation en cours' : 'Actualiser les données'"
-          class="p-2 text-gray-600 hover:text-gray-800 rounded-md hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          :class="{ 'animate-spin': isLoading, 'opacity-50 cursor-not-allowed': isLoading }"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-          </svg>
-        </button>
-        
-        <NuxtLink
-          :to="AppUrl.OFFERS_APPROVAL"
-          aria-label="Voir tous les appels d'offres"
-          class="p-2 text-gray-600 hover:text-gray-800 rounded-md hover:bg-gray-100 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
-        </NuxtLink>
-      </div>
+
+
     </div>
 
     <!-- Metrics Grid avec animation d'entrée -->
@@ -157,9 +131,7 @@
       <div key="total" class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
         <div class="flex items-center">
           <div class="p-3 rounded-lg bg-blue-100 text-blue-600 mr-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-            </svg>
+            <Icon name="heroicons:home" class="h-5 w-5" />
           </div>
           <div>
             <p class="text-gray-500 text-sm font-medium">Total</p>
@@ -173,9 +145,7 @@
       <div key="active" class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
         <div class="flex items-center">
           <div class="p-3 rounded-lg bg-green-100 text-green-600 mr-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <Icon name="heroicons:check-circle" class="h-5 w-5" />
           </div>
           <div>
             <p class="text-gray-500 text-sm font-medium">Actifs</p>
@@ -189,9 +159,7 @@
       <div key="submitted" class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
         <div class="flex items-center">
           <div class="p-3 rounded-lg bg-amber-100 text-amber-600 mr-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <Icon name="heroicons:paper-airplane" class="h-5 w-5" />
           </div>
           <div>
             <p class="text-gray-500 text-sm font-medium">Soumis</p>
@@ -205,9 +173,7 @@
       <div key="success" class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200">
         <div class="flex items-center">
           <div class="p-3 rounded-lg bg-purple-100 text-purple-600 mr-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
+            <Icon name="heroicons:trophy" class="h-5 w-5" />
           </div>
           <div class="flex-1">
             <p class="text-gray-500 text-sm font-medium">Taux de réussite</p>
@@ -240,9 +206,7 @@
       <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">
         <div class="flex items-center">
           <div class="p-2 rounded-full bg-gray-100 text-gray-600 mr-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <Icon name="heroicons:chart-bar" class="h-5 w-5" />
           </div>
           <div>
             <p class="text-sm font-medium text-gray-500">Valeur Totale</p>
@@ -253,9 +217,7 @@
       <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">
         <div class="flex items-center">
           <div class="p-2 rounded-full bg-green-50 text-green-600 mr-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
+            <Icon name="heroicons:chart-square-bar" class="h-5 w-5" />
           </div>
           <div>
             <p class="text-sm font-medium text-gray-500">Valeur Gagnée</p>
@@ -266,9 +228,7 @@
       <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200">
         <div class="flex items-center">
           <div class="p-2 rounded-full bg-blue-50 text-blue-600 mr-4">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <Icon name="heroicons:clock" class="h-5 w-5" />
           </div>
           <div>
             <p class="text-sm font-medium text-gray-500">En Attente</p>
@@ -283,51 +243,20 @@
       <div class="border-b border-gray-200 pb-5 mb-6">
         <div class="sm:flex sm:items-center sm:justify-between">
           <h3 class="text-lg font-semibold leading-6 text-gray-900">Appels d'offres récents</h3>
-          <div class="mt-3 sm:ml-4 sm:mt-0">
-            <div class="flex space-x-3">
-              <button
-                @click="refreshData"
-                type="button"
-                class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 transition-colors duration-200"
-                :disabled="isLoading"
-                :class="{ 'opacity-50 cursor-not-allowed': isLoading }"
-                title="Rafraîchir"
-                aria-label="Actualiser la liste"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Actualiser
-              </button>
-              <button
-                @click="navigateToNewOffer"
-                type="button"
-                class="inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 transition-colors duration-200"
-                aria-label="Créer un nouvel appel d'offres"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="-ml-0.5 mr-1.5 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.5v15m7.5-7.5h-15" />
-                </svg>
-                Nouvel appel d'offres
-              </button>
-            </div>
-          </div>
+
         </div>
         <p class="mt-2 text-sm text-gray-500">Derniers appels d'offres ajoutés ou modifiés</p>
       </div>
-      
+
       <div v-if="recentOffers.length > 0" class="bg-white shadow overflow-hidden sm:rounded-lg">
         <ul class="divide-y divide-gray-200">
           <li v-for="offer in paginatedOffers" :key="offer.id" class="group hover:bg-gray-50 transition-colors duration-150">
-            <a href="#" @click.prevent="navigateToOffer(offer.id)" class="block" :aria-label="`Voir les détails de l'appel d'offres ${offer.title}`">
-              <div class="px-4 py-4 sm:px-6">
-                <div class="flex items-center justify-between">
+            <div class="px-4 py-4 sm:px-6">
+              <div class="flex items-center justify-between">
                   <div class="flex items-center min-w-0">
                     <div class="flex-shrink-0 mr-4">
                       <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                        </svg>
+                        <Icon name="heroicons:document-text" class="h-5 w-5 text-blue-600" />
                       </div>
                     </div>
                     <div class="min-w-0 flex-1">
@@ -336,53 +265,68 @@
                       </p>
                       <div class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-4">
                         <div class="mt-2 flex items-center text-sm text-gray-500">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                          </svg>
+                          <Icon name="heroicons:calendar" class="h-5 w-5 mr-2 text-gray-400" />
                           <span>{{ formatDate(offer.submission_deadline) }}</span>
                         </div>
                         <div class="mt-2 flex items-center text-sm text-gray-500">
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-                          </svg>
+                          <Icon name="heroicons:users" class="h-5 w-5 mr-2 text-gray-400" />
                           <span>{{ formatCurrency(offer.estimated_budget) }}</span>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="ml-4 flex-shrink-0 flex flex-col items-end">
-                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mb-1" :class="getStatusBadgeClass(offer.status)">
-                      {{ getStatusLabel(offer.status) }}
-                    </span>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium" :class="getDeadlineBadgeClass(offer.submission_deadline)">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      {{ getDaysUntilDeadline(offer.submission_deadline) }}
-                    </span>
+                  <div class="flex items-center space-x-2">
+                    <!-- Boutons d'action -->
+                    <div class="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <NuxtLink
+                        :to="AppUrl.parameterize(AppUrl.OFFERS_EDIT, offer.id)"
+                        class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50"
+                        title="Modifier"
+                      >
+                        <Icon name="heroicons:pencil" class="h-5 w-5" />
+                      </NuxtLink>
+                      <button
+                        @click.stop="confirmDelete(offer.id)"
+                        class="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-50"
+                        title="Supprimer"
+                      >
+                        <Icon name="heroicons:trash" class="h-5 w-5" />
+                      </button>
+                      <NuxtLink
+                        :to="AppUrl.parameterize(AppUrl.OFFERS_APPROVAL, offer.id)"
+                        class="text-gray-600 hover:text-gray-800 p-1 rounded-full hover:bg-gray-100"
+                        title="Voir les détails"
+                      >
+                        <Icon name="heroicons:eye" class="h-5 w-5" />
+                      </NuxtLink>
+                    </div>
+                    <div class="ml-2 flex-shrink-0 flex flex-col items-end">
+                      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mb-1" :class="getStatusBadgeClass(offer.status)">
+                        {{ getStatusLabel(offer.status) }}
+                      </span>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium" :class="getDeadlineBadgeClass(offer.submission_deadline)">
+                        <Icon name="heroicons:clock" class="h-5 w-5 mr-2 text-gray-400" />
+                        {{ getDaysUntilDeadline(offer.submission_deadline) }}
+                      </span>
+                    </div>
                   </div>
                 </div>
                 <div class="mt-2 sm:flex sm:justify-between">
                   <div class="sm:flex">
                     <p class="flex items-center text-sm text-gray-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                      </svg>
-                      {{ offer.entreprise || 'Non spécifié' }}
+                      <Icon name="heroicons:user" class="h-4 w-4 mr-1.5 text-gray-400" />
+                      {{ offer.enterprise?.name || 'Non spécifié' }}
                     </p>
                   </div>
                   <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
+                   <Icon name="heroicons-solid:clock" class="h-5 w-5 mr-1.5 text-gray-400" />
                     <span>Mis à jour {{ formatRelativeDate(offer.publication_date) }}</span>
                   </div>
                 </div>
               </div>
-            </a>
           </li>
         </ul>
-        
+
         <!-- Pagination Controls -->
         <div v-if="recentOffers.length > itemsPerPage" class="mt-4 flex items-center justify-between px-4 py-3 bg-gray-50">
           <div class="text-sm text-gray-600">
@@ -410,51 +354,20 @@
           </div>
         </div>
       </div>
-      
+
+
       <!-- Empty State -->
-      <div v-else class="text-center py-8" role="alert" aria-live="polite">
-        <svg
-          class="mx-auto h-12 w-12 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1"
-            d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-        </svg>
-        <h3 class="mt-2 text-sm font-medium text-gray-900">Aucun appel d'offres</h3>
-        <p class="mt-1 text-sm text-gray-500">
-          Commencez par ajouter votre premier appel d'offres.
-        </p>
-        <div class="mt-6">
+
+			<div class="mt-6 flex justify-end">
           <button
             type="button"
             @click="navigateToNewOffer"
             class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
           >
-            <svg
-              class="-ml-1 mr-2 h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                clip-rule="evenodd"
-              />
-            </svg>
+            <Icon name="heroicons:plus" class="-ml-1 mr-2 h-5 w-5" />
             Nouvel appel d'offres
           </button>
         </div>
-      </div>
-      
       <!-- Upcoming Deadlines Section -->
       <div v-if="showUpcomingDeadlines && upcomingDeadlines.length > 0" class="mt-8 bg-white rounded-lg border border-gray-200 p-4">
         <div class="flex items-center justify-between mb-3">
@@ -485,19 +398,11 @@
 import { ref, onMounted, onUnmounted, computed, watch, shallowRef } from 'vue'
 import { navigateTo } from '#app'
 import { useOfferStore } from '@/stores/offerStore'
+//import { useConfirm } from 'primevue/config'
 import { useDateFormat, useNow } from '@vueuse/core'
+import type { Offer } from '~/models/Offer'
+import { NuxtLink } from '#components'
 
-// Type simple pour les offres
-interface Offer {
-  id: string;
-  title: string;
-  description?: string;
-  estimated_budget?: number;
-  publication_date?: string;
-  submission_deadline?: string;
-  status?: string;
-  [key: string]: any; // Pour les propriétés supplémentaires
-}
 
 interface Props {
   title?: string
@@ -516,6 +421,7 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const offerStore = useOfferStore()
+// const confirm = useConfirm()
 const isLoading = ref(false)
 const isInitialLoad = ref(true)
 const error = shallowRef<Error | null>(null)
@@ -543,32 +449,32 @@ const filterAndSortOffers = (rawOffers: any[]): any[] => {
 
     // Créer une copie profonde des offres pour éviter de modifier l'original
     const offers = JSON.parse(JSON.stringify(rawOffers))
-    
+
     // Appliquer les filtres
     let result = offers.filter((offer: any) => {
       // Filtre par statut
       if (filters.value.status && offer.status !== filters.value.status) {
         return false
       }
-      
+
       // Filtre par recherche
       if (filters.value.search) {
         const searchLower = filters.value.search.toLowerCase()
         const title = String(offer?.title || '').toLowerCase()
         const description = String(offer?.description || '').toLowerCase()
-        
+
         if (!title.includes(searchLower) && !description.includes(searchLower)) {
           return false
         }
       }
-      
+
       return true
     })
-    
+
     // Appliquer le tri
     result.sort((a: any, b: any) => {
       let comparison = 0
-      
+
       switch (filters.value.sortBy) {
         case 'date': {
           const dateA = new Date(a.publication_date || a.submission_deadline || 0).getTime()
@@ -583,10 +489,10 @@ const filterAndSortOffers = (rawOffers: any[]): any[] => {
           comparison = (Number(a.estimated_budget) || 0) - (Number(b.estimated_budget) || 0)
           break
       }
-      
+
       return filters.value.sortOrder === 'desc' ? -comparison : comparison
     })
-    
+
     return result
   } catch (error) {
     console.error('Error in filterAndSortOffers:', error)
@@ -595,7 +501,7 @@ const filterAndSortOffers = (rawOffers: any[]): any[] => {
 }
 
 // Offres filtrées et triées
-const filteredOffers = computed<Record<string, any>[]>(() => {
+const filteredOffers = computed<Offer[]>(() => {
   if (!offerStore.offers) return []
   return filterAndSortOffers(offerStore.offers)
 })
@@ -617,7 +523,7 @@ const submittedOffers = computed(() => countOffersByStatus('submitted'))
 const wonOffers = computed(() => countOffersByStatus('won'))
 const lostOffers = computed(() => countOffersByStatus('lost'))
 const totalOffers = computed(() => filteredOffers.value.length)
-const totalBudget = computed(() => 
+const totalBudget = computed(() =>
   filteredOffers.value.reduce((sum: number, o: any) => sum + (Number(o.estimated_budget) || 0), 0)
 )
 const wonBudget = computed(() => sumBudgetByStatus('won'))
@@ -630,7 +536,7 @@ const successRate = computed(() => {
 
 // Vérifie s'il y a des filtres actifs
 const hasActiveFilters = computed(() => {
-  return filters.value.status !== '' || 
+  return filters.value.status !== '' ||
          filters.value.search !== '' ||
          filters.value.sortBy !== 'date' ||
          filters.value.sortOrder !== 'desc'
@@ -689,7 +595,7 @@ const totalPages = computed(() => {
 
 const upcomingDeadlines = computed(() => {
   if (filteredOffers.value.length === 0) return []
-  
+
   return filteredOffers.value
     .filter((offer) => {
       if (!offer.submission_deadline) return false
@@ -715,16 +621,16 @@ const upcomingDeadlines = computed(() => {
 // Methods
 const refreshData = async (): Promise<void> => {
   if (isLoading.value) return
-  
+
   isLoading.value = true
   error.value = null
-  
+
   try {
     await offerStore.fetchOffers()
   } catch (err) {
     console.error('Erreur lors du chargement des offres:', err)
-    error.value = err instanceof Error 
-      ? err 
+    error.value = err instanceof Error
+      ? err
       : new Error('Une erreur est survenue lors du chargement des données')
   } finally {
     isLoading.value = false
@@ -733,7 +639,7 @@ const refreshData = async (): Promise<void> => {
 
 const setupAutoRefresh = (): void => {
   clearAutoRefresh()
-  
+
   if (props.autoRefresh && props.refreshInterval && props.refreshInterval > 0) {
     const intervalMs = props.refreshInterval * 60 * 1000
     refreshTimer = setInterval(() => {
@@ -741,7 +647,7 @@ const setupAutoRefresh = (): void => {
         console.error('Erreur lors du rafraîchissement automatique:', err)
       })
     }, intervalMs)
-    
+
     if (offerStore.offers.length === 0) {
       refreshData().catch(console.error)
     }
@@ -766,6 +672,25 @@ const navigateToNewOffer = (): void => {
 
 const navigateToOfferList = (): void => {
   navigateTo('/offers')
+}
+
+// Navigation vers l'édition d'une offre
+const navigateToEdit = (offerId: string): void => {
+  navigateTo(`/offers/offer-form/${offerId}`)
+}
+
+// Confirmation de suppression d'une offre
+const confirmDelete = async (offer: any): Promise<void> => {
+  if (confirm(`Êtes-vous sûr de vouloir supprimer l'appel d'offres "${offer.title}" ?`)) {
+    try {
+      await offerStore.deleteOffer(offer.id)
+      await refreshData()
+      // Vous pourriez ajouter une notification de succès ici
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'offre :', error)
+      // Vous pourriez ajouter une notification d'erreur ici
+    }
+  }
 }
 
 // Status and urgency helpers
@@ -797,11 +722,11 @@ const getStatusBadgeClass = (status: string = 'draft'): string => {
 
 const getDeadlineBadgeClass = (deadline: string | Date): string => {
   if (!deadline) return 'bg-gray-100 text-gray-800'
-  
+
   const deadlineDate = new Date(deadline)
   const diffTime = deadlineDate.getTime() - now.value.getTime()
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  
+
   if (diffDays < 0) return 'bg-red-100 text-red-800'
   if (diffDays <= 3) return 'bg-yellow-100 text-yellow-800'
   return 'bg-green-100 text-green-800'
@@ -813,18 +738,17 @@ const getDaysUntilDeadline = (deadline: string): string => {
 
   if (diffDays === 0) return "Aujourd'hui"
   if (diffDays === 1) return 'Demain'
-  if (diffDays < 0) return 'Échue'
+  if (diffDays < 0) return 'En retard'
   return `${diffDays}j`
 }
 
 // Utility functions
 const formatCurrency = (amount: number): string => {
   return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR',
+    style: 'decimal',
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(amount)
+    maximumFractionDigits: 0
+  }).format(amount) + ' FCFA'
 }
 
 const formatDate = (dateString: string): string => {

@@ -36,13 +36,13 @@
       <!-- Tab Content -->
       <div class="flex-1 overflow-y-auto p-6">
         <!-- General Tab -->
-        <GeneralTab v-if="activeTab === 'general'" 
+        <GeneralTab v-if="activeTab === 'general'"
           v-model:offer-form-data="offerFormData"
           v-model:metadata-form-data="metadataFormData"
         />
 
         <!-- Information Tab -->
-        <InfoTab v-if="activeTab === 'information'" 
+        <InfoTab v-if="activeTab === 'information'"
           v-model:offer-form-data="offerFormData"
           v-model:metadata-form-data="metadataFormData"
         />

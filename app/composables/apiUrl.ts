@@ -38,6 +38,8 @@ export const ApiUrl = {
   OFFER_TYPES: "/offer-types",
   OFFERS_PENDING: "/offers/pending",
   OFFER_BY_ID: "/offers/:id",
+  OFFER_APPROVE: "/offers/:id/approve",
+  OFFER_REJECT: "/offers/:id/reject",
   OFFERS: "/offers",
 
   ENTREPRISES: "/entreprises",

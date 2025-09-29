@@ -22,12 +22,13 @@ export const AppUrl ={
 	OFFERS_NEW: "/offers/offer-form",
 	OFFERS_TASK_FORM: "/offers/task-form",
 	OFFERS_APPROVAL: "/offers/:id/approuver",
+	OFFERS_EDIT: "/offers/:id/modifier",
 	OFFERS_PENDING: "/offers/pending",
 	OFFERS_DOCUMENTS: "/offers/id/documents-availability",
 	OFFERS_LOTS: "/offers/id/lots-configuration",
 	OFFERS_PROJECTS: "/offers/projects",
 	OFFERS_QUICK_STAT: "/offers/offer-quick-stat",
-	
+
 	//SUPPLIERS
 	SUPPLIERS: "/fournisseurs",
 	SUPPLIERS_CONTACTS: "/fournisseurs/contacts",
