@@ -7,12 +7,12 @@
           <h4 class="text-sm font-medium text-gray-900 mb-4">Exigences de l'appel d'offre</h4>
           <div class="space-y-3">
             <div
-              v-for="(requirement, index) in offerFormData.requirements"
+              v-for="(requirement, index) in offerFormData.requirement"
               :key="index"
               class="flex items-center space-x-2"
             >
               <input
-                v-model="offerFormData.requirements[index]"
+                v-model="offerFormData.requirement![index]"
                 type="text"
                 class="flex-1 rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
                 placeholder="Décrivez une exigence..."
@@ -151,15 +151,15 @@ const metadataFormData = defineModel<MetadataForm>("metadataFormData", {
 const { validationErrors } = storeToRefs(useOfferStore());
 
 const addRequirement = () => {
-  if (!Array.isArray(offerFormData.value.requirements)) {
-    offerFormData.value.requirements = [];
+  if (!Array.isArray(offerFormData.value.requirement)) {
+    offerFormData.value.requirement = [];
   }
-  offerFormData.value.requirements.push("");
+  offerFormData.value.requirement.push("");
 };
 
 const removeRequirement = (index: number) => {
-  if (Array.isArray(offerFormData.value.requirements)) {
-    offerFormData.value.requirements.splice(index, 1);
+  if (Array.isArray(offerFormData.value.requirement)) {
+    offerFormData.value.requirement.splice(index, 1);
   }
 };
 </script>

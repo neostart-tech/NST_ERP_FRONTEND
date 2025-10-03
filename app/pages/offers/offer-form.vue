@@ -148,6 +148,7 @@ const handleSubmit = async () => {
     useAlert().showAlert("Offre enregistrée avec succès", "success");
     navigateTo('/offers/offer-quick-stat');
   } catch (error) {
+		console.log(error)
     validationErrors.value = offerStore.validationErrors;
     const errorsSize = Object.keys(validationErrors.value).length;
     useAlert().showAlert(

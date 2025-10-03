@@ -33,7 +33,8 @@
             Date de publication
           </label>
           <div class="w-full rounded-md px-3 py-2 border border-gray-300 bg-gray-100">
-            {{ formatDate(offer.publication_date) || 'Non spécifié' }}
+						{{ formatDate(offer.publication_date) || 'Non spécifié' }}
+            <!-- {{ formatDateTime(offer.publication_date) || 'Non spécifié' }} -->
           </div>
         </div>
 
@@ -87,7 +88,7 @@
             Adresse d'obtention du dossier
           </label>
           <div class="w-full rounded-md px-3 py-2 border border-gray-300 bg-gray-100">
-            {{ offer.metaData?.offer_pickup_address || 'Non spécifié' }}
+            {{ offer.metadata?.tender_pickup_address || 'Non spécifié' }}
           </div>
         </div>
 
@@ -105,7 +106,7 @@
             Date et heure de dépouillement du dossier
           </label>
           <div class="w-full rounded-md px-3 py-2 border border-gray-300 bg-gray-100">
-            {{ formatDateTime(offer.metaData?.offer_opening_date) || 'Non spécifié' }}
+            {{ formatDateTime(offer.metadata?.tender_opening_date) || 'Non spécifié' }}
           </div>
         </div>
 
@@ -114,15 +115,15 @@
             Garantie bancaire
           </label>
           <div class="w-full rounded-md px-3 py-2 border border-gray-300 bg-gray-100">
-            {{ offer.metaData?.bank_guarentee ? 'Oui' : 'Non' }}
+            {{ offer.metadata?.has_bank_guarentee ? 'Oui' : 'Non' }}
           </div>
 
-          <div v-if="offer.metaData?.bank_guarentee" class="mt-3">
+          <div v-if="offer.metadata?.has_bank_guarentee" class="mt-3">
             <label class="block text-sm font-medium text-gray-700 mb-2">
               Montant de la garantie
             </label>
             <div class="w-full rounded-md px-3 py-2 border border-gray-300 bg-gray-100">
-              {{ offer.metaData?.bank_guarentee_amount ? formatNumber(offer.metaData.bank_guarentee_amount) + ' FCFA' : 'Non spécifié' }}
+              {{ offer.metadata?.bank_guarentee ? formatNumber(offer.metadata.bank_guarentee) + ' FCFA' : 'Non spécifié' }}
             </div>
           </div>
         </div>
@@ -140,7 +141,7 @@
             Autorité contractante
           </label>
           <div class="w-full rounded-md px-3 py-2 border border-gray-300 bg-gray-100">
-            {{ offer.entreprise?.name || 'Non spécifié' }}
+            {{ offer.enterprise?.name || 'Non spécifié' }}
           </div>
         </div>
         <div>
@@ -156,7 +157,7 @@
             Projet lié à l'offre
           </label>
           <div class="w-full rounded-md px-3 py-2 border border-gray-300 bg-gray-100">
-            {{ offer.metaData?.offer_project || 'Non spécifié' }}
+            {{ offer.metadata?.offer_project || 'Non spécifié' }}
           </div>
         </div>
         <div>
@@ -164,7 +165,7 @@
             Bailleur
           </label>
           <div class="w-full rounded-md px-3 py-2 border border-gray-300 bg-gray-100">
-            {{ offer.metaData?.sponsor || 'Non spécifié' }}
+            {{ offer.metadata?.sponsor || 'Non spécifié' }}
           </div>
         </div>
       </div>
@@ -206,12 +207,22 @@ defineProps({
       default: () => ({})
     }
   });
-import RequiredField from "~/app/components/partials/RequiredField.vue";
+
 const formatDate = (dateString: string): string => {
   if (!dateString) return '';
   const date = new Date(dateString);
+	console.log(date);
   return date.toLocaleDateString('fr-FR');
 };
+
+// const formatDate = (dateString: string): string => {
+//   if (!dateString) return '';
+//   const date = new Date(dateString.replace(' ', 'T'));
+//   console.log(date);
+//   if (isNaN(date.getTime())) return ''; // sécurité
+//   return date.toLocaleDateString('fr-FR');
+// };
+
 
 const formatDateTime = (dateTimeString: string): string => {
   if (!dateTimeString) return '';

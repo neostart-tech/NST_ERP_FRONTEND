@@ -51,7 +51,7 @@ export interface OfferForm {
 	file_obtaining_deadline?: string;
 	offer_validity: string;
 	submission_address: string;
-	requirement?: string | string[];
+	requirement?: string[];
 	stacking_instruction?: string;
 	batch_number: string;
 	execution_batch_duration?: string;
@@ -60,28 +60,26 @@ export interface OfferForm {
 
 export interface Metadata {
 	id: string;
-	bank_guarentee?: string;
-	bank_guarentee_amount?: number;
+	bank_guarentee?: number;
 	offer_project?: string;
 	sponsor?: string;
 	clarification_instruction?: string;
 	is_free?: boolean;
-	offer_opening_date?: string;
-	offer_pickup_address?: string;
+	tender_opening_date?: string;
+	tender_pickup_address?: string;
 	comment?: string;
 	updated_at: string;
 	created_at: string;
 }
 
 export interface MetadataForm {
-	bank_guarentee?: boolean;
-	bank_guarentee_amount?: number;
+	bank_guarentee?: number;
 	offer_project?: string;
 	sponsor?: string;
 	clarification_instruction?: string;
 	is_free?: boolean;
-	offer_opening_date?: string;
-	offer_pickup_address?: string;
+	tender_opening_date?: string;
+	tender_pickup_address?: string;
 	comment?: string;
 }
 
@@ -102,7 +100,7 @@ export const defaultOfferFormData = (data: Offer | null): OfferForm => ({
 	file_obtaining_deadline: data?.file_obtaining_deadline || "",
 	offer_validity: data?.offer_validity || "",
 	submission_address: data?.submission_address || "",
-	requirement: data?.requirement || "",
+	requirement: data?.requirement || [],
 	stacking_instruction: data?.stacking_instruction || "",
 	batch_number: data?.batch_number || "",
 	execution_batch_duration: data?.execution_batch_duration || "",
@@ -136,13 +134,12 @@ export const defaultOfferData = (): Offer => ({
 
 
 export const defaultMetadataFormData = (): MetadataForm => ({
-	bank_guarentee: "",
-	bank_guarentee_amount: 0,
+	bank_guarentee: 0,
 	offer_project: "",
 	sponsor: "",
 	clarification_instruction: "",
 	is_free: false,
-	offer_opening_date: "",
-	offer_pickup_address: "",
+	tender_opening_date: "",
+	tender_pickup_address: "",
 	comment: "",
 });

@@ -124,12 +124,12 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Adresse d'obtention du dossier
           </label>
-          <input v-model="metadataFormData.offer_pickup_address" type="text" :class="[
+          <input v-model="metadataFormData.tender_pickup_address" type="text" :class="[
             'w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500',
-            validationErrors.offer_pickup_address ? 'border-red-500' : '',
+            validationErrors.tender_pickup_address ? 'border-red-500' : '',
           ]" placeholder="Adresse" />
-          <p v-if="validationErrors.offer_pickup_address" class="text-red-500 text-sm mt-1">
-            {{ validationErrors.offer_pickup_address }}
+          <p v-if="validationErrors.tender_pickup_address" class="text-red-500 text-sm mt-1">
+            {{ validationErrors.tender_pickup_address }}
           </p>
         </div>
 
@@ -152,12 +152,12 @@
             Date et heure de dépouillement du dossier
             <RequiredField />
           </label>
-          <input v-model="metadataFormData.offer_opening_date" type="datetime-local" :class="[
+          <input v-model="metadataFormData.tender_opening_date" type="datetime-local" :class="[
             'w-full rounded-md px-3 py-2 border border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500',
-            validationErrors.offer_opening_date ? 'border-red-500' : '',
+            validationErrors.tender_opening_date ? 'border-red-500' : '',
           ]" placeholder="50000" />
-          <p v-if="validationErrors.offer_opening_date" class="text-red-500 text-sm mt-1">
-            {{ validationErrors.offer_opening_date }}
+          <p v-if="validationErrors.tender_opening_date" class="text-red-500 text-sm mt-1">
+            {{ validationErrors.tender_opening_date }}
           </p>
         </div>
 
@@ -178,7 +178,7 @@
               <span class="text-sm text-gray-700">Non</span>
             </label>
           </div>
-          <div v-if="metadataFormData.bank_guarentee == 1" class="mt-3">
+          <div v-if="metadataFormData.bank_guarentee_amount == 1" class="mt-3">
             <label class="block text-sm font-medium text-gray-700 mb-2">
               Montant de la garantie
               <RequiredField />

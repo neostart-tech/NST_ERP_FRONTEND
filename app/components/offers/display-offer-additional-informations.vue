@@ -6,8 +6,9 @@
           <label class="block text-sm font-medium text-gray-700 mb-2">
             Exigences de l'appel d'offre
           </label>
-          <div class="w-full rounded-md px-3 py-2 border border-gray-300 bg-gray-100 min-h-[80px]">
-            {{ offer.requirement || 'Non spécifié' }}
+          <div v-for ="requirement in  offer.requirement" :key="requirement"
+					class="w-full rounded-md mb-2 px-3 py-2 border border-gray-300 bg-gray-100 ">
+            {{ requirement }}
           </div>
         </div>
 
@@ -25,7 +26,7 @@
             Consignes de clarification
           </label>
           <div class="w-full rounded-md px-3 py-2 border border-gray-300 bg-gray-100 min-h-[80px]">
-            {{ offer.metaData?.clarification_instruction || 'Non spécifié' }}
+            {{ offer.metadata?.clarification_instruction || 'Non spécifié' }}
           </div>
         </div>
       </div>
@@ -51,7 +52,7 @@
       <h4 class="text-sm font-medium text-gray-900 mb-4">Commentaires</h4>
       <div>
         <div class="w-full rounded-md px-3 py-2 border border-gray-300 bg-gray-100 min-h-[80px]">
-          {{ offer.metaData?.comment || 'Aucun commentaire' }}
+          {{ offer.metadata?.comment || 'Aucun commentaire' }}
         </div>
       </div>
     </div>

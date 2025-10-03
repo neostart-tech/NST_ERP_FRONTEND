@@ -44,11 +44,8 @@ export const extractTime = (dateAsString: string | null): string => {
  * @returns Un objet avec la date (YYYY-MM-DD) et l'heure (HH:MM:SS)
  */
 export const extractDateTime = (dateAsString: string | null): string => {
-  if (!dateAsString) return { date: "", time: "" };
+  if (!dateAsString) return "";
   const [date, timeWithMs] = dateAsString.split('T');
   const time = timeWithMs ? timeWithMs.split('.')[0] : "";
   return date + "T" + time;
-
-
-	 
 };

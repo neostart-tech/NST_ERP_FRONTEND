@@ -44,7 +44,8 @@ export const useOfferStore = defineStore("OfferStore", {
         const formData = {
           ...offerData,
           ...metadata,
-          offer_type_id: offerData.offer_type
+          offer_type_id: offerData.offer_type,
+					requirement:offerData.requirement?.join(",") || ""
         };
         console.log("formData:", formData)
         const { data } = await useApi().post<Offer>(ApiUrl.OFFERS, formData);
@@ -59,12 +60,7 @@ export const useOfferStore = defineStore("OfferStore", {
 
     async getOneOffer(id: string) {
       try {
-        let { data } = await useApi().get<Offer>(ApiUrl.parameterize(ApiUrl.OFFER_BY_ID, id));
-				data.publication_date = extractTime(data.publication_date);
-				data.submission_deadline = extractDateTime(data.submission_deadline);
-				data.file_obtaining_deadline = extractTime(data.file_obtaining_deadline);
-				data.offer_opening_date = extractTime(data.offer_opening_date);
-				console.log(data);
+        const { data } = await useApi().get<Offer>(ApiUrl.parameterize(ApiUrl.OFFER_BY_ID, id));
         return data;
       } catch (error) {
         console.error("Error fetching offer:", error);
