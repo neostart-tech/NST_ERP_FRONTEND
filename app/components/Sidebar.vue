@@ -26,28 +26,7 @@
       <div class="flex flex-col h-full bg-gradient-to-b from-sky-800 to-sky-900 shadow-xl">
         <!-- Header fixe -->
        <div class="flex-shrink-0 px-6 py-5 border-b border-sky-700 bg-sky-800 sticky top-0 z-10">
-  <div class="flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <!-- Lien pour ajouter le logo de l'entreprise -->
-      <a href="#" class="flex items-center justify-center w-16 h-16 rounded-xl bg-white/10 backdrop-blur-sm">
-        <!-- Remplacez cette balise img par votre logo -->
-        <img src="C:\Users\Ambroise ADENYO\Desktop\stage_projet\images\ez426phx.png" alt="Logo de l'entreprise" class="w-13 h-13 object-contain">
-        <!-- Ou utilisez ce SVG par défaut si le logo n'est pas encore disponible -->
-        <!--
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-        </svg>
-        -->
-      </a>
-      <div>
-        <h1 class="text-lg font-bold text-white">Neo Start Tech</h1>
-        <p class="text-xs font-medium text-sky-200">Business Manager</p>
-      </div>
-    </div>
 
-    <!-- Mobile close button moved to the top left -->
-    <div class="w-8"></div>
-  </div>
 </div>
 
 
