@@ -783,10 +783,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fortawesome/fontawesome-free@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "@fortawesome/fontawesome-free@npm:7.0.0"
-  checksum: 10c0/204a192c5a340a01c348d62dbee2bf94a540ef33e035b758cbb96cba203c5d28948ab59d57f23ff67617f49812e0642d5050b00dcdbf6bf6c17e03e4096f5e06
+"@fortawesome/fontawesome-free@npm:^7.1.0":
+  version: 7.1.0
+  resolution: "@fortawesome/fontawesome-free@npm:7.1.0"
+  checksum: 10c0/3bcaf2c18f3b2ece0fb5640681f13051cb787d686ab444437b3605ba3dca9dce4c7c1f844d94b7ad011482ac20b2b387f3a4c33c2739b50c4425fe529ab7b050
   languageName: node
   linkType: hard
 
@@ -6804,7 +6804,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "nuxt-app@workspace:."
   dependencies:
-    "@fortawesome/fontawesome-free": "npm:^7.0.0"
+    "@fortawesome/fontawesome-free": "npm:^7.1.0"
     "@nuxt/icon": "npm:^1.15.0"
     "@nuxtjs/tailwindcss": "npm:^6.14.0"
     "@pinia-plugin-persistedstate/nuxt": "npm:^1.2.1"
