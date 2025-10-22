@@ -25,7 +25,7 @@
 		</div>
 
 		<div class="flex items-center space-x-4">
-		
+
 			<!-- Notifications -->
 			<button class="p-2 text-gray-400 hover:text-gray-600 relative">
 				<Icon name="heroicons:bell" class="w-6 h-6" />
@@ -169,17 +169,21 @@ const pageTitle = computed(() => {
 	console.log("route.name:", route.name);
 
 	const titleMap: Record<string, string> = {
-		dashboard: "Tableau de bord",
-		clients: "Gestion des Clients",
-		"client-detail": "Détail Client",
 		quotes: "Devis",
 		orders: "Commandes",
 		invoices: "Factures",
 		suppliers: "Fournisseurs",
 		entreprises: "Entreprises",
+		dashboard: "Tableau de bord",
+		clients: "Gestion des Clients",
+		offers: "Soumissions d'offres",
+		"client-detail": "Détail Client",
 		"entreprises-detail": "Détail Entreprise",
 		"entreprises-ajouter": "Ajouter une entreprise",
 		"entreprises-modifier": "Modifier une entreprise",
+		"offers-offer-form": "Ajouter un nouvel appel d'offre ",
+		"offers-id-modifier": "Modifier un appel d'offre",
+		"offers-offer-quick-stat": "Statistiques des appels d'offre",
 	};
 	return titleMap[route.name as string] || "ERP Neo Start Technology";
 });

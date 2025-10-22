@@ -6,48 +6,80 @@
  * - Maintenir une cohérence dans l'utilisation des endpoints
  */
 export const ApiUrl = {
-  /**
-   * Endpoint pour l'authentification
-   * Méthode: POST
-   * Corps: { email: string, password: string }
-   * Retour: { token: string, user: User }
-   */
-  LOGIN: '/auth/login',
+	/**
+	 * Endpoint pour l'authentification
+	 * Méthode: POST
+	 * Corps: { email: string, password: string }
+	 * Retour: { token: string, user: User }
+	 */
+	LOGIN: '/auth/login',
 
-  /**
-   * Endpoint pour l'inscription
-   * Méthode: POST
-   * Corps: { email: string, password: string }
-   * Retour: { user: User }
-   */
-  REGISTER: '/register',
+	/**
+	 * Endpoint pour l'inscription
+	 * Méthode: POST
+	 * Corps: { email: string, password: string }
+	 * Retour: { user: User }
+	 */
+	REGISTER: '/register',
 
-  /**
-   * Endpoint pour la déconnexion
-   * Méthode: POST
-   * Corps: Vide
-   * Retour: Vide
-   */
-  LOGOUT: '/auth/logout',
+	/**
+	 * Endpoint pour la déconnexion
+	 * Méthode: POST
+	 * Corps: Vide
+	 * Retour: Vide
+	 */
+	LOGOUT: '/auth/logout',
 
-  FORGOT_PASSWORD: "/auth/forgot-password",
-  RESET_PASSWORD: "/auth/reset-password",
-  DEFINE_PASSWORD: "/auth/define-password",
+	FORGOT_PASSWORD: "/auth/forgot-password",
+	RESET_PASSWORD: "/auth/reset-password",
+	DEFINE_PASSWORD: "/auth/define-password",
 
-  DOCUMENT_TYPES: "/document-types",
-  OFFER_TYPES: "/offer-types",
-  OFFERS_PENDING: "/offers/pending",
-  OFFER_BY_ID: "/offers/:id",
-  OFFER_APPROVE: "/offers/:id/approve",
-  OFFER_REJECT: "/offers/:id/reject",
-  OFFERS: "/offers",
+	DOCUMENT_TYPES: "/document-types",
+	OFFER_TYPES: "/offer-types",
+	OFFERS_PENDING: "/offers/pending",
+	OFFER_BY_ID: "/offers/:id",
+	OFFER_DECISION: "/offers/:id/decision",
+	OFFERS: "/offers",
+	OFFER_LOTS: "/offers/:id/lots",
 
-  ENTREPRISES: "/entreprises",
-  ENTREPRISE_BY_ID: "/entreprises/:id",
+	ENTREPRISES: "/entreprises",
+	ENTREPRISE_BY_ID: "/entreprises/:id",
 
-  USERS_INDEX: "/users",
-  USER_BY_ID: "/users/:id",
-  USERS_CONFIRM_PASSWORD: "/users/confirm-password",
+	USERS_INDEX: "/users",
+	USER_BY_ID: "/users/:id",
+	USERS_CONFIRM_PASSWORD: "/users/confirm-password",
 
-  parameterize: (item: string, id: string|number ) => item.replace(':id', id.toString()),
+	/**
+ * Fonction pour les url à paramètres sous la forme url/:id
+ */
+	parameterized: (item: string, parameters: Record<string, string | number> | string | number) => {
+		// Si on passe directement un string ou un number → c'est l'id par défaut
+		if (typeof parameters === "string" || typeof parameters === "number") {
+			return item.replace(":id", parameters.toString());
+		}
+
+		// Sinon on parcourt l'objet
+		Object.entries(parameters).forEach(([key, value]) => {
+			item = item.replace(`:${key}`, value.toString());
+		});
+
+		return item;
+	},
+
+	/**
+ * Fonction pour les query strings sous la forme url?key=value
+ */
+	queryable: (item: string, queries: Record<string, string | number> | string | number) => {
+		// Si on passe directement un string ou un number → c'est le paramètre 'id' par défaut
+		if (typeof queries === "string" || typeof queries === "number") {
+			return `${item}?q=${encodeURIComponent(queries.toString())}`;
+		}
+
+		// Sinon on construit les query strings à partir de l'objet
+		const queryString = Object.entries(queries)
+			.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value.toString())}`)
+			.join('&');
+
+		return queryString ? `${item}?${queryString}` : item;
+	},
 } as const;

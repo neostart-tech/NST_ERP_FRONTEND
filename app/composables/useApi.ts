@@ -23,13 +23,13 @@ export const useApi = () => {
 		'X-XSRF-TOKEN': XSRFToken,
 		'Content-Type': 'application/json',
 		'Accept': 'application/json',
-		...(authStore.token && {Authorization: `Bearer ${authStore.token}`}),
+		...(authStore.token && { Authorization: `Bearer ${authStore.token}` }),
 		// credentials: 'include',
 		...headers,
 	});
 
 	const request = async <T>(endpoint: string, config: ApiConfig = {}): Promise<ApiResponse<T>> => {
-		const {method = 'GET', headers = {}, body, signal} = config;
+		const { method = 'GET', headers = {}, body, signal } = config;
 		const fullUrl = `${baseUrl}${endpoint}`;
 
 		try {
@@ -47,6 +47,10 @@ export const useApi = () => {
 				return request<T>(endpoint, config);
 			}
 
+			if (response.status === 401) {
+				authStore.logout();
+			}
+
 			const data = await response.json();
 
 			if (!response.ok) {
@@ -59,7 +63,7 @@ export const useApi = () => {
 				throw error;
 			}
 
-			return {data: data.data};
+			return { data: data.data };
 
 		} catch (error) {
 			console.log("Api error:", error);
@@ -68,19 +72,19 @@ export const useApi = () => {
 	};
 
 	const get = <T>(endpoint: string, config: ApiConfig = {}) =>
-		request<T>(endpoint, {method: 'GET', ...config});
+		request<T>(endpoint, { method: 'GET', ...config });
 
 	const post = <T>(endpoint: string, body: any, config: ApiConfig = {}) =>
-		request<T>(endpoint, {method: 'POST', body, ...config});
+		request<T>(endpoint, { method: 'POST', body, ...config });
 
 	const put = <T>(endpoint: string, body: any, config: ApiConfig = {}) =>
-		request<T>(endpoint, {method: 'PUT', body, ...config});
+		request<T>(endpoint, { method: 'PUT', body, ...config });
 
 	const del = <T>(endpoint: string, config: ApiConfig = {}) =>
-		request<T>(endpoint, {method: 'DELETE', ...config});
+		request<T>(endpoint, { method: 'DELETE', ...config });
 
 	const patch = <T>(endpoint: string, body: any, config: ApiConfig = {}) =>
-		request<T>(endpoint, {method: 'PATCH', body, ...config});
+		request<T>(endpoint, { method: 'PATCH', body, ...config });
 
 	return {
 		request,

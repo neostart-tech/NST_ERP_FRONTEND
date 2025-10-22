@@ -91,7 +91,6 @@ import InfoTab from "~/app/components/offers/info-tab.vue";
 const isSubmitting = ref(false);
 
 const offerStore = useOfferStore();
-const validationErrors = ref<ValidationErrors>({});
 
 // State
 const activeTab = ref("general");
@@ -129,7 +128,7 @@ const isTabValid = (tabId: string): boolean => {
     case "general":
       return !!(offerFormData.value.title && offerFormData.value.submission_deadline);
     case "information":
-      return !!offerFormData.value.offer_type;
+      return !!offerFormData.value.offer_type_id;
     default:
       return true;
   }
@@ -146,11 +145,10 @@ const handleSubmit = async () => {
   try {
     await offerStore.storeOffer(offerFormData.value, metadataFormData.value);
     useAlert().showAlert("Offre enregistrée avec succès", "success");
-    navigateTo('/offers/offer-quick-stat');
+    navigateTo(AppUrl.OFFERS_QUICK_STAT);
   } catch (error) {
 		console.log(error)
-    validationErrors.value = offerStore.validationErrors;
-    const errorsSize = Object.keys(validationErrors.value).length;
+    const errorsSize = Object.keys(offerStore.validationErrors).length;
     useAlert().showAlert(
       `${errorsSize} erreur${errorsSize > 1 ? "s" : ""
       } sont survenues lors de l'enregistrement`,

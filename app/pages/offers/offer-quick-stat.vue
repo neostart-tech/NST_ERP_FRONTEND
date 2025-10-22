@@ -113,7 +113,7 @@
           <span v-if="isLoading" class="ml-2 text-sm text-gray-600">Chargement...</span>
         </h1>
         <button
-          @click="navigateToNewOffer"
+          @click="navigateTo(AppUrl.OFFERS_NEW)"
           class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
           aria-label="Créer un nouvel appel d'offres"
         >
@@ -279,6 +279,13 @@
                     <!-- Boutons d'action -->
                     <div class="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       <NuxtLink
+                        :to="AppUrl.parameterize(AppUrl.OFFERS_LOTS, offer.id)"
+                        class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50"
+                        title="Modifier"
+                      >
+                        <Icon name="heroicons:cog" class="h-5 w-5" />
+                      </NuxtLink>
+                      <NuxtLink
                         :to="AppUrl.parameterize(AppUrl.OFFERS_EDIT, offer.id)"
                         class="text-blue-600 hover:text-blue-800 p-1 rounded-full hover:bg-blue-50"
                         title="Modifier"
@@ -286,7 +293,7 @@
                         <Icon name="heroicons:pencil" class="h-5 w-5" />
                       </NuxtLink>
                       <button
-                        @click.stop="confirmDelete(offer.id)"
+                        @click.stop="confirmDelete(offer)"
                         class="text-red-600 hover:text-red-800 p-1 rounded-full hover:bg-red-50"
                         title="Supprimer"
                       >
@@ -359,14 +366,13 @@
       <!-- Empty State -->
 
 			<div class="mt-6 flex justify-end">
-          <button
-            type="button"
-            @click="navigateToNewOffer"
-            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+          <NuxtLink
+            :to="AppUrl.OFFERS"
+            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 "
           >
-            <Icon name="heroicons:plus" class="-ml-1 mr-2 h-5 w-5" />
-            Nouvel appel d'offres
-          </button>
+					<Icon name="heroicons:arrow-long-right" class="-ml-1 mr-2 h-5 w-5" />
+          Voir tous les appels d'offre
+          </NuxtLink>
         </div>
       <!-- Upcoming Deadlines Section -->
       <div v-if="showUpcomingDeadlines && upcomingDeadlines.length > 0" class="mt-8 bg-white rounded-lg border border-gray-200 p-4">
@@ -398,10 +404,10 @@
 import { ref, onMounted, onUnmounted, computed, watch, shallowRef } from 'vue'
 import { navigateTo } from '#app'
 import { useOfferStore } from '@/stores/offerStore'
-//import { useConfirm } from 'primevue/config'
-import { useDateFormat, useNow } from '@vueuse/core'
+import { useNow } from '@vueuse/core'
 import type { Offer } from '~/models/Offer'
 import { NuxtLink } from '#components'
+import Swal from 'sweetalert2'
 
 
 interface Props {
@@ -428,7 +434,7 @@ const error = shallowRef<Error | null>(null)
 let refreshTimer: NodeJS.Timeout | null = null
 
 // État pour les filtres
-const filters = shallowRef({
+const filters = ref({
   status: '',
   search: '',
   sortBy: 'date',
@@ -626,7 +632,7 @@ const refreshData = async (): Promise<void> => {
   error.value = null
 
   try {
-    await offerStore.fetchOffers()
+    await offerStore.fetchOffers();
   } catch (err) {
     console.error('Erreur lors du chargement des offres:', err)
     error.value = err instanceof Error
@@ -680,17 +686,28 @@ const navigateToEdit = (offerId: string): void => {
 }
 
 // Confirmation de suppression d'une offre
-const confirmDelete = async (offer: any): Promise<void> => {
-  if (confirm(`Êtes-vous sûr de vouloir supprimer l'appel d'offres "${offer.title}" ?`)) {
-    try {
-      await offerStore.deleteOffer(offer.id)
-      await refreshData()
-      // Vous pourriez ajouter une notification de succès ici
-    } catch (error) {
-      console.error('Erreur lors de la suppression de l\'offre :', error)
-      // Vous pourriez ajouter une notification d'erreur ici
-    }
-  }
+const confirmDelete = async (offer: Offer): Promise<void> => {
+  Swal.fire({
+		title: 'Supprimer l\'appel d\'offres',
+		html: `Êtes-vous sûr de vouloir supprimer l\'appel d\'offres <b>"${offer.title}"</b> ?`,
+		icon: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		confirmButtonText: 'Oui, supprimer',
+		cancelButtonText: 'Annuler'
+	}).then(async (result) => {
+		if (result.isConfirmed) {
+			try {
+				await offerStore.deleteOffer(offer.id)
+				await refreshData()
+				useAlert().showAlert('Offre supprimée avec succès', 'success')
+			} catch (error) {
+				console.error('Erreur lors de la suppression de l\'offre :', error)
+				useAlert().showAlert('Erreur lors de la suppression de l\'offre', 'error')
+			}
+		}
+	})
 }
 
 // Status and urgency helpers

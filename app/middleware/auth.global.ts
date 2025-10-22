@@ -19,6 +19,10 @@ export default defineNuxtRouteMiddleware((to) => {
   const isAuthenticated = auth.isAuthenticated;
   const hasConfirmedPassword = !!auth.user?.hasConfirmedPassword;
 
+
+	console.log("user:", auth.user);
+
+
   // 1) Utilisateur NON authentifié : ne PAS vérifier hasConfirmedPassword
   if (!isAuthenticated) {
     if (publicRoutes.includes(basePath as any)) {

@@ -139,14 +139,11 @@ import { defaultMetadataFormData, defaultOfferFormData, type MetadataForm, type 
 import RequiredField from "../partials/RequiredField.vue";
 
 const offerFormData = defineModel<OfferForm>("offerFormData", {
-  default: defaultOfferFormData(),
+  default: defaultOfferFormData(null),
   required: true,
 });
 
-const metadataFormData = defineModel<MetadataForm>("metadataFormData", {
-  default: defaultMetadataFormData(),
-  required: true,
-});
+const metadataFormData = ref<MetadataForm>(defaultMetadataFormData());
 
 const { validationErrors } = storeToRefs(useOfferStore());
 
@@ -162,4 +159,10 @@ const removeRequirement = (index: number) => {
     offerFormData.value.requirement.splice(index, 1);
   }
 };
+
+onMounted(async () => {
+	console.log("offerFormData.value.metadata!:", offerFormData.value.metadata!);
+
+	metadataFormData.value = offerFormData.value.metadata!
+});
 </script>

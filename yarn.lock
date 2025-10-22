@@ -7561,6 +7561,7 @@ __metadata:
     pinia: "npm:^3.0.3"
     pinia-plugin-persistedstate: "npm:^4.4.1"
     secure-ls: "npm:^2.0.0"
+    sweetalert2: "npm:^11.23.0"
   languageName: unknown
   linkType: soft
 
@@ -9920,6 +9921,13 @@ __metadata:
   bin:
     svgo: ./bin/svgo.js
   checksum: 10c0/2b01c910d59d10bb15e17714181a8fa96531b09a4e2cf2ca1abe24dbcb8400725b6d542d6e456c62222546e334d5b344799c170c5b6be0c48e31b02c23297275
+  languageName: node
+  linkType: hard
+
+"sweetalert2@npm:^11.23.0":
+  version: 11.23.0
+  resolution: "sweetalert2@npm:11.23.0"
+  checksum: 10c0/1ad95b7ce0d355e8d021998c6576bbe3f6f9796fa886a8b33b6be28349061ba0942bb567b49bce926d8161db43fb2c94a908b3fb2f12883f7b50eea73f420b32
   languageName: node
   linkType: hard
 

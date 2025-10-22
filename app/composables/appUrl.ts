@@ -24,8 +24,8 @@ export const AppUrl ={
 	OFFERS_APPROVAL: "/offers/:id/approuver",
 	OFFERS_EDIT: "/offers/:id/modifier",
 	OFFERS_PENDING: "/offers/pending",
-	OFFERS_DOCUMENTS: "/offers/id/documents-availability",
-	OFFERS_LOTS: "/offers/id/lots-configuration",
+	OFFERS_DOCUMENTS: "/offers/:id/documents-availability",
+	OFFERS_LOTS: "/offers/:id/lots-configuration",
 	OFFERS_PROJECTS: "/offers/projects",
 	OFFERS_QUICK_STAT: "/offers/offer-quick-stat",
 

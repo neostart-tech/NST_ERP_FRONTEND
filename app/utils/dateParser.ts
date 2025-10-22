@@ -35,7 +35,8 @@ export const extractTime = (dateAsString: string | null): string => {
   if (!dateAsString) return "";
   const timePart = dateAsString.split('T')[1];
   if (!timePart) return "";
-  return timePart.split('.')[0]; // Retire les millisecondes si présentes
+  const timeWithoutMs = timePart.split('.')[0];
+  return timeWithoutMs || ""; // Retire les millisecondes si présentes
 };
 
 /**
@@ -48,4 +49,68 @@ export const extractDateTime = (dateAsString: string | null): string => {
   const [date, timeWithMs] = dateAsString.split('T');
   const time = timeWithMs ? timeWithMs.split('.')[0] : "";
   return date + "T" + time;
+};
+
+/**
+ * Parse une date ISO pour l'afficher dans un input de type datetime-local
+ * Gère les formats: 2025-11-15T11:30:00.000000Z ou 2025-11-15
+ * @param dateAsString Chaîne de date au format ISO
+ * @returns La date au format YYYY-MM-DDTHH:MM pour input datetime-local
+ */
+export const parseForDateTimeInput = (dateAsString: string | null | undefined): string => {
+  if (!dateAsString) return "";
+
+  // Retire le Z final si présent
+  const cleanDate = dateAsString.replace('Z', '');
+
+  // Split sur T pour séparer date et heure
+  const [datePart, timePart] = cleanDate.split('T');
+
+  if (!timePart) {
+    // Si pas d'heure, retourne juste la date
+    return datePart || "";
+  }
+
+  // Retire les microsecondes (.000000) et garde seulement HH:MM
+  const timeWithoutMs = timePart.split('.')[0];
+  if (!timeWithoutMs) return datePart || "";
+  const timeParts = timeWithoutMs.split(':');
+  const hours = timeParts[0] || "00";
+  const minutes = timeParts[1] || "00";
+
+  return `${datePart}T${hours}:${minutes}`;
+};
+
+/**
+ * Parse une date ISO pour l'afficher dans un input de type date
+ * Gère les formats: 2025-11-15T11:30:00.000000Z ou 2025-11-15
+ * @param dateAsString Chaîne de date au format ISO
+ * @returns La date au format YYYY-MM-DD pour input date
+ */
+export const parseForDateInput = (dateAsString: string | null | undefined): string => {
+  if (!dateAsString) return "";
+  // Extrait seulement la partie date
+  return dateAsString.split('T')[0] || "";
+};
+
+/**
+ * Parse une date ISO pour l'afficher dans un input de type time
+ * Gère le format: 2025-11-15T11:30:00.000000Z
+ * @param dateAsString Chaîne de date au format ISO
+ * @returns L'heure au format HH:MM pour input time
+ */
+export const parseForTimeInput = (dateAsString: string | null): string => {
+  if (!dateAsString) return "";
+
+  const timePart = dateAsString.split('T')[1];
+  if (!timePart) return "";
+
+  // Retire le Z et les microsecondes, garde seulement HH:MM
+  const cleanTime = timePart.replace('Z', '').split('.')[0];
+  if (!cleanTime) return "";
+  const timeParts = cleanTime.split(':');
+  const hours = timeParts[0] || "00";
+  const minutes = timeParts[1] || "00";
+
+  return `${hours}:${minutes}`;
 };

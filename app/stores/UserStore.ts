@@ -26,7 +26,7 @@ export const useUserStore = defineStore("UserStore", {
 		async getOneUser(userId: string) {
 			this.isLoading = true;
 			try {
-				const { data } = await useApi().get<User>(ApiUrl.parameterize(ApiUrl.USER_BY_ID, userId));
+				const { data } = await useApi().get<User>(ApiUrl.parameterized(ApiUrl.USER_BY_ID, userId));
 				return data;
 			} catch (error) {
 				this.validationErrors = useValidationErrors(error);
@@ -58,7 +58,7 @@ export const useUserStore = defineStore("UserStore", {
 		async updateUser(user: User) {
 			this.isLoading = true;
 			try {
-				const { data } = await useApi().put<User>(ApiUrl.parameterize(ApiUrl.USER_BY_ID, user.id), user);
+				const { data } = await useApi().put<User>(ApiUrl.parameterized(ApiUrl.USER_BY_ID, user.id), user);
 				this.users = this.users.map(_ => _.id === user.id ? data : _);
 				return data;
 			} catch (error) {

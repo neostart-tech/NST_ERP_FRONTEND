@@ -31,7 +31,8 @@ export interface Offer {
 	batch_number: string;
 	execution_batch_duration: string;
 	execution_duration: string;
-	metaData: Metadata
+	metadata: Metadata,
+	lots: Lot[]
 }
 
 export interface OfferForm {
@@ -42,7 +43,7 @@ export interface OfferForm {
 	amount: number;
 	submission_deadline: string;
 	status: string;
-	offer_type: string;
+	offer_type_id: string;
 	source_label: string;
 	source_reference: string;
 	enterprise_id: string;
@@ -56,6 +57,7 @@ export interface OfferForm {
 	batch_number: string;
 	execution_batch_duration?: string;
 	execution_duration?: string;
+	metadata?: MetadataForm
 }
 
 export interface Metadata {
@@ -73,6 +75,7 @@ export interface Metadata {
 }
 
 export interface MetadataForm {
+	has_bank_guarentee?: number;
 	bank_guarentee?: number;
 	offer_project?: string;
 	sponsor?: string;
@@ -83,6 +86,15 @@ export interface MetadataForm {
 	comment?: string;
 }
 
+export interface Lot {
+	id: string;
+	name: string;
+	title: string;
+	description: string | null;
+	total_profit: number;
+	isNew: boolean;
+}
+
 export const defaultOfferFormData = (data: Offer | null): OfferForm => ({
 	title: data?.title || "",
 	description: data?.description || "",
@@ -91,7 +103,7 @@ export const defaultOfferFormData = (data: Offer | null): OfferForm => ({
 	amount: data?.amount || 0,
 	submission_deadline: data?.submission_deadline || "",
 	status: data?.status || "",
-	offer_type: data?.offer_type.label || "",
+	offer_type_id: data?.offer_type.id || "",
 	source_label: data?.offer_source.label || "",
 	source_reference: data?.offer_source.reference || "",
 	enterprise_id: data?.enterprise.id || "",
@@ -105,6 +117,7 @@ export const defaultOfferFormData = (data: Offer | null): OfferForm => ({
 	batch_number: data?.batch_number || "",
 	execution_batch_duration: data?.execution_batch_duration || "",
 	execution_duration: data?.execution_duration || "",
+	metadata: data?.metadata || {}
 });
 
 export const defaultOfferData = (): Offer => ({
@@ -119,7 +132,7 @@ export const defaultOfferData = (): Offer => ({
 	offer_source: "",
 	source_label: "",
 	enterprise: "",
-	metaData: defaultMetadataFormData(),
+	metadata: defaultMetadataFormData(),
 	number: "",
 	file_price: 0,
 	file_obtaining_deadline: "",
@@ -132,9 +145,8 @@ export const defaultOfferData = (): Offer => ({
 	execution_duration: "",
 });
 
-
 export const defaultMetadataFormData = (): MetadataForm => ({
-	bank_guarentee: 0,
+	has_bank_guarentee: 0,
 	offer_project: "",
 	sponsor: "",
 	clarification_instruction: "",
@@ -143,3 +155,14 @@ export const defaultMetadataFormData = (): MetadataForm => ({
 	tender_pickup_address: "",
 	comment: "",
 });
+
+export const defaultLotData = (): Lot => ({
+	id: "",
+	name: "",
+	title: "",
+	description: "",
+	total_profit: 0,
+	isNew: true
+})
+
+

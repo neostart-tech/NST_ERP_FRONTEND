@@ -41,7 +41,7 @@ export const useEnterpriseStore = defineStore("EnterpriseStore", {
 
     async deleteEnterprise(entrepriseId: string) {
       try {
-        await useApi().del(ApiUrl.parameterize(ApiUrl.ENTREPRISE_BY_ID, entrepriseId));
+        await useApi().del(ApiUrl.parameterized(ApiUrl.ENTREPRISE_BY_ID, entrepriseId));
         this.enterprises = this.enterprises.filter(_ => _.id !== entrepriseId);
       } catch (error) {
         throw error;
@@ -51,7 +51,7 @@ export const useEnterpriseStore = defineStore("EnterpriseStore", {
     async getOneEntreprise(entrepriseId: string) {
       this.isLoading = true;
       try {
-        const { data } = await useApi().get<Entreprise>(ApiUrl.parameterize(ApiUrl.ENTREPRISE_BY_ID, entrepriseId));
+        const { data } = await useApi().get<Entreprise>(ApiUrl.parameterized(ApiUrl.ENTREPRISE_BY_ID, entrepriseId));
         return data;
       } catch (error) {
         this.validationErrors = useValidationErrors(error);
@@ -66,7 +66,7 @@ export const useEnterpriseStore = defineStore("EnterpriseStore", {
       this.validationErrors = {};
       try {
         const { data } = await useApi().put<Entreprise>(
-          ApiUrl.parameterize(ApiUrl.ENTREPRISE_BY_ID, entrepriseId),
+          ApiUrl.parameterized(ApiUrl.ENTREPRISE_BY_ID, entrepriseId),
           enterpriseFormData
         );
         this.enterprises = this.enterprises.map(_ => _.id === entrepriseId ? data : _);
