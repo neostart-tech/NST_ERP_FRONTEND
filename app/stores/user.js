@@ -1,4 +1,4 @@
-// stores/user.js - VERSION CORRIGÉE
+// stores/user.js - VERSION COMPLÈTE ET CORRIGÉE
 
 import { defineStore } from 'pinia'
 
@@ -18,7 +18,7 @@ export const useUserStore = defineStore('user', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-           'Accept': 'application/json',
+            'Accept': 'application/json',
           },
           body: JSON.stringify(userData),
         })
@@ -26,7 +26,7 @@ export const useUserStore = defineStore('user', {
         if (!res.ok) {
           const err = await res.json()
           this.error = err
-          throw new Error('Erreur lors de la création de l utilisateur.')
+          throw new Error('Erreur lors de la création de l\'utilisateur.')
         }
 
         const createdUser = await res.json()
@@ -47,7 +47,7 @@ export const useUserStore = defineStore('user', {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            Accept: 'application/json',
+            'Accept': 'application/json',
           },
           body: JSON.stringify(userData),
         })
@@ -55,10 +55,17 @@ export const useUserStore = defineStore('user', {
         if (!res.ok) {
           const err = await res.json()
           this.error = err
-          throw new Error('Erreur lors de la mise à jour de l utilisateur.')
+          throw new Error('Erreur lors de la mise à jour de l\'utilisateur.')
         }
 
         const updatedUser = await res.json()
+        
+        // Mettre à jour l'utilisateur dans la liste locale
+        const index = this.users.findIndex(u => u.id === userId)
+        if (index !== -1) {
+          this.users[index] = { ...this.users[index], ...updatedUser.user }
+        }
+        
         return updatedUser
       } catch (err) {
         this.error = err.message
@@ -69,53 +76,150 @@ export const useUserStore = defineStore('user', {
     },
 
     async fetchUsers() {
-      try {
-        this.users = await $fetch('http://127.0.0.1:8000/api/users')
-      } catch (err) {
-        console.error("Erreur lors de l'affichage", err)
-        throw err
-      }
-    },
-
-    // ✅ CORRECTION avec DEBUG : fetchUser maintenant DANS le bloc actions
-    async fetchUser(id) {
-      console.log('🟡 STORE: Début fetchUser avec ID:', id)
       this.loading = true
       this.error = null
       try {
-        const url = `http://127.0.0.1:8000/api/users/${id}`
-        console.log('🟡 STORE: URL appelée:', url)
-        
-        const response = await fetch(url)
-        console.log('🟡 STORE: Statut de la réponse:', response.status)
+        const response = await fetch('http://127.0.0.1:8000/api/users')
         
         if (!response.ok) {
-          console.error('❌ STORE: Réponse non OK:', response.status, response.statusText)
-          throw new Error(`Utilisateur non trouvé - Status: ${response.status}`)
+          throw new Error(`Erreur HTTP: ${response.status}`)
         }
         
         const data = await response.json()
-        console.log('🟡 STORE: Données reçues:', data)
         
-        // ✅ CORRECTION : Retourner directement user si la structure est { success: true, user: {...} }
-        if (data.success && data.user) {
-          console.log('✅ STORE: Utilisateur extrait:', data.user)
-          return data.user
-        } else if (data.user) {
-          console.log('✅ STORE: Utilisateur trouvé (format alternatif):', data.user)
-          return data.user
-        } else {
-          console.log('✅ STORE: Retour direct des données:', data)
-          return data // Au cas où la structure change
-        }
+        // Gestion des différentes structures de réponse
+        this.users = Array.isArray(data) ? data : (data.users || data.data || [])
         
       } catch (error) {
-        console.error('❌ STORE: Erreur dans fetchUser:', error)
+        console.error("Erreur lors du chargement des utilisateurs:", error)
+        this.error = error.message
+        this.users = []
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async fetchUser(id) {
+      this.loading = true
+      this.error = null
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/users/${id}`)
+        
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`)
+        }
+        
+        const data = await response.json()
+        return data.user || data
+        
+      } catch (error) {
+        console.error("Erreur lors du chargement de l'utilisateur:", error)
         this.error = error.message
         throw error
       } finally {
         this.loading = false
-        console.log('🟡 STORE: Fin fetchUser')
+      }
+    },
+
+    // NOUVELLE MÉTHODE: Désactiver un utilisateur
+    async deactivateUser(userId) {
+      this.loading = true
+      this.error = null
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/api/users/${userId}/deactivate`, {
+          method: 'PATCH',
+          headers: {
+            'Accept': 'application/json',
+          },
+        })
+
+        if (!res.ok) {
+          const err = await res.json()
+          this.error = err
+          throw new Error('Erreur lors de la désactivation de l\'utilisateur.')
+        }
+
+        const result = await res.json()
+        
+        // Mettre à jour l'utilisateur dans la liste locale
+        const index = this.users.findIndex(u => u.id === userId)
+        if (index !== -1) {
+          this.users[index].is_active = false
+        }
+        
+        return result
+      } catch (err) {
+        this.error = err.message
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+
+    // Méthode activateUser existante (à garder)
+    async activateUser(userId) {
+      this.loading = true
+      this.error = null
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/api/users/${userId}/activate`, {
+          method: 'PATCH',
+          headers: {
+            'Accept': 'application/json',
+          },
+        })
+
+        if (!res.ok) {
+          const err = await res.json()
+          this.error = err
+          throw new Error('Erreur lors de l\'activation de l\'utilisateur.')
+        }
+
+        const result = await res.json()
+        
+        // Mettre à jour l'utilisateur dans la liste
+        const index = this.users.findIndex(u => u.id === userId)
+        if (index !== -1) {
+          this.users[index].is_active = true
+        }
+        
+        return result
+      } catch (err) {
+        this.error = err.message
+        throw err
+      } finally {
+        this.loading = false
+      }
+    },
+
+    // NOUVELLE MÉTHODE: Supprimer un utilisateur
+    async deleteUser(userId) {
+      this.loading = true
+      this.error = null
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/api/users/${userId}`, {
+          method: 'DELETE',
+          headers: {
+            'Accept': 'application/json',
+          },
+        })
+
+        if (!res.ok) {
+          const err = await res.json()
+          this.error = err
+          throw new Error('Erreur lors de la suppression de l\'utilisateur.')
+        }
+
+        const result = await res.json()
+        
+        // Retirer l'utilisateur de la liste locale
+        this.users = this.users.filter(u => u.id !== userId)
+        
+        return result
+      } catch (err) {
+        this.error = err.message
+        throw err
+      } finally {
+        this.loading = false
       }
     }
   }

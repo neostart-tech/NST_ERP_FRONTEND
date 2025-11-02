@@ -55,8 +55,8 @@
         </thead>
         <tbody>
           <tr v-for="order in filteredOrders" :key="order.id" class="hover:bg-gray-50">
-            <td class="border px-3 py-2 text-center">{{ order.reference }}</td>
-            <td class="border px-3 py-2 text-center">{{ order.client.last_name }} {{ order.client.first_name }}</td>
+            <td class="border px-3 py-2 text-center"></td>
+            <td class="border px-3 py-2 text-center"> </td>
             <td class="border px-3 py-2 text-center">
               <span :class="statusClass(order.status)" class="px-2 py-1 rounded text-xs font-bold">{{ translateStatus(order.status) }}</span>
             </td>
@@ -94,8 +94,8 @@
         <h2 class="text-2xl font-bold mb-4 text-indigo-700">Détails de la Commande</h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 mb-6">
-          <p><strong>Référence :</strong> {{ selectedOrder.reference }}</p>
-          <p><strong>Client :</strong> {{ selectedOrder.client.last_name }} {{ selectedOrder.client.first_name }}</p>
+          <p><strong>Référence :</strong> </p>
+          <p><strong>Client :</strong> {{ selectedOrder.client.name }} </p>
           <p><strong>Date :</strong> {{ formatDate(selectedOrder.created_at) }}</p>
           <p><strong>Statut :</strong> <span :class="statusClass(selectedOrder.status)">{{ translateStatus(selectedOrder.status) }}</span></p>
           <p><strong>Proforma associée :</strong>

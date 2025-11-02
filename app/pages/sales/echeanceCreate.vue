@@ -10,7 +10,7 @@
       <select v-model="factureSelectionnee" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-indigo-500">
         <option  value="">Sélectionner la facture</option>
         <option v-for="invoice in invoiceStore.facture":key="invoice.id":value="invoice" >
-          {{ invoice.reference }} - {{ invoice.order.client.name }}
+          {{ invoice.reference }} 
         </option>
       </select>
     </div>
@@ -19,10 +19,10 @@
       <h2 class="font-semibold text-lg mb-2">Détails de la Facture</h2>
       <p>
         <strong>Client :</strong>
-        {{ factureSelectionnee.order.client.last_name }}
-        {{ factureSelectionnee.order.client.first_name }}
+        {{ factureSelectionnee.order.client.name }}
+        
       </p>
-      <p><strong>Commande :</strong> {{ factureSelectionnee.order.status }}</p>
+      <p><strong>Commande :</strong> </p>
       <p>
         <strong>Total à payer :</strong>
         {{ formatCurrency(factureSelectionnee.total) }}

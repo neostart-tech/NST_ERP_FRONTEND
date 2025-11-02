@@ -1,22 +1,11 @@
 <template>
   <main class="flex-1 p-6 bg-gray-50 min-h-screen">
     <div class="max-w-7xl mx-auto">
-      <!-- Header avec bouton d'export -->
       <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <h1 class="text-2xl font-bold text-gray-800">Calcul des Primes</h1>
         
-        <button 
-          @click="exportBonuses"
-          class="px-5 py-2.5 bg-sky-600 text-white font-semibold rounded-lg shadow-md hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 transition-colors duration-200 flex items-center gap-2"
-        >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-          </svg>
-          Exporter les primes
-        </button>
       </div>
 
-      <!-- Statistiques rapides -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
           <div class="flex items-center justify-between">
@@ -75,7 +64,6 @@
         </div>
       </div>
 
-      <!-- Filtres -->
       <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 mb-6">
         <div class="px-6 py-5 border-b border-gray-100">
           <h2 class="text-lg font-semibold text-gray-900">Filtrer les résultats</h2>
@@ -121,7 +109,6 @@
             </div>
           </div>
           
-          <!-- Période personnalisée -->
           <div v-if="filters.period === 'custom'" class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
             <div>
               <label for="start-date" class="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
@@ -146,7 +133,6 @@
         </div>
       </div>
 
-      <!-- Tableau des primes -->
       <div class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
@@ -162,14 +148,13 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-100">
               <tr 
-                v-for="bonus in filteredBonuses" 
+                v-for="bonus in displayedBonuses" 
                 :key="bonus.id" 
                 class="hover:bg-sky-50 transition-colors duration-150"
               >
                 <td class="px-6 py-4 whitespace-nowrap">
                   <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10">
-                      <!-- Avatar avec initiales -->
                       <div class="h-10 w-10 rounded-full bg-gradient-to-br from-sky-400 to-sky-600 flex items-center justify-center text-white font-bold">
                         {{ getInitials(bonus.first_name, bonus.last_name) }}
                       </div>
@@ -201,8 +186,7 @@
                 </td>
               </tr>
               
-              <!-- Ligne de total -->
-              <tr class="bg-gray-50 font-semibold">
+              <tr v-if="displayedBonuses.length > 0" class="bg-gray-50 font-semibold">
                 <td class="px-6 py-4 whitespace-nowrap">Total</td>
                 <td class="px-6 py-4 whitespace-nowrap text-gray-900">{{ formatCurrency(totalTarget) }}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-gray-900">{{ formatCurrency(totalAchieved) }}</td>
@@ -215,8 +199,7 @@
                 <td class="px-6 py-4 whitespace-nowrap"></td>
               </tr>
               
-              <!-- Message si aucun résultat -->
-              <tr v-if="filteredBonuses.length === 0">
+              <tr v-if="displayedBonuses.length === 0">
                 <td colspan="6" class="px-6 py-4 whitespace-nowrap text-center text-gray-500">
                   Aucune prime trouvée avec les filtres actuels
                 </td>
@@ -235,6 +218,11 @@ import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
 
+// Variable pour stocker toutes les primes générées
+const allBonuses = ref([])
+// Variable pour stocker les primes à afficher, après filtrage
+const displayedBonuses = ref([])
+
 // Filtres
 const filters = reactive({
   salesperson: '',
@@ -245,70 +233,23 @@ const filters = reactive({
 
 // Computed pour obtenir les commerciaux
 const commercials = computed(() => {
-  if (!userStore.users?.users) return []
-  return userStore.users.users.filter(user => 
-    user.role.toLowerCase() === 'commercial'
+  if (!userStore.users || !Array.isArray(userStore.users)) return []
+  return userStore.users.filter(user => 
+    user.role && user.role.toLowerCase() === 'commercial'
   )
 })
 
-// Générer des primes simulées basées sur les vrais commerciaux
-const simulatedBonuses = computed(() => {
-  return commercials.value.map((commercial, index) => {
-    // Simulation d'objectifs et de réalisations
-    const baseTarget = 80000 + (index * 20000) + Math.random() * 10000
-    const target = Math.round(baseTarget)
-    
-    // Simulation du taux de réalisation (70% à 130%)
-    const achievementMultiplier = 0.7 + Math.random() * 0.6
-    const achieved = Math.round(target * achievementMultiplier)
-    const achievementRate = Math.round((achieved / target) * 100)
-    
-    // Calcul de la prime (bonus si > 100% de l'objectif)
-    let bonusAmount = 0
-    if (achieved > target) {
-      const surplus = achieved - target
-      bonusAmount = Math.round(surplus * 0.03) // 3% du surplus comme prime
-    }
-    
-    return {
-      id: commercial.id,
-      first_name: commercial.first_name,
-      last_name: commercial.last_name,
-      email: commercial.email,
-      target: target,
-      achieved: achieved,
-      achievementRate: achievementRate,
-      bonusAmount: bonusAmount,
-      period: getCurrentQuarter()
-    }
-  })
-})
-
-// Primes filtrées
-const filteredBonuses = computed(() => {
-  let result = [...simulatedBonuses.value]
-  
-  // Filtre par commercial
-  if (filters.salesperson) {
-    result = result.filter(b => b.id === parseInt(filters.salesperson))
-  }
-  
-  // Ici vous pouvez ajouter d'autres filtres selon vos besoins
-  
-  return result
-})
-
-// Totaux calculés
+// Fonctions de calcul des totaux basées sur les données affichées
 const totalTarget = computed(() => {
-  return filteredBonuses.value.reduce((sum, b) => sum + b.target, 0)
+  return displayedBonuses.value.reduce((sum, b) => sum + b.target, 0)
 })
 
 const totalAchieved = computed(() => {
-  return filteredBonuses.value.reduce((sum, b) => sum + b.achieved, 0)
+  return displayedBonuses.value.reduce((sum, b) => sum + b.achieved, 0)
 })
 
 const totalBonuses = computed(() => {
-  return filteredBonuses.value.reduce((sum, b) => sum + b.bonusAmount, 0)
+  return displayedBonuses.value.reduce((sum, b) => sum + b.bonusAmount, 0)
 })
 
 const overallAchievementRate = computed(() => {
@@ -333,12 +274,6 @@ const getAchievementBadge = (rate) => {
   }
 }
 
-const getCurrentQuarter = () => {
-  const now = new Date()
-  const quarter = Math.floor((now.getMonth() + 3) / 3)
-  return `T${quarter} ${now.getFullYear()}`
-}
-
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('fr-FR', { 
     style: 'currency', 
@@ -348,18 +283,112 @@ const formatCurrency = (amount) => {
   }).format(amount)
 }
 
+// Fonction pour générer des primes simulées basées sur les vrais commerciaux
+const generateSimulatedBonuses = () => {
+  const bonuses = []
+  if (!commercials.value.length) return []
+
+  // Gérer les dates pour simuler des primes sur un an
+  const today = new Date();
+  const oneYearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+
+  let currentDate = oneYearAgo;
+  while (currentDate <= today) {
+    commercials.value.forEach(commercial => {
+      // Pour simuler des primes par période, on peut le faire par exemple par trimestre
+      // Si la date actuelle est le début d'un trimestre
+      if (currentDate.getMonth() % 3 === 0 && currentDate.getDate() === 1) {
+        const baseTarget = 80000 + (Math.random() * 20000)
+        const target = Math.round(baseTarget)
+        
+        const achievementMultiplier = 0.7 + Math.random() * 0.6
+        const achieved = Math.round(target * achievementMultiplier)
+        const achievementRate = Math.round((achieved / target) * 100)
+        
+        let bonusAmount = 0
+        if (achieved > target) {
+          const surplus = achieved - target
+          bonusAmount = Math.round(surplus * 0.03) // 3% du surplus comme prime
+        }
+        
+        bonuses.push({
+          id: parseInt(commercial.id),
+          first_name: commercial.first_name,
+          last_name: commercial.last_name,
+          email: commercial.email,
+          target: target,
+          achieved: achieved,
+          achievementRate: achievementRate,
+          bonusAmount: bonusAmount,
+          period: `T${Math.floor((currentDate.getMonth() + 3) / 3)} ${currentDate.getFullYear()}`,
+          date: currentDate.toISOString().split('T')[0]
+        })
+      }
+    });
+    // Avancer la date d'un jour pour la simulation
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  return bonuses;
+}
+
+// Fonction pour appliquer les filtres et mettre à jour le tableau
 const applyFilters = () => {
-  console.log('Filtres appliqués:', filters)
+  let filtered = [...allBonuses.value]
+
+  // Filtrage par commercial
+  if (filters.salesperson) {
+    filtered = filtered.filter(b => b.id === parseInt(filters.salesperson))
+  }
+  
+  // Filtrage par période
+  if (filters.period !== 'custom') {
+    const today = new Date();
+    let startDate = null;
+    let endDate = today;
+
+    switch (filters.period) {
+      case 'quarter':
+        const currentMonthQuarter = today.getMonth()
+        const startMonthOfQuarter = Math.floor(currentMonthQuarter / 3) * 3
+        startDate = new Date(today.getFullYear(), startMonthOfQuarter, 1)
+        break
+      case 'semester':
+        const currentMonthSemester = today.getMonth()
+        const startMonthOfSemester = Math.floor(currentMonthSemester / 6) * 6
+        startDate = new Date(today.getFullYear(), startMonthOfSemester, 1)
+        break
+      case 'year':
+        startDate = new Date(today.getFullYear(), 0, 1)
+        break
+    }
+    filtered = filtered.filter(b => {
+      const bonusDate = new Date(b.date)
+      return bonusDate >= startDate && bonusDate <= endDate
+    })
+  } else {
+    const startDate = filters.startDate ? new Date(filters.startDate) : null
+    const endDate = filters.endDate ? new Date(filters.endDate) : null
+
+    filtered = filtered.filter(b => {
+      const bonusDate = new Date(b.date)
+      const isAfterStart = !startDate || bonusDate >= startDate
+      const isBeforeEnd = !endDate || bonusDate <= endDate
+      return isAfterStart && isBeforeEnd
+    })
+  }
+
+  displayedBonuses.value = filtered
 }
 
 const exportBonuses = () => {
   alert('Export des primes en cours...')
-  // Ici vous implémenteriez la logique d'export réel
 }
 
-// Charger les utilisateurs au montage
-onMounted(() => {
-  userStore.fetchUsers()
+// Charger les utilisateurs et générer les données au montage
+onMounted(async () => {
+  await userStore.fetchUsers()
+  allBonuses.value = generateSimulatedBonuses()
+  applyFilters() // Appliquer les filtres initiaux au chargement
 })
 </script>
 

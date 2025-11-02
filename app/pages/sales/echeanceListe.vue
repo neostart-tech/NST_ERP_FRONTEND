@@ -57,7 +57,7 @@
             </td>
           </tr>
           <tr v-for="schedule in scheduleStore.echeancier" :key="schedule.id" class="border-t hover:bg-gray-50 transition duration-100 ease-in-out">
-            <td class="p-3 border  text-center text-gray-800">{{schedule.invoice.order.client.last_name}} {{schedule.invoice.order.client.first_name}}</td>
+            <td class="p-3 border  text-center text-gray-800">{{schedule.invoice.order.client.name}} </td>
             <td class="p-3 border text-center text-gray-700">{{ schedule.invoice.reference }}</td>
             <td class="p-3 border text-center font-semibold">{{ formatCurrency(schedule.invoice.total) }}</td>
             <td class="p-3 border text-center space-x-3 flex justify-center">
@@ -76,12 +76,12 @@
       <h2 class="text-2xl font-bold mb-4 text-indigo-700">Détails de l'échéancier</h2>
       <button @click="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800">
         <i class="fas fa-times"></i>
->>>>>>> origin/melchior_sale_management
+
       </button>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg text-sm text-gray-700 mb-6">
         <p><strong>Référence facture :</strong> {{ selectedSchedule.invoice.reference }}</p>
-        <p><strong>Client :</strong> {{ selectedSchedule.invoice.order.client.last_name }} {{ selectedSchedule.invoice.order.client.first_name }}</p>
+        <p><strong>Client :</strong> {{ selectedSchedule.invoice.order.client.name }} </p>
         <p><strong>Total Facture :</strong> {{ formatCurrency(selectedSchedule.invoice.total) }}</p>
         <p><strong>Commande :</strong> </p>
         <p><strong>Date de création :</strong> {{ formatDate(selectedSchedule.invoice.order.date) }}</p>
