@@ -31,7 +31,7 @@
       <!-- Lien pour ajouter le logo de l'entreprise -->
       <a href="#" class="flex items-center justify-center w-16 h-16 rounded-xl bg-white/10 backdrop-blur-sm">
         <!-- Remplacez cette balise img par votre logo -->
-        <img src="C:\Users\Ambroise ADENYO\OneDrive\Desktop\stage_projet\images\ez426phx.png" alt="Logo de l'entreprise" class="w-13 h-13 object-contain">
+        <!-- <img src="C:\Users\Ambroise ADENYO\OneDrive\Desktop\stage_projet\images\ez426phx.png" alt="Logo de l'entreprise" class="w-13 h-13 object-contain"> -->
         <!-- Ou utilisez ce SVG par défaut si le logo n'est pas encore disponible -->
         <!--
         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
