@@ -9,11 +9,12 @@ export const AppUrl ={
 	// Tout le reste a besoin d'authentification
 	DASHBOARD: "/dashboard",
 	ABOUT: "/about",
-	CLIENTS: "/clients",
-	ORDERS: "/orders",
+	CLIENTS: "/sales/clients",
 	QUOTES: "/quotes",
 	INVOICES: "/invoices",
 	SALES: "/sales",
+	BALANCE:"/sales/bilan",
+	STATS:'/sales/statistique',
 	FOLLOWUP: "/followup",
 	USERS: "/utilisateurs",
 

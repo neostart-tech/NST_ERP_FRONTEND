@@ -5,14 +5,14 @@
  * - Réduire les risques d'erreurs de frappe
  * - Maintenir une cohérence dans l'utilisation des endpoints
  */
-export const ApiUrl = {
-	/**
-	 * Endpoint pour l'authentification
-	 * Méthode: POST
-	 * Corps: { email: string, password: string }
-	 * Retour: { token: string, user: User }
-	 */
-	LOGIN: '/auth/login',
+export const ApiUrls = {
+  /**
+   * Endpoint pour l'authentification
+   * Méthode: POST
+   * Corps: { email: string, password: string }
+   * Retour: { token: string, user: User }
+   */
+  LOGIN: '/auth/login',
 
 	/**
 	 * Endpoint pour l'inscription
