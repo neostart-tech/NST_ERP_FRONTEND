@@ -5,7 +5,7 @@
  * - Réduire les risques d'erreurs de frappe
  * - Maintenir une cohérence dans l'utilisation des endpoints
  */
-export const ApiUrls = {
+export const ApiUrl = {
   /**
    * Endpoint pour l'authentification
    * Méthode: POST

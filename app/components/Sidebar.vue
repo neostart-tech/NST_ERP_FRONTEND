@@ -200,7 +200,7 @@
               </NuxtLink> -->
 
               <!-- Menu avec sous-menus -->
-              <!-- <div v-else class="nav-section">
+              <div v-else class="nav-section">
                 <button @click="toggleSection(menu.id)" class="w-full nav-section-header"
                   :class="{ 'nav-section-header-active': expandedSections[menu.id] }">
                   <div class="flex items-center justify-between w-full">
@@ -238,7 +238,7 @@
                     </NuxtLink>
                   </div>
                 </transition>
-              </div> -->
+              </div>
             </template>
           </div>
         </nav>
