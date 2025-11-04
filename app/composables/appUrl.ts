@@ -1,4 +1,4 @@
-export const AppUrl ={
+export const AppUrl = {
 	// Url Publiques
 	HOME: "/",
 	LOGIN: "/auth",
@@ -13,8 +13,18 @@ export const AppUrl ={
 	QUOTES: "/quotes",
 	INVOICES: "/invoices",
 	SALES: "/sales",
-	BALANCE:"/sales/bilan",
-	STATS:'/sales/statistique',
+	INFOPROPO: "/sales/listeProforma",
+	PROPO: '/sales/proposition',
+	ORDER: '/sales/order',
+	ORDERINFO: '/sales/infoCommande',
+	INVOICE: '/sales/invoice',
+	INVOICEINFO: '/sales/recapFacture',
+	DELIVERY: '/sales/livraison',
+	DELIVERYINFO: '/sales/listeLivraison',
+	SCHEDULE: '/sales/echeanceCreate',
+	SCHEDULEINFO: '/sales/echeanceListe',
+	BALANCE: "/sales/bilan",
+	STATS: '/sales/statistique',
 	FOLLOWUP: "/followup",
 	USERS: "/utilisateurs",
 
