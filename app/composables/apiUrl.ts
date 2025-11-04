@@ -12,7 +12,7 @@ export const ApiUrls = {
    * Corps: { email: string, password: string }
    * Retour: { token: string, user: User }
    */
-  LOGIN: '/login',
+  LOGIN: '/auth/login',
 
   /**
    * Endpoint pour l'inscription
@@ -28,5 +28,5 @@ export const ApiUrls = {
    * Corps: Vide
    * Retour: Vide
    */
-  LOGOUT: '/logout',
+  LOGOUT: '/auth/logout',
 };
