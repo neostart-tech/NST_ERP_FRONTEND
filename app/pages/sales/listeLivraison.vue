@@ -48,8 +48,8 @@
         </thead>
         <tbody>
           <tr v-for="delivery in filteredDeliveries" :key="delivery.id" class="hover:bg-gray-50 border-b border-gray-200">
-            <td class="p-3  text-center border border-gray-200">{{ delivery.order.client.last_name }} {{ delivery.order.client.first_name }}</td>
-            <td class="p-3  text-center border border-gray-200">{{ delivery.order.reference }}</td>
+            <td class="p-3  text-center border border-gray-200"> </td>
+            <td class="p-3  text-center border border-gray-200"></td>
             <td class="p-3 text-center  border border-gray-200">
               <span  class="px-2 py-1 rounded text-xs font-bold">
                 {{ translateDeliveryType(delivery.delivery_type) }}
@@ -78,10 +78,10 @@
     <div v-if="showModal && selectedDelivery" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div class="bg-white rounded-lg shadow-xl w-3/4 max-w-3xl p-6 relative max-h-[90vh] overflow-y-auto">
         <h2 class="text-2xl font-bold mb-4 text-indigo-700">Détails du Bordereau</h2>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 mb-6">
-          <p><strong>Commande :</strong> {{ selectedDelivery.order.reference }}</p>
-          <p><strong>Client :</strong> {{ selectedDelivery.order.client.last_name }} {{ selectedDelivery.order.client.first_name }}</p>
+          <!-- <p><strong>Commande :</strong> {{ selectedDelivery.order.reference }}</p> -->
+          <!-- <p><strong>Client :</strong> {{ selectedDelivery.order.client.name }} </p> -->
           <p><strong>Date :</strong> {{ formatDate(selectedDelivery.delivery_date) }}</p>
           <p><strong>Adresse :</strong> {{ selectedDelivery.delivery_address }}</p>
           <p><strong>Type :</strong>
@@ -99,7 +99,7 @@
               <th class="p-2 text-left border   text-center">Code</th>
               <th class="p-2 text-left border   text-center">Numéro Série</th>
               <th class="p-2 text-center border   text-center">Qté Livrée</th>
-            </tr>        
+            </tr>
           </thead>
           <tbody>
             <tr v-for="article in selectedDelivery.items" :key="article.id" class="border-t">
@@ -122,7 +122,7 @@
           <button @click="closeModal" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow">
             Fermer
           </button>
-          
+
         </div>
       </div>
     </div>

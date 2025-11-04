@@ -14,7 +14,7 @@
           :key="proforma.id"
           :value="proforma.id"
         >
-          {{ proforma.reference }} : {{ proforma.client.last_name }} {{ proforma.client.first_name }} - {{ proforma.object }}
+          {{ proforma.reference }} : {{ proforma.client.name }} {{ proforma.object }}
         </option>
       </select>
     </div>
@@ -25,7 +25,7 @@
       <select v-model="selectedClient" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500">
         <option value="">-- Sélectionner un client --</option>
         <option v-for="client in clientStore.clients" :key="client.id" :value="client.id">
-          {{ client.last_name }} {{ client.first_name }}
+          {{ client.name }} 
         </option>
       </select> -->
       <!-- Client -->
@@ -169,14 +169,12 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import { useClientStore } from '~/app/stores/sale/client'
+import { useClientStore } from '#imports'
 import { useProformaStore } from '#imports'
 import { useArticleStore } from '#imports'
 import { useOrderStore } from '#imports'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
-
-definePageMeta({ layout: 'default' })
 
 const selectedQuote = ref('')
 const selectedClient = ref('')

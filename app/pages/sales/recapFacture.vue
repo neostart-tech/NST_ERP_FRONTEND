@@ -64,7 +64,7 @@
         <tbody>
           <tr v-for="invoice in filteredInvoices" :key="invoice.id" class="hover:bg-gray-50">
             <td class="border px-3 py-2   text-center">{{ invoice.reference }}</td>
-            <td class="border px-3 py-2  text-center">{{ invoice.order.client.first_name }} {{ invoice.order.client.last_name }}</td>
+            <td class="border px-3 py-2  text-center"></td>
             <td class="border px-3 py-2  text-center">{{ formatCurrency(invoice.total) }}</td>
             <td class="border px-3 py-2  text-center">{{ formatDate(invoice.date) }}</td>
             <td class="border px-3 py-2 flex justify-center gap-2">
@@ -97,8 +97,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 mb-6">
         <p><strong>Référence :</strong> {{ selectedInvoice.reference }}</p>
         <p><strong>Date :</strong> {{ formatDate(selectedInvoice.date) }}</p>
-        <p><strong>Client :</strong> {{ selectedInvoice.order.client.first_name }} {{
-          selectedInvoice.order.client.last_name }}</p>
+        <p><strong>Client :</strong> {{ selectedInvoice.order.client.name }}</p>
         <p><strong>Commande concernée:</strong> {{ selectedInvoice.order.reference }}</p>
         <p><strong>Montant TTC:</strong> {{ formatCurrency(selectedInvoice.total) }}</p>
       </div>

@@ -13,7 +13,7 @@
         <select v-model="selectedCommande" @change="loadCommande" class="border border-black w-full p-2 rounded-lg">
           <option value="">-- Sélectionner une commande --</option>
           <option v-for="(cmd, index) in orderStore.commande" :key="cmd.id" :value="cmd.id">
-            {{ cmd.reference }} - {{ cmd.client.last_name }} {{ cmd.client.first_name }} 
+            {{ cmd.date }} 
           </option>
         </select>
       </div>
