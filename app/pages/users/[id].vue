@@ -234,7 +234,7 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '~/app/stores/_user'
 
 const route = useRoute()
 const userStore = useUserStore()

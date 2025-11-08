@@ -261,7 +261,7 @@ import DefaultLayout from '@/layouts/default.vue'
 import { ref, reactive, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '~/app/stores/_user'
 const userStore = useUserStore()
 
 

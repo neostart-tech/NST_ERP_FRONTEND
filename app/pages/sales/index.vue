@@ -395,7 +395,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useUserStore } from "@/stores/user";
+import { useUserStore } from "~/app/stores/_user";
 
 // Références
 const userStore = useUserStore();
