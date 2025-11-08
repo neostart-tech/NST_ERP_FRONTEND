@@ -49,6 +49,12 @@ export const AppUrl = {
 	SUPPLIERS_INVOICES: "/fournisseurs/invoices",
 	SUPPLIERS_EVALUATIONS: "/fournisseurs/evaluations",
 
+	//SALES REPRESENTATIVES
+	SALES_REPRESENTATIVES_NEW: "/users/form",
+	SALES_REPRESENTATIVES_EDIT: "/users/:id/edit",
+	SALES_REPRESENTATIVES_COMISSIONS: "/sales/commissions",
+	SALES_REPRESENTATIVES_BONUSES: "/sales/bonuses",
+
 	//MAINTENANCE
 	MAINTENANCE_TICKETS: "/maintenance/tickets",
 	MAINTENANCE_PLANNING: "/maintenance/planning",

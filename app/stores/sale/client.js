@@ -1,70 +1,58 @@
 import { defineStore } from "pinia";
+import { useApi } from "@/composables/useApi";
+import { ApiUrl } from "@/composables/apiUrl";
 export const useClientStore = defineStore("client", {
-  state: () => ({
-    loading: false,
-    clients: [],
-    stat:{
-      total:0,
-      physique:0, 
-      moral:0
-    }
-  }),
-  actions: {
-    async createClients(payload){
-      try{
-        const response=await $fetch('http://127.0.0.1:8000/api/client',{
-          method:'POST',
-          headers:{
-            'Accept':'application/json',
-            'Content-Type':'application/json',
-          },
-          body:payload
-        })
-        return response
+	state: () => ({
+		loading: false,
+		clients: [],
+		stat: {
+			total: 0,
+			physique: 0,
+			moral: 0
+		},
+		validationError: {}
+	}),
+	actions: {
+		async createClients(payload) {
+			try {
+				const { client } = await useApi().post(ApiUrl.CLIENTS, payload)
+				return client;
 
-      }catch(error){
-        console.error("Erreur",error);
-     
-      }
-    },
+			} catch (error) {
+				this.validationError = useValidationErrors(error);
+				throw error;
+			}
+		},
 
-    async fetchClients() {
-      try {
-        // this.loading = true;
-        this.clients = await $fetch("http://127.0.0.1:8000/api/client");
+		async fetchClients() {
+			try {
+				const { clients } = await useApi().get(ApiUrl.CLIENTS)
+				this.clients = clients
+			} catch (error) {
+				console.error("Erreur lors du chargement des clients:", error);
+			}
+		},
 
-        // this.loading = false;
-      } catch (error) {
-        console.error("Erreur lors du chargement des clients:", error);
-      }
-    },
+		async fetchStats() {
+			try {
+				const { stats } = await useApi().get(ApiUrl.CLIENT_STATS)
+				this.stat = stats
+			} catch (error) {
+				console.error('Erreur lors du chargement des statistiques', error);
 
-    async fetchStats(){
-      try{
-        this.stat=await $fetch('http://127.0.0.1:8000/api/client/stats');
-      }catch(error){
-        console.error('Erreur lors du chargement des statistiques',error);
+			}
+		},
+		async updateClient(clientId, payload) {
+			try {
+				const { client } = await useApi().put(ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, clientId), payload)
+				return client;
+			} catch (error) {
+				console.error("Erreur lors de la mise à jour")
+			}
+		}
 
-      }
-    },
-    async updateClient(clientId, payload){
-      try{
-        const response=await $fetch(`http://127.0.0.1:8000/api/client/${clientId}`,{
-          method:'PUT',
-          headers:{
-            'Accept':'appliction/json',
-            'Content-Type':'applicaton/json'
-          },
-          body:payload
-        })
 
-      }catch(error){
-        console.error("Erreur lors de la mise à jour")
-      }
-    }
+	}
 
-    
-  }
 
- 
 });

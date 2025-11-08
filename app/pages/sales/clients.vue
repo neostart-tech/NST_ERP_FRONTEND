@@ -1,108 +1,276 @@
 <template>
   <div class="max-w-6xl mx-auto p-6 space-y-6">
-    <!-- Titre -->
-    <h1 class="text-2xl font-bold text-gray-800">Gestion des Clients</h1>
+    		<!-- En-tête -->
+			<div class="relative mb-4">
+				<div
+					class="bg-gradient-to-r from-sky-600 to-sky-700 rounded-lg shadow p-4 text-white overflow-hidden"
+				>
+					<!-- Motif de fond décoratif simplifié -->
+					<div class="absolute inset-0 opacity-5">
+						<div
+							class="absolute -top-8 -right-8 w-20 h-20 bg-white rounded-full"
+						></div>
+					</div>
+					<div>
+						<h1 class="text-xl font-bold">Gestion des Clients</h1>
+						<p class="text-sky-100 text-sm mt-1">
+							Créer et suivez vos clients physiques et moraux
+						</p>
+					</div>
+				</div>
+			</div>
 
-    <!-- Statistiques -->
-    <div class="grid grid-cols-3 gap-6">
-      <div class="bg-indigo-100 p-4 rounded-xl border-l-4 border-blue-900 shadow text-center">
-        <h3 class="text-lg font-semibold text-indigo-700">Total Clients</h3>
-        <p class="text-3xl font-bold">{{ clientStore.stat.total }}</p>
-      </div>
-      <div class="bg-green-100 p-4 rounded-xl border-l-4 border-green-800 shadow text-center">
-        <h3 class="text-lg font-semibold text-green-700">Clients Physiques</h3>
-        <p class="text-3xl font-bold">{{ clientStore.stat.physique }}</p>
-      </div>
-      <div class="bg-yellow-100 p-4 rounded-lg border-l-4 border-yellow-800 h-[100px] shadow text-center">
-        <h3 class="text-lg font-semibold text-yellow-700">Clients Moraux</h3>
-        <p class="text-3xl font-bold">{{ clientStore.stat.moral }}</p>
-      </div>
-    </div>
+		<!-- Statistiques -->
+				<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+			<!-- Carte Total Clients -->
+			<div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Clients</p>
+						<p class="text-3xl font-bold text-gray-900">
+							{{ clientStore.stat.total }}
+						</p>
+					</div>
+					<div class="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center">
+						<Icon name="heroicons:user-group" class="w-6 h-6 text-sky-600" />
+					</div>
+				</div>
+			</div>
 
-    <!-- Liste des Clients -->
-    <div class="bg-white border p-4 rounded-lg shadow mt-6">
-      <div class="flex justify-between mb-4">
-        <h2 class="text-lg font-semibold">Liste des Clients</h2>
-        <button @click="openModalForCreate" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
-          <i class="fas fa-plus"></i> Nouveau Client
+			<!-- Carte Nouveaux Clients (Mois) -->
+			<div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-gray-600">Nouveaux (Mois)</p>
+						<p class="text-3xl font-bold text-purple-600">
+							{{ clientStore.stat.newThisMonth || 0 }}
+						</p>
+						<p class="text-xs text-gray-500 mt-1">+5% vs mois dernier</p>
+					</div>
+					<div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+						<Icon name="heroicons:sparkles" class="w-6 h-6 text-purple-600" />
+					</div>
+				</div>
+			</div>
+
+			<!-- Carte Clients Physiques -->
+			<div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-gray-600">Clients Physiques</p>
+						<p class="text-3xl font-bold text-emerald-600">
+							{{ clientStore.stat.physique }}
+						</p>
+					</div>
+					<div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
+						<Icon name="heroicons:user" class="w-6 h-6 text-emerald-600" />
+					</div>
+				</div>
+			</div>
+
+			<!-- Carte Clients Moraux -->
+			<div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-gray-600">Clients Moraux</p>
+						<p class="text-3xl font-bold text-amber-600">
+							{{ clientStore.stat.moral }}
+						</p>
+					</div>
+					<div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
+						<Icon name="heroicons:building-office" class="w-6 h-6 text-amber-600" />
+					</div>
+				</div>
+			</div>
+		</div>
+
+		 <div class="flex justify-between items-center mb-6">
+        <h2 class="text-lg font-semibold text-gray-800">Liste des Clients</h2>
+        <button
+          @click="openModalForCreate"
+          class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+        >
+          <Icon name="heroicons:plus" class="-ml-1 mr-2 h-5 w-5" />
+          Nouveau client
         </button>
       </div>
-
-      <table class="w-full border border-gray-300 text-sm">
-        <thead class="bg-gray-200">
-          <tr>
-            <th class="border border-gray-300 p-2">Nom</th>
-            <th class="border border-gray-300 p-2">Prénom</th>
-            <th class="border border-gray-300 p-2">Email</th>
-            <th class="border border-gray-300 p-2">Téléphone</th>
-            <th class="border border-gray-300 p-2">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="client in clientStore.clients" :key="client.id" class="border-t">
-            <td class="border border-gray-300 text-center p-2">{{ client.last_name }}</td>
-            <td class="border border-gray-300 text-center p-2">{{ client.first_name }}</td>
-            <td class="border border-gray-300 text-center p-2">{{ client.email }}</td>
-            <td class="border border-gray-300 text-center p-2">{{ client.phone }}</td>
-            <td class="border border-gray-300 text-center p-2">
-              <button @click="viewClient(client)" title="Voir" class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100">
-                <i class="fas fa-eye"></i>
-              </button>
-              <button @click="editClient(client)" title="Modifier" class="text-yellow-600 hover:text-yellow-900 p-1 rounded-full hover:bg-yellow-100">
-                <i class="fas fa-edit"></i>
-              </button>
-              <button @click="deleteClient(client)" title="Supprimer" class="text-red-600 hover:text-red-900 p-1 rounded-full hover:bg-red-100">
-                <i class="fas fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Liste des Clients -->
+    <div class="bg-white border p-4 rounded-lg shadow mt-6">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Nom
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Prénom
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Email
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Téléphone
+              </th>
+              <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="client in clientStore.clients" :key="client.id" class="hover:bg-gray-50 transition-colors duration-150">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm font-medium text-gray-900">{{ client.last_name }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-900">{{ client.first_name }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-500">{{ client.email || '-' }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="text-sm text-gray-500">{{ client.phone || '-' }}</div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button @click="editClient(client)" class="text-blue-600 hover:text-blue-900 mr-4">
+                  <Icon name="heroicons:pencil-square" class="w-5 h-5" />
+                </button>
+                <button @click="viewClient(client)" class="text-gray-600 hover:text-gray-900">
+                  <Icon name="heroicons:eye" class="w-5 h-5" />
+                </button>
+              </td>
+            </tr>
+            <tr v-if="clientStore.clients.length === 0">
+              <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+                Aucun client trouvé
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Modal Client -->
-    <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div class="bg-white p-6 rounded-lg w-96 shadow-lg">
-        <h3 class="text-lg font-semibold mb-4">{{ isEditing ? "Modifier Client" : "Enregistrer Client" }}</h3>
+    <div v-if="showModal" class="fixed inset-0 z-50 overflow-y-auto">
+      <div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" @click="showModal = false"></div>
 
-        <div class="space-y-4">
-          <select v-model="newClient.type" class="w-full border p-2 rounded-[15px]">
-            <option value="">Type de Client</option>
-            <option value="Physique">Physique</option>
-            <option value="Moral">Moral</option>
-          </select>
-
-          <!-- Client Physique -->
-          <div v-if="newClient.type === 'Physique'" class="space-y-3">
-            <input v-model="newClient.last_name" type="text" placeholder="Nom" class="w-full border p-2 rounded-[15px]" />
-            <input v-model="newClient.first_name" type="text" placeholder="Prénom" class="w-full border p-2 rounded-[15px]" />
-            <input v-model="newClient.email" type="email" placeholder="Email" class="w-full border p-2 rounded-[15px]" />
-            <input v-model="newClient.phone" type="text" placeholder="Téléphone" class="w-full border p-2 rounded-[15px]" />
-            <input v-model="newClient.region" type="text" placeholder="Région" class="w-full border p-2 rounded-[15px]" />
-            <input v-model="newClient.city" type="text" placeholder="Ville" class="w-full border p-2 rounded-[15px]" />
-            <input v-model="newClient.country" type="text" placeholder="Pays" class="w-full border p-2 rounded-[15px]" />
+      <div class="flex min-h-full items-center justify-center p-4 text-center">
+        <div class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
+          <!-- En-tête -->
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                <Icon name="heroicons:user-circle" class="h-6 w-6 text-blue-600" />
+              </div>
+              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                <h3 class="text-lg font-medium leading-6 text-gray-900" id="modal-title">
+                  {{ isEditing ? 'Modifier le client' : 'Nouveau client' }}
+                </h3>
+              </div>
+            </div>
           </div>
 
-          <!-- Client Moral -->
-          <div v-if="newClient.type === 'Moral'" class="space-y-3">
-            <input v-model="newClient.companyName" type="text" placeholder="Raison Sociale" class="w-full border p-2 rounded-[15px]" />
-            <input v-model="newClient.email" type="email" placeholder="Email" class="w-full border p-2 rounded-[15px]" />
-            <input v-model="newClient.phone" type="text" placeholder="Téléphone" class="w-full border p-2 rounded-[15px]" />
-            <input v-model="newClient.region" type="text" placeholder="Région" class="w-full border p-2 rounded-[15px]" />
-            <input v-model="newClient.city" type="text" placeholder="Ville" class="w-full border p-2 rounded-[15px]" />
-            <input v-model="newClient.country" type="text" placeholder="Pays" class="w-full border p-2 rounded-[15px]" />
-          </div>
-        </div>
+          <!-- Contenu du formulaire -->
+          <div class="px-6 py-4">
+            <div class="space-y-6">
+              <!-- Type de client -->
+              <div>
+                <label for="client-type" class="block text-sm font-medium text-gray-700 mb-1">Type de client</label>
+                <select
+                  id="client-type"
+                  v-model="newClient.type"
+                  class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-3 px-4 border"
+                >
+                  <option value="">Sélectionnez un type de client</option>
+                  <option value="Physique">Particulier</option>
+                  <option value="Moral">Entreprise</option>
+                </select>
+              </div>
 
-        <div class="flex justify-end mt-4 gap-2">
-          <button @click="resetForm" class="px-4 py-2 bg-red-300 rounded-[15px] hover:bg-red-700 hover:text-white">Annuler</button>
-          <button @click="handleSave" class="px-4 py-2 bg-blue-600 text-white rounded-[15px] hover:bg-blue-900">
-            {{ isEditing ? "Mettre à jour" : "Enregistrer" }}
-          </button>
+              <!-- Formulaire Client Physique -->
+              <div v-if="newClient.type === 'Physique'" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div class="space-y-1">
+                  <label class="block text-sm font-medium text-gray-700">Nom</label>
+                  <input v-model="newClient.last_name" type="text" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-sm font-medium text-gray-700">Prénom</label>
+                  <input v-model="newClient.first_name" type="text" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-sm font-medium text-gray-700">Email</label>
+                  <input v-model="newClient.email" type="email" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-sm font-medium text-gray-700">Téléphone</label>
+                  <input v-model="newClient.phone" type="tel" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-sm font-medium text-gray-700">Région</label>
+                  <input v-model="newClient.region" type="text" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-sm font-medium text-gray-700">Ville</label>
+                  <input v-model="newClient.city" type="text" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+                <div class="space-y-1 sm:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700">Pays</label>
+                  <input v-model="newClient.country" type="text" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+              </div>
+
+              <!-- Formulaire Client Moral -->
+              <div v-if="newClient.type === 'Moral'" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div class="space-y-1 sm:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700">Raison Sociale</label>
+                  <input v-model="newClient.companyName" type="text" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-sm font-medium text-gray-700">Email</label>
+                  <input v-model="newClient.email" type="email" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-sm font-medium text-gray-700">Téléphone</label>
+                  <input v-model="newClient.phone" type="tel" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-sm font-medium text-gray-700">Région</label>
+                  <input v-model="newClient.region" type="text" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-sm font-medium text-gray-700">Ville</label>
+                  <input v-model="newClient.city" type="text" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-sm font-medium text-gray-700">Pays</label>
+                  <input v-model="newClient.country" type="text" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Pied de page du modal -->
+            <div class="bg-gray-50 px-6 py-4 sm:flex sm:flex-row-reverse sm:px-6">
+              <button
+                type="button"
+                @click="handleSave"
+                class="inline-flex w-full justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+              >
+                {{ isEditing ? 'Mettre à jour' : 'Enregistrer' }}
+              </button>
+              <button
+                type="button"
+                @click="showModal = false"
+                class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+  
   <!-- Modal Affichage Client -->
 <div v-if="showViewModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
   <div class="bg-white p-6 rounded-lg w-96 shadow-lg">
@@ -133,7 +301,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useClientStore } from '~/app/stores/sale/client'
 import Swal from 'sweetalert2'
 
@@ -142,6 +310,9 @@ const clientStore = useClientStore()
 const showModal = ref(false)
 const isEditing = ref(false)
 const clientId = ref(null)
+
+// Référence pour le modal
+const modalRef = ref(null)
 
 const newClient = ref({
   type: '',
@@ -162,9 +333,17 @@ onMounted(() => {
 })
 
 // Ouvrir modal pour créer un client
-const openModalForCreate = () => {
+const openModalForCreate = async () => {
+  console.log('openModalForCreate appelé')
   resetForm()
+  isEditing.value = false
   showModal.value = true
+  console.log('showModal après mise à jour:', showModal.value)
+  // Forcer le re-rendu
+  await nextTick()
+  if (modalRef.value) {
+    modalRef.value.focus()
+  }
 }
 
 const selectedClient = ref(null)
@@ -220,8 +399,7 @@ const handleSave = async () => {
 // Enregistrer un nouveau client
 const saveClient = async () => {
   try {
-    const payload = { ...newClient.value }
-    await clientStore.createClients(payload)
+		await clientStore.createClients(newClient.value);
     Swal.fire({ icon: 'success', title: 'Succès', text: 'Client enregistré avec succès', timer: 2000, showConfirmButton: false })
     await clientStore.fetchClients()
     await clientStore.fetchStats()
@@ -264,7 +442,7 @@ const updateClient = async () => {
       city: newClient.value.city,
       company_name: newClient.value.companyName
     }
-  
+
     await clientStore.updateClient(clientId.value, payload)
     Swal.fire({ icon: 'success', title: 'Succès', text: 'Client modifié avec succès', timer: 2000, showConfirmButton: false })
     await clientStore.fetchClients()
@@ -291,7 +469,7 @@ const resetForm = () => {
   }
   isEditing.value = false
   clientId.value = null
-  showModal.value = false
+  // Ne pas modifier showModal ici, c'est géré par openModalForCreate
 }
 
 
