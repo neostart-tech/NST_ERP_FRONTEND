@@ -6,7 +6,7 @@ import { useValidationErrors } from '../composables/useValidationErrors';
 
 export const useClientStore = defineStore('client', {
 	state: () => ({
-		clients: [] as Client[], // Toujours initialiser avec un tableau vide
+		clients: [] as Client[],
 		stat: {
 			total: 0,
 			physique: 0,
@@ -18,6 +18,7 @@ export const useClientStore = defineStore('client', {
 	}),
 
 	actions: {
+		// Créer un client
 		async createClient(clientData: Client) {
 			try {
 				const { data } = await useApi().post<Client>(ApiUrl.CLIENTS, clientData);
@@ -31,6 +32,7 @@ export const useClientStore = defineStore('client', {
 			}
 		},
 
+		// Charger les clients
 		async fetchClients() {
 			try {
 				this.loading = true;
@@ -48,7 +50,7 @@ export const useClientStore = defineStore('client', {
 			}
 		},
 
-		// NOUVEAU: Récupérer un client spécifique
+		// Charger un client
 		async fetchClient(id: string) {
 			try {
 				this.loading = true;
@@ -64,14 +66,11 @@ export const useClientStore = defineStore('client', {
 			}
 		},
 
-		// NOUVEAU: Mettre à jour un client
-
+		// Mettre à jour un client
 		async updateClient(id: string, clientData: Client) {
 			try {
 				const {data} = await useApi().put<Client>(ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id), clientData);
-
 				this.clients.map(_ => _.id === id ? data : _);
-
 				return data;
 			} catch (error) {
 				console.error("Erreur mise à jour client:", error);
@@ -80,21 +79,19 @@ export const useClientStore = defineStore('client', {
 			}
 		},
 
-		// NOUVEAU: Supprimer un client
+		// Supprimer un client
 		async deleteClient(id: string) {
 			try {
 				await useApi().del<Client>(ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id));
 				// Retirer le client de la liste
 				this.clients = this.clients.filter(_ => _.id !== id);
-
 			} catch (error) {
-				console.error("Erreur suppression client:", error);
 				this.errors = useValidationErrors(error);
 				throw error;
 			}
 		},
 
-		// NOUVEAU: Réinitialiser l'erreur
+		// Réinitialiser l'erreur
 		clearError() {
 			this.errors = {} as ValidationErrors;
 		}

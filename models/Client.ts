@@ -1,6 +1,5 @@
 export interface Client {
 	id:string,
-	type: string,
 	first_name: string,
 	last_name: string,
 	client_type: string,
@@ -14,7 +13,6 @@ export interface Client {
 
 export const defaultClient = () : Client => ({
 	id: Date.now().toString(),
-	type: '',
 	first_name: '',
 	last_name: '',
 	client_type: '',

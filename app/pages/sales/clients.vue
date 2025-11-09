@@ -116,10 +116,12 @@
 						<tr v-for="client in clients" :key="client.id" class="hover:bg-gray-50 transition-colors duration-150">
 							<td class="px-6 py-4 whitespace-nowrap">
 								<div class="text-sm font-medium text-gray-900" v-if="client.client_type === 'Physique'">
-									{{ client.last_name }} {{ client.first_name }} <Icon name="heroicons:user" class="w-4 h-4 text-emerald-600" />
+									{{ client.last_name }} {{ client.first_name }}
+									<Icon name="heroicons:user" class="w-4 h-4 text-emerald-600" />
 								</div>
 								<div class="text-sm font-medium text-gray-900" v-else>
-									{{ client.company_name }} <Icon name="heroicons:building-office" class="w-4 h-4  text-amber-600" />
+									{{ client.company_name }}
+									<Icon name="heroicons:building-office" class="w-4 h-4  text-amber-600" />
 								</div>
 							</td>
 							<td class="px-6 py-4 whitespace-nowrap">
@@ -129,11 +131,14 @@
 								<div class="text-sm text-gray-500">{{ client.phone || '-' }}</div>
 							</td>
 							<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-								<button @click="editClient(client)" class="text-blue-600 hover:text-blue-900 mr-4">
+								<button @click="editClient(client)" class="text-blue-600 hover:text-blue-900 mr-3">
 									<Icon name="heroicons:pencil-square" class="w-5 h-5" />
 								</button>
-								<button @click="viewClient(client)" class="text-gray-600 hover:text-gray-900">
+								<button @click="viewClient(client)" class="text-gray-600 hover:text-gray-900 mr-3">
 									<Icon name="heroicons:eye" class="w-5 h-5" />
+								</button>
+								<button @click="deleteClient(client)" class="text-red-600 hover:text-red-900">
+									<Icon name="heroicons:trash" class="w-5 h-5" />
 								</button>
 							</td>
 						</tr>
@@ -176,71 +181,72 @@
 								<!-- Type de client -->
 								<div>
 									<label for="client-type" class="block text-sm font-medium text-gray-700 mb-1">Type de client</label>
-									<select id="client-type" v-model="newClient.type"
+									<select id="client-type" v-model="newClient.client_type"
 										class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-3 px-4 border">
 										<option value="">Sélectionnez un type de client</option>
 										<option value="Physique">Particulier</option>
 										<option value="Moral">Entreprise</option>
 									</select>
+									<InvalidInput :error="errors.client_type" />
 								</div>
 
 								<!-- Formulaire Client Physique -->
-								<div v-if="newClient.type == 'Physique'" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+								<div v-if="newClient.client_type == 'Physique'" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 									<div class="space-y-1">
 										<label class="block text-sm font-medium text-gray-700">Nom</label>
 										<input v-model="newClient.last_name" type="text" name="last_name"
 											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-											<InvalidInput :error="errors.last_name" />
+										<InvalidInput :error="errors.last_name" />
 									</div>
 									<div class="space-y-1">
 										<label class="block text-sm font-medium text-gray-700">Prénom</label>
 										<input v-model="newClient.first_name" type="text" name="first_name"
 											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-											<InvalidInput :error="errors.first_name" />
+										<InvalidInput :error="errors.first_name" />
 									</div>
 								</div>
 
 								<!-- Formulaire Client Moral -->
-								<div v-if="newClient.type == 'Moral'" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+								<div v-if="newClient.client_type == 'Moral'" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 									<div class="space-y-1 sm:col-span-2">
 										<label class="block text-sm font-medium text-gray-700">Raison Sociale</label>
-										<input v-model="newClient.company_name" type="text" name="companyName"
+										<input v-model="newClient.company_name" type="text" name="company_name"
 											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-										<InvalidInput :error="errors.companyName" />
+										<InvalidInput :error="errors.company_name" />
 									</div>
 								</div>
 
 								<!-- Formulaire Client Moral -->
-								<div v-if="newClient.type !== ''" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+								<div v-if="newClient.client_type !== ''" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 									<div class="space-y-1">
 										<label class="block text-sm font-medium text-gray-700">Email</label>
 										<input v-model="newClient.email" type="email" name="email"
 											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-											<InvalidInput :error="errors.email" />
+										<InvalidInput :error="errors.email" />
 									</div>
 									<div class="space-y-1">
 										<label class="block text-sm font-medium text-gray-700">Téléphone</label>
 										<input v-model="newClient.phone" type="tel" name="phone"
 											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-											<InvalidInput :error="errors.phone" />
+										<InvalidInput :error="errors.phone" />
 									</div>
 									<div class="space-y-1">
 										<label class="block text-sm font-medium text-gray-700">Région</label>
 										<input v-model="newClient.region" type="text" name="region"
 											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-											<InvalidInput :error="errors.region" />
+										<InvalidInput :error="errors.region" />
 									</div>
 									<div class="space-y-1">
 										<label class="block text-sm font-medium text-gray-700">Ville</label>
 										<input v-model="newClient.city" type="text" name="city"
 											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-											<InvalidInput :error="errors.city" />
+										<InvalidInput :error="errors.city" />
 									</div>
 									<div class="space-y-1 sm:col-span-2">
 										<label class="block text-sm font-medium text-gray-700">Pays</label>
 										<input v-model="newClient.country" type="text" name="country"
 											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-											<InvalidInput :error="errors.country" />
+										<InvalidInput :error="errors.country" />
 									</div>
 								</div>
 							</div>
@@ -269,12 +275,12 @@
 			<h3 class="text-lg font-semibold mb-4">Informations Client</h3>
 
 			<div class="space-y-2">
-				<p><strong>Type :</strong> {{ selectedClient!.type || selectedClient!.client_type }}</p>
-				<p v-if="selectedClient!.type === 'Physique' || selectedClient!.client_type === 'Physique'">
+				<p><strong>Type :</strong> {{ selectedClient!.client_type || selectedClient!.client_type }}</p>
+				<p v-if="selectedClient!.client_type === 'Physique' || selectedClient!.client_type === 'Physique'">
 					<strong>Nom :</strong> {{ selectedClient!.last_name }}<br>
 					<strong>Prénom :</strong> {{ selectedClient!.first_name }}
 				</p>
-				<p v-if="selectedClient!.type === 'Moral' || selectedClient!.client_type === 'Moral'">
+				<p v-if="selectedClient!.client_type === 'Moral' || selectedClient!.client_type === 'Moral'">
 					<strong>Raison Sociale :</strong> {{ selectedClient!.company_name || selectedClient!.company_name }}
 				</p>
 				<p><strong>Email :</strong> {{ selectedClient!.email }}</p>
@@ -325,6 +331,7 @@ const openModalForCreate = async () => {
 	// Forcer le re-rendu
 	await nextTick()
 	if (modalRef.value) {
+		// @ts-ignore
 		modalRef.value.focus()
 	}
 }
@@ -340,7 +347,7 @@ const viewClient = (client: Client) => {
 // Créer ou mettre à jour selon le mode
 const handleSave = async () => {
 	// Validation du type
-	if (!newClient.value.type) {
+	if (!newClient.value.client_type) {
 		Swal.fire({
 			icon: 'warning',
 			title: 'Attention',
@@ -350,7 +357,8 @@ const handleSave = async () => {
 	}
 
 	// Validation selon le type
-	if (newClient.value.type === 'Physique') {
+	if (newClient.value.client_type === 'Physique') {
+		newClient.value.company_name = '';
 		if (!newClient.value.first_name || !newClient.value.last_name) {
 			Swal.fire({
 				icon: 'warning',
@@ -359,7 +367,9 @@ const handleSave = async () => {
 			})
 			return
 		}
-	} else if (newClient.value.type === 'Moral') {
+	} else if (newClient.value.client_type === 'Moral') {
+		newClient.value.first_name = '';
+		newClient.value.last_name = '';
 		if (!newClient.value.company_name) {
 			Swal.fire({
 				icon: 'warning',
@@ -378,20 +388,35 @@ const handleSave = async () => {
 	}
 }
 
-
 // Enregistrer un nouveau client
 const saveClient = async () => {
-	try {
-		await clientStore.createClient(newClient.value);
-		Swal.fire({ icon: 'success', title: 'Succès', text: 'Client enregistré avec succès', timer: 2000, showConfirmButton: false });
-		await clientStore.fetchClients();
-		// await clientStore.fetchStat();
-		resetForm();
-		showModal.value = false;
-	} catch (error) {
-		console.error(error)
-		Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible d’enregistrer le client' })
-	}
+	Swal.fire({
+		title: 'Ajouter le client ?',
+		html: `Êtes-vous sûr de vouloir ajouter le client <b>${newClient.value.company_name || newClient.value.first_name + ' ' + newClient.value.last_name}</b> ?`,
+		icon: 'question',
+		showCancelButton: true,
+		confirmButtonText: 'Oui',
+		cancelButtonText: 'Non',
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		reverseButtons: true
+	}).then(async result => {
+		if (result.isConfirmed) {
+			try {
+				await clientStore.createClient(newClient.value);
+				Swal.fire({ icon: 'success', title: 'Succès', text: 'Client enregistré avec succès', timer: 2000, showConfirmButton: false });
+				await clientStore.fetchClients();
+				// await clientStore.fetchStat();
+				resetForm();
+				showModal.value = false;
+			} catch (error) {
+				console.error(error)
+				Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible d\'enregistrer le client' })
+			}
+		} else {
+			resetForm();
+		}
+	});
 }
 
 // Préparer le formulaire pour édition
@@ -414,48 +439,61 @@ const editClient = (client: Client) => {
 
 // Mettre à jour un client existant
 const updateClient = async () => {
-	try {
-		const payload = {
-			first_name: newClient.value.first_name,
-			last_name: newClient.value.last_name,
-			email: newClient.value.email,
-			phone: newClient.value.phone,
-			client_type: newClient.value.type,
-			country: newClient.value.country,
-			region: newClient.value.region,
-			city: newClient.value.city,
-			company_name: newClient.value.company_name
+	Swal.fire({
+		title: 'Mettre à jour le client ?',
+		html: `Êtes-vous sûr de vouloir mettre à jour le client <b>${newClient.value.company_name || newClient.value.first_name + ' ' + newClient.value.last_name}</b> ?`,
+		icon: 'question',
+		showCancelButton: true,
+		confirmButtonText: 'Oui',
+		cancelButtonText: 'Non',
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		reverseButtons: true
+	}).then(async (result) => {
+		if (result.isConfirmed) {
+			try {
+				await clientStore.updateClient(clientId.value!, newClient.value)
+				Swal.fire({ icon: 'success', title: 'Succès', text: 'Client modifié avec succès', timer: 2000, showConfirmButton: false })
+				await clientStore.fetchClients()
+				// await clientStore.fetchStats()
+				resetForm()
+				showModal.value = false
+			} catch (error) {
+				Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de modifier le client' })
+			}
 		}
-
-		await clientStore.updateClient(clientId.value, payload)
-		Swal.fire({ icon: 'success', title: 'Succès', text: 'Client modifié avec succès', timer: 2000, showConfirmButton: false })
-		await clientStore.fetchClients()
-		await clientStore.fetchStats()
-		resetForm()
-		showModal.value = false
-	} catch (error) {
-		console.error(error)
-		Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de modifier le client' })
-	}
+	});
 }
+
+// Supprimer un client existant
+const deleteClient = async (client: Client) => {
+	Swal.fire({
+		title: 'Supprimer le client ?',
+		html: `Êtes-vous sûr de vouloir supprimer le client <b>${client.company_name || client.first_name + ' ' + client.last_name}</b> ?`,
+		icon: 'question',
+		showCancelButton: true,
+		cancelButtonText: 'Annuler',
+		cancelButtonColor: '#3085d6',
+		confirmButtonColor: '#d33',
+		confirmButtonText: 'Oui, supprimer !'
+	}).then(async result => {
+		if (result.isConfirmed) {
+			try {
+				await clientStore.deleteClient(client.id)
+				Swal.fire({ icon: 'success', title: 'Succès', text: 'Client supprimé avec succès', showConfirmButton: false })
+				await clientStore.fetchClients()
+			} catch (error) {
+				Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de supprimer le client' })
+			}
+		}
+	})
+};
 
 // Réinitialiser le formulaire
 const resetForm = () => {
-	newClient.value = {
-		type: '',
-		first_name: '',
-		last_name: '',
-		company_name: '',
-		email: '',
-		phone: '',
-		region: '',
-		country: '',
-		city: ''
-	}
+	newClient.value = defaultClient();
 	isEditing.value = false
 	clientId.value = null
 	// Ne pas modifier showModal ici, c'est géré par openModalForCreate
 }
-
-
 </script>
