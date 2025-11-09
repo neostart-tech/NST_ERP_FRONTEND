@@ -8,8 +8,8 @@
             <h1 class="text-2xl font-bold text-gray-900">Modifier le client</h1>
             <p class="text-gray-600">Mettez à jour les informations de votre client</p>
           </div>
-          <button 
-            @click="$router.back()" 
+          <button
+            @click="$router.back()"
             class="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
           >
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -20,10 +20,10 @@
         </div>
 
         <!-- Messages d'état -->
-        <div v-if="clientStore.error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
-          {{ clientStore.error }}
+        <div v-if="clientStore.errors" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6">
+          {{ clientStore.errors }}
         </div>
-        
+
         <div v-if="message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg mb-6">
           {{ message }}
         </div>
@@ -251,7 +251,7 @@
 </template>
 
 <script setup>
-import { useClientStore } from '~/app/stores/clientStore';
+import { useClientStore } from '~/app/stores/ClientStore';
 import { onMounted, ref, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -285,7 +285,7 @@ const form = reactive({
 onMounted(async () => {
   try {
     await clientStore.fetchClient(route.params.id);
-    
+
     if (clientStore.currentClient) {
       // Mapper les données du client vers le formulaire
       Object.assign(form, {
@@ -298,8 +298,8 @@ onMounted(async () => {
         region: clientStore.currentClient.region,
         city: clientStore.currentClient.city,
         salesman_id: clientStore.currentClient.salesman_id,
-        client_contacts: clientStore.currentClient.contacts && clientStore.currentClient.contacts.length > 0 
-          ? clientStore.currentClient.contacts 
+        client_contacts: clientStore.currentClient.contacts && clientStore.currentClient.contacts.length > 0
+          ? clientStore.currentClient.contacts
           : [{ name: '', role: '', email: '', phone: '' }]
       });
     }
@@ -338,7 +338,7 @@ const submitForm = async () => {
     });
 
     message.value = 'Client mis à jour avec succès';
-    
+
     // Redirection après un délai
     setTimeout(() => {
       router.push('/clients');

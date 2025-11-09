@@ -1,23 +1,25 @@
 import { defineStore } from "pinia";
 import { useApi } from "@/composables/useApi";
 import { ApiUrl } from "@/composables/apiUrl";
-export const useClientStore = defineStore("client", {
+
+export const useClientStore = defineStore("ClientStore", {
 	state: () => ({
 		loading: false,
 		clients: [],
 		stat: {
 			total: 0,
 			physique: 0,
-			moral: 0
+			moral: 0,
+			newThisMonth: 0
 		},
 		validationError: {}
 	}),
 	actions: {
 		async createClients(payload) {
 			try {
-				const { client } = await useApi().post(ApiUrl.CLIENTS, payload)
-				return client;
-
+				const { data } = await useApi().post<Client>(ApiUrl.CLIENTS, payload);
+				this.client.push(data)
+				return data;
 			} catch (error) {
 				this.validationError = useValidationErrors(error);
 				throw error;
@@ -26,8 +28,9 @@ export const useClientStore = defineStore("client", {
 
 		async fetchClients() {
 			try {
-				const { clients } = await useApi().get(ApiUrl.CLIENTS)
-				this.clients = clients
+				const { data } = await useApi().get(ApiUrl.CLIENTS);
+
+				this.clients = data
 			} catch (error) {
 				console.error("Erreur lors du chargement des clients:", error);
 			}

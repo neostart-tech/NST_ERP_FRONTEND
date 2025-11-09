@@ -3,7 +3,8 @@ export interface Client {
 	type: string,
 	first_name: string,
 	last_name: string,
-	companyName: string,
+	client_type: string,
+	company_name: string,
 	email: string,
 	phone: string,
 	region: string,
@@ -12,14 +13,15 @@ export interface Client {
 }
 
 export const defaultClient = () : Client => ({
-	id: '',
+	id: Date.now().toString(),
 	type: '',
 	first_name: '',
 	last_name: '',
-	companyName: '',
+	client_type: '',
+	company_name: '',
 	email: '',
 	phone: '',
 	region: '',
 	country: '',
 	city: ''
-});	
+});

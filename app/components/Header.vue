@@ -184,6 +184,7 @@ const pageTitle = computed(() => {
 		"offers-offer-form": "Ajouter un nouvel appel d'offre ",
 		"offers-id-modifier": "Modifier un appel d'offre",
 		"offers-offer-quick-stat": "Statistiques des appels d'offre",
+		"sales-clients": "Gestion des clients"
 	};
 	return titleMap[route.name as string] || "ERP Neo Start Technology";
 });

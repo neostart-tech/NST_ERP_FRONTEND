@@ -99,10 +99,7 @@
 					<thead class="bg-gray-50">
 						<tr>
 							<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-								Nom
-							</th>
-							<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-								Prénom
+								Nom / Raison Sociale
 							</th>
 							<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 								Email
@@ -116,13 +113,14 @@
 						</tr>
 					</thead>
 					<tbody class="bg-white divide-y divide-gray-200">
-						<tr v-for="client in clientStore.clients" :key="client.id"
-							class="hover:bg-gray-50 transition-colors duration-150">
+						<tr v-for="client in clients" :key="client.id" class="hover:bg-gray-50 transition-colors duration-150">
 							<td class="px-6 py-4 whitespace-nowrap">
-								<div class="text-sm font-medium text-gray-900">{{ client.last_name }}</div>
-							</td>
-							<td class="px-6 py-4 whitespace-nowrap">
-								<div class="text-sm text-gray-900">{{ client.first_name }}</div>
+								<div class="text-sm font-medium text-gray-900" v-if="client.client_type === 'Physique'">
+									{{ client.last_name }} {{ client.first_name }} <Icon name="heroicons:user" class="w-4 h-4 text-emerald-600" />
+								</div>
+								<div class="text-sm font-medium text-gray-900" v-else>
+									{{ client.company_name }} <Icon name="heroicons:building-office" class="w-4 h-4  text-amber-600" />
+								</div>
 							</td>
 							<td class="px-6 py-4 whitespace-nowrap">
 								<div class="text-sm text-gray-500">{{ client.email || '-' }}</div>
@@ -139,7 +137,7 @@
 								</button>
 							</td>
 						</tr>
-						<tr v-if="clientStore.clients.length === 0">
+						<tr v-if="clients.length === 0">
 							<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
 								Aucun client trouvé
 							</td>
@@ -150,7 +148,7 @@
 		</div>
 
 		<!-- Modal Client -->
-		<div class="fixed inset-0 z-50 overflow-y-auto">
+		<div v-if="showModal" class="fixed inset-0 z-50 overflow-y-auto">
 			<div class="fixed inset-0 bg-black bg-opacity-50 transition-opacity" @click="showModal = false"></div>
 
 			<div class="flex min-h-full items-center justify-center p-4 text-center">
@@ -171,85 +169,95 @@
 						</div>
 					</div>
 
-					<!-- Contenu du formulaire -->
-					<div class="px-6 py-4">
-						<div class="space-y-6">
-							<!-- Type de client -->
-							<div>
-								<label for="client-type" class="block text-sm font-medium text-gray-700 mb-1">Type de client</label>
-								<select id="client-type" v-model="newClient.type"
-									class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-3 px-4 border">
-									<option value="">Sélectionnez un type de client</option>
-									<option value="Physique">Particulier</option>
-									<option value="Moral">Entreprise</option>
-								</select>
+					<form @submit.prevent="handleSave">
+						<!-- Contenu du formulaire -->
+						<div class="px-6 py-4">
+							<div class="space-y-6">
+								<!-- Type de client -->
+								<div>
+									<label for="client-type" class="block text-sm font-medium text-gray-700 mb-1">Type de client</label>
+									<select id="client-type" v-model="newClient.type"
+										class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-3 px-4 border">
+										<option value="">Sélectionnez un type de client</option>
+										<option value="Physique">Particulier</option>
+										<option value="Moral">Entreprise</option>
+									</select>
+								</div>
+
+								<!-- Formulaire Client Physique -->
+								<div v-if="newClient.type == 'Physique'" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+									<div class="space-y-1">
+										<label class="block text-sm font-medium text-gray-700">Nom</label>
+										<input v-model="newClient.last_name" type="text" name="last_name"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+											<InvalidInput :error="errors.last_name" />
+									</div>
+									<div class="space-y-1">
+										<label class="block text-sm font-medium text-gray-700">Prénom</label>
+										<input v-model="newClient.first_name" type="text" name="first_name"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+											<InvalidInput :error="errors.first_name" />
+									</div>
+								</div>
+
+								<!-- Formulaire Client Moral -->
+								<div v-if="newClient.type == 'Moral'" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+									<div class="space-y-1 sm:col-span-2">
+										<label class="block text-sm font-medium text-gray-700">Raison Sociale</label>
+										<input v-model="newClient.company_name" type="text" name="companyName"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+										<InvalidInput :error="errors.companyName" />
+									</div>
+								</div>
+
+								<!-- Formulaire Client Moral -->
+								<div v-if="newClient.type !== ''" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+									<div class="space-y-1">
+										<label class="block text-sm font-medium text-gray-700">Email</label>
+										<input v-model="newClient.email" type="email" name="email"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+											<InvalidInput :error="errors.email" />
+									</div>
+									<div class="space-y-1">
+										<label class="block text-sm font-medium text-gray-700">Téléphone</label>
+										<input v-model="newClient.phone" type="tel" name="phone"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+											<InvalidInput :error="errors.phone" />
+									</div>
+									<div class="space-y-1">
+										<label class="block text-sm font-medium text-gray-700">Région</label>
+										<input v-model="newClient.region" type="text" name="region"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+											<InvalidInput :error="errors.region" />
+									</div>
+									<div class="space-y-1">
+										<label class="block text-sm font-medium text-gray-700">Ville</label>
+										<input v-model="newClient.city" type="text" name="city"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+											<InvalidInput :error="errors.city" />
+									</div>
+									<div class="space-y-1 sm:col-span-2">
+										<label class="block text-sm font-medium text-gray-700">Pays</label>
+										<input v-model="newClient.country" type="text" name="country"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
+											<InvalidInput :error="errors.country" />
+									</div>
+								</div>
 							</div>
 
-							<!-- Formulaire Client Physique -->
-							<div v-if="newClient.type == 'Physique'" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-700">Nom</label>
-									<input v-model="newClient.last_name" type="text"
-										class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-								</div>
-								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-700">Prénom</label>
-									<input v-model="newClient.first_name" type="text"
-										class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-								</div>
-							</div>
-
-							<!-- Formulaire Client Moral -->
-							<div v-if="newClient.type == 'Moral'" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-								<div class="space-y-1 sm:col-span-2">
-									<label class="block text-sm font-medium text-gray-700">Raison Sociale</label>
-									<input v-model="newClient.companyName" type="text"
-										class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-								</div>
-							</div>
-
-							<!-- Formulaire Client Moral -->
-							<div v-if="newClient.type !== ''" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-700">Email</label>
-									<input v-model="newClient.email" type="email"
-										class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-								</div>
-								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-700">Téléphone</label>
-									<input v-model="newClient.phone" type="tel"
-										class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-								</div>
-								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-700">Région</label>
-									<input v-model="newClient.region" type="text"
-										class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-								</div>
-								<div class="space-y-1">
-									<label class="block text-sm font-medium text-gray-700">Ville</label>
-									<input v-model="newClient.city" type="text"
-										class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-								</div>
-								<div class="space-y-1 sm:col-span-2">
-									<label class="block text-sm font-medium text-gray-700">Pays</label>
-									<input v-model="newClient.country" type="text"
-										class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border" />
-								</div>
+							<!-- Pied de page du modal -->
+							<div class="bg-gray-50 px-6 py-4 mt-4 sm:flex sm:flex-row-reverse sm:px-6">
+								<button type="submit"
+									class="inline-flex w-full justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto">
+									{{ isEditing ? 'Mettre à jour' : 'Enregistrer' }}
+								</button>
+								<button type="button" @click="showModal = false"
+									class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
+									Annuler
+								</button>
 							</div>
 						</div>
-
-						<!-- Pied de page du modal -->
-						<div class="bg-gray-50 px-6 py-4 mt-4 sm:flex sm:flex-row-reverse sm:px-6">
-							<button type="button" @click="handleSave"
-								class="inline-flex w-full justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto">
-								{{ isEditing ? 'Mettre à jour' : 'Enregistrer' }}
-							</button>
-							<button type="button" @click="showModal = false"
-								class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
-								Annuler
-							</button>
-						</div>
-					</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -261,19 +269,19 @@
 			<h3 class="text-lg font-semibold mb-4">Informations Client</h3>
 
 			<div class="space-y-2">
-				<p><strong>Type :</strong> {{ selectedClient.type || selectedClient.client_type }}</p>
-				<p v-if="selectedClient.type === 'Physique' || selectedClient.client_type === 'Physique'">
-					<strong>Nom :</strong> {{ selectedClient.last_name }}<br>
-					<strong>Prénom :</strong> {{ selectedClient.first_name }}
+				<p><strong>Type :</strong> {{ selectedClient!.type || selectedClient!.client_type }}</p>
+				<p v-if="selectedClient!.type === 'Physique' || selectedClient!.client_type === 'Physique'">
+					<strong>Nom :</strong> {{ selectedClient!.last_name }}<br>
+					<strong>Prénom :</strong> {{ selectedClient!.first_name }}
 				</p>
-				<p v-if="selectedClient.type === 'Moral' || selectedClient.client_type === 'Moral'">
-					<strong>Raison Sociale :</strong> {{ selectedClient.company_name || selectedClient.companyName }}
+				<p v-if="selectedClient!.type === 'Moral' || selectedClient!.client_type === 'Moral'">
+					<strong>Raison Sociale :</strong> {{ selectedClient!.company_name || selectedClient!.company_name }}
 				</p>
-				<p><strong>Email :</strong> {{ selectedClient.email }}</p>
-				<p><strong>Téléphone :</strong> {{ selectedClient.phone }}</p>
-				<p><strong>Région :</strong> {{ selectedClient.region }}</p>
-				<p><strong>Ville :</strong> {{ selectedClient.city }}</p>
-				<p><strong>Pays :</strong> {{ selectedClient.country }}</p>
+				<p><strong>Email :</strong> {{ selectedClient!.email }}</p>
+				<p><strong>Téléphone :</strong> {{ selectedClient!.phone }}</p>
+				<p><strong>Région :</strong> {{ selectedClient!.region }}</p>
+				<p><strong>Ville :</strong> {{ selectedClient!.city }}</p>
+				<p><strong>Pays :</strong> {{ selectedClient!.country }}</p>
 			</div>
 
 			<div class="flex justify-end mt-4">
@@ -285,18 +293,19 @@
 
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue'
-import { useClientStore } from '~/app/stores/sale/client'
 import Swal from 'sweetalert2'
-import { defaultClient } from '~/models/Client'
+import { defaultClient, type Client } from '~/models/Client'
+import { useClientStore } from '~/app/stores/ClientStore'
+import InvalidInput from '~/app/components/partials/InvalidInput.vue';
 
-const clientStore = useClientStore()
-console.log("clients: ", clientStore.clients)
+const clientStore = useClientStore();
+const { clients, errors } = storeToRefs(clientStore);
 
 const showModal = ref(false)
 const isEditing = ref(false)
-const clientId = ref(null)
+const clientId = ref<string | null>(null)
 
 // Référence pour le modal
 const modalRef = ref(null)
@@ -304,18 +313,15 @@ const modalRef = ref(null)
 const newClient = ref(defaultClient())
 
 // Charger les clients au montage
-onMounted(() => {
-	clientStore.fetchClients()
-	// clientStore.fetchStats()
+onMounted(async () => {
+	await clientStore.fetchClients();
 })
 
 // Ouvrir modal pour créer un client
 const openModalForCreate = async () => {
-	console.log('openModalForCreate appelé')
 	resetForm()
 	isEditing.value = false
 	showModal.value = true
-	console.log('showModal après mise à jour:', showModal.value)
 	// Forcer le re-rendu
 	await nextTick()
 	if (modalRef.value) {
@@ -323,10 +329,10 @@ const openModalForCreate = async () => {
 	}
 }
 
-const selectedClient = ref(null)
+const selectedClient = ref<Client | null>(null)
 const showViewModal = ref(false)
 
-const viewClient = (client) => {
+const viewClient = (client: Client) => {
 	selectedClient.value = client
 	showViewModal.value = true
 }
@@ -354,7 +360,7 @@ const handleSave = async () => {
 			return
 		}
 	} else if (newClient.value.type === 'Moral') {
-		if (!newClient.value.companyName) {
+		if (!newClient.value.company_name) {
 			Swal.fire({
 				icon: 'warning',
 				title: 'Attention',
@@ -376,11 +382,12 @@ const handleSave = async () => {
 // Enregistrer un nouveau client
 const saveClient = async () => {
 	try {
-		await clientStore.createClients(newClient.value);
-		Swal.fire({ icon: 'success', title: 'Succès', text: 'Client enregistré avec succès', timer: 2000, showConfirmButton: false })
-		await clientStore.fetchClients()
-		await clientStore.fetchStats()
-		resetForm()
+		await clientStore.createClient(newClient.value);
+		Swal.fire({ icon: 'success', title: 'Succès', text: 'Client enregistré avec succès', timer: 2000, showConfirmButton: false });
+		await clientStore.fetchClients();
+		// await clientStore.fetchStat();
+		resetForm();
+		showModal.value = false;
 	} catch (error) {
 		console.error(error)
 		Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible d’enregistrer le client' })
@@ -388,7 +395,7 @@ const saveClient = async () => {
 }
 
 // Préparer le formulaire pour édition
-const editClient = (client) => {
+const editClient = (client: Client) => {
 	isEditing.value = true
 	showModal.value = true
 	clientId.value = client.id
@@ -396,13 +403,13 @@ const editClient = (client) => {
 		type: client.client_type || '',
 		first_name: client.first_name || '',
 		last_name: client.last_name || '',
-		companyName: client.company_name || '',
+		company_name: client.company_name || '',
 		email: client.email || '',
 		phone: client.phone || '',
 		region: client.region || '',
 		country: client.country || '',
 		city: client.city || ''
-	}
+	} as Client
 }
 
 // Mettre à jour un client existant
@@ -417,7 +424,7 @@ const updateClient = async () => {
 			country: newClient.value.country,
 			region: newClient.value.region,
 			city: newClient.value.city,
-			company_name: newClient.value.companyName
+			company_name: newClient.value.company_name
 		}
 
 		await clientStore.updateClient(clientId.value, payload)
@@ -425,6 +432,7 @@ const updateClient = async () => {
 		await clientStore.fetchClients()
 		await clientStore.fetchStats()
 		resetForm()
+		showModal.value = false
 	} catch (error) {
 		console.error(error)
 		Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de modifier le client' })
@@ -437,7 +445,7 @@ const resetForm = () => {
 		type: '',
 		first_name: '',
 		last_name: '',
-		companyName: '',
+		company_name: '',
 		email: '',
 		phone: '',
 		region: '',

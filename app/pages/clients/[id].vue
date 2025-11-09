@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { useClientStore } from '~/app/stores/clientStore';
+import { useClientStore } from '~/app/stores/ClientStore';
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 

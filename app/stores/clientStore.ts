@@ -7,9 +7,14 @@ import { useValidationErrors } from '../composables/useValidationErrors';
 export const useClientStore = defineStore('client', {
 	state: () => ({
 		clients: [] as Client[], // Toujours initialiser avec un tableau vide
-		currentClient: null as Client | null, // Pour stocker les détails d'un client spécifique
+		stat: {
+			total: 0,
+			physique: 0,
+			moral: 0,
+			newThisMonth: 0
+		},
 		loading: false,
-		error: {} as ValidationErrors
+		errors: {} as ValidationErrors
 	}),
 
 	actions: {
@@ -20,7 +25,8 @@ export const useClientStore = defineStore('client', {
 				return data;
 			} catch (error) {
 				console.error("Erreur création client:", error);
-				this.error = useValidationErrors(error);
+				this.errors = useValidationErrors(error);
+				console.log("Errors:", this.errors);
 				throw error;
 			}
 		},
@@ -28,17 +34,14 @@ export const useClientStore = defineStore('client', {
 		async fetchClients() {
 			try {
 				this.loading = true;
-				this.error = {};
+				this.errors = {};
 
-				// Utilisez $fetch de Nuxt 3 ou fetch standard
 				const { data } = await useApi().get<Client[]>(ApiUrl.CLIENTS);
-
-				// Assurez-vous que data est un tableau
 				this.clients = data;
 
 			} catch (error) {
 				console.error("Erreur lors du chargement des clients:", error);
-				this.error = useValidationErrors(error);
+				this.errors = useValidationErrors(error);
 				this.clients = []; // Garantir que clients reste un tableau
 			} finally {
 				this.loading = false;
@@ -49,16 +52,12 @@ export const useClientStore = defineStore('client', {
 		async fetchClient(id: string) {
 			try {
 				this.loading = true;
-				this.error = {} as ValidationErrors;
-
+				this.errors = {} as ValidationErrors;
 				const { data } = await useApi().get<Client>(ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id));
-
-				this.currentClient = data;
-
 				return data;
 			} catch (error) {
 				console.error("Erreur lors du chargement du client:", error);
-				this.error = useValidationErrors(error);
+				this.errors = useValidationErrors(error);
 				throw error;
 			} finally {
 				this.loading = false;
@@ -70,13 +69,13 @@ export const useClientStore = defineStore('client', {
 		async updateClient(id: string, clientData: Client) {
 			try {
 				const {data} = await useApi().put<Client>(ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id), clientData);
-				
+
 				this.clients.map(_ => _.id === id ? data : _);
 
 				return data;
 			} catch (error) {
 				console.error("Erreur mise à jour client:", error);
-				this.error = useValidationErrors(error);
+				this.errors = useValidationErrors(error);
 				throw error;
 			}
 		},
@@ -90,14 +89,14 @@ export const useClientStore = defineStore('client', {
 
 			} catch (error) {
 				console.error("Erreur suppression client:", error);
-				this.error = useValidationErrors(error);
+				this.errors = useValidationErrors(error);
 				throw error;
 			}
 		},
 
 		// NOUVEAU: Réinitialiser l'erreur
 		clearError() {
-			this.error = {} as ValidationErrors;
+			this.errors = {} as ValidationErrors;
 		}
 	}
 });

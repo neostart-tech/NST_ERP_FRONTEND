@@ -99,7 +99,7 @@ export const useApi = () => {
 
 const refreshToken = async () => {
 	console.log("Refreshing token...");
-	await $fetch('http://localhost:8000/sanctum/csrf-cookie', {
+	await $fetch(`${import.meta.env.VITE_API_URL_BASE || 'http://localhost:8000'}/sanctum/csrf-cookie`, {
 		credentials: 'include',
 	})
 }
