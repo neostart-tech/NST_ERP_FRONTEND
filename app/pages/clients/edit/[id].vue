@@ -30,7 +30,7 @@
       </div>
 
       <!-- Formulaire -->
-      <div v-if="!clientStore.loading && form" class="bg-white rounded-2xl shadow-xl p-6">
+      <div v-if="!clientStore.isLoading && form" class="bg-white rounded-2xl shadow-xl p-6">
         <form @submit.prevent="submitForm">
           <!-- Informations de base -->
           <div class="mb-8">
@@ -235,7 +235,7 @@
       </div>
 
       <!-- Squelette de chargement -->
-      <div v-if="clientStore.loading" class="bg-white rounded-2xl shadow-xl p-6">
+      <div v-if="clientStore.isLoading" class="bg-white rounded-2xl shadow-xl p-6">
         <div class="animate-pulse space-y-4">
           <div class="h-8 bg-gray-200 rounded w-1/3"></div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

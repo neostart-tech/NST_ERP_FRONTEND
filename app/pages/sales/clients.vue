@@ -1,9 +1,8 @@
 <template>
 	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
 		<!-- En-tête -->
-		<div class="relative mb-4">
+		<!-- <div class="relative mb-4">
 			<div class="bg-gradient-to-r from-sky-600 to-sky-700 rounded-lg shadow p-4 text-white overflow-hidden">
-				<!-- Motif de fond décoratif simplifié -->
 				<div class="absolute inset-0 opacity-5">
 					<div class="absolute -top-8 -right-8 w-20 h-20 bg-white rounded-full"></div>
 				</div>
@@ -14,7 +13,7 @@
 					</p>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 		<!-- Statistiques -->
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -33,6 +32,29 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- <div class="sm:flex sm:items-center sm:justify-between mb-6">
+				<h1 class="text-2xl font-bold text-gray-900">Liste des Entreprises</h1>
+				<div class="mt-4 sm:mt-0 sm:ml-4 flex flex-col sm:flex-row gap-3"> -->
+			<!-- Champ de recherche -->
+			<!-- <div class="relative flex-1 max-w-xs">
+						<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+							<Icon name="heroicons:magnifying-glass" class="h-5 w-5 text-gray-400" />
+						</div>
+						<input v-model="searchQuery" type="text" placeholder="Rechercher..."
+							class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400" />
+					</div> -->
+
+			<!-- Boutons d'action -->
+			<!-- <div class="flex items-center space-x-3">
+						<button @click="navigateTo('/entreprises/ajouter')"
+							class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+							<Icon name="heroicons:plus-20-solid" class="-ml-1 mr-2 h-5 w-5" />
+							Ajouter une entreprise
+						</button>
+					</div> -->
+			<!-- </div>
+			</div> -->
 
 			<!-- Carte Nouveaux Clients (Mois) -->
 			<div
@@ -84,14 +106,36 @@
 			</div>
 		</div>
 
-		<div class="flex justify-between items-center mb-6">
+		<!-- <div class="flex justify-between items-center mb-6">
 			<h2 class="text-lg font-semibold text-gray-800">Liste des Clients</h2>
 			<button @click="openModalForCreate"
 				class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
 				<Icon name="heroicons:plus" class="-ml-1 mr-2 h-5 w-5" />
 				Nouveau client
 			</button>
+		</div> -->
+
+		<div class="sm:flex sm:items-center sm:justify-between mb-6">
+			<h1 class="text-2xl font-bold text-gray-900">Liste des clients</h1>
+			<div class="mt-4 sm:mt-0 sm:ml-4 flex flex-col sm:flex-row gap-3">
+				<!-- Champ de recherche -->
+				<div class="relative flex-1 max-w-xs">
+					<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+						<Icon name="heroicons:magnifying-glass" class="h-5 w-5 text-gray-400" />
+					</div>
+					<input v-model="searchQuery" type="text" placeholder="Rechercher..."
+						class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400" />
+				</div>
+
+				<!-- Boutons d'action -->
+				<button @click="openModalForCreate"
+					class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+					<Icon name="heroicons:plus" class="-ml-1 mr-2 h-5 w-5" />
+					Nouveau client
+				</button>
+			</div>
 		</div>
+
 		<!-- Liste des Clients -->
 		<div class="bg-white border p-4 rounded-lg shadow mt-6">
 			<div class="overflow-x-auto">
@@ -113,7 +157,8 @@
 						</tr>
 					</thead>
 					<tbody class="bg-white divide-y divide-gray-200">
-						<tr v-for="client in clients" :key="client.id" class="hover:bg-gray-50 transition-colors duration-150">
+						<tr v-for="client in paginatedClients" :key="client.id"
+							class="hover:bg-gray-50 transition-colors duration-150">
 							<td class="px-6 py-4 whitespace-nowrap">
 								<div class="text-sm font-medium text-gray-900" v-if="client.client_type === 'Physique'">
 									{{ client.last_name }} {{ client.first_name }}
@@ -142,15 +187,20 @@
 								</button>
 							</td>
 						</tr>
-						<tr v-if="clients.length === 0">
-							<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+						<tr v-if="filteredClients.length === 0">
+							<!-- <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
 								Aucun client trouvé
-							</td>
+							</td> -->
+							<EmptyState v-if="filteredClients.length !== 0" title="Aucun client trouvé"
+								:description="noDataDescription" icon="heroicons:user-group" iconColor="text-indigo-400"
+								@reload="fetchClients" :isLoading="isLoading" :searchQuery="searchQuery" />
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</div>
+
+		<Paginator :totalItems="filteredClients.length" @range-changed="onRangeChanged" />
 
 		<!-- Modal Client -->
 		<div v-if="showModal" class="fixed inset-0 z-50 overflow-y-auto">
@@ -305,22 +355,63 @@ import Swal from 'sweetalert2'
 import { defaultClient, type Client } from '~/models/Client'
 import { useClientStore } from '~/app/stores/ClientStore'
 import InvalidInput from '~/app/components/partials/InvalidInput.vue';
+import Paginator from '~/app/components/Paginator.vue';
 // TODO: Ajouter un spinner aux bouton d'enregistrement
 const clientStore = useClientStore();
-const { clients, errors } = storeToRefs(clientStore);
+const { clients, errors, isLoading } = storeToRefs(clientStore);
 
 const showModal = ref(false)
 const isEditing = ref(false)
-const clientId = ref<string | null>(null)
+const clientId = ref<string | null>(null);
+const error = ref<Error | null>(null);
+
+const searchQuery = ref<string>('');
+const noDataDescription = ref("Il n'y a actuellement aucune entreprise à afficher.");
+
+const range = reactive({ start: 0, end: 0 })
+
+const onRangeChanged = ({ start, end }: { start: number, end: number }) => {
+	range.start = start;
+	range.end = end;
+};
+
+const filteredClients = computed(() => {
+	if (!searchQuery.value) {
+		return clients.value
+	}
+
+	noDataDescription.value = ""
+	return clients.value.filter(_ =>
+		_.first_name.toLowerCase().includes(searchQuery.value) ||
+		_.last_name.toLowerCase().includes(searchQuery.value) ||
+		_.phone.toLowerCase().includes(searchQuery.value) ||
+		_.company_name.toLowerCase().includes(searchQuery.value) ||
+		_.city.toString().toLowerCase().includes(searchQuery.value)
+	)
+});
+
+const paginatedClients = computed(() => {
+	return filteredClients.value.slice(range.start - 1, range.end)
+});
 
 // Référence pour le modal
 const modalRef = ref(null)
 
-const newClient = ref(defaultClient())
+const newClient = ref(defaultClient());
+
+const fetchClients = async () => {
+	try {
+		await clientStore.fetchClients()
+	} catch (e) {
+		error.value = e as Error
+		console.error("Erreur lors de la récupération des entreprises:", e)
+	}
+}
+
 
 // Charger les clients au montage
 onMounted(async () => {
-	await clientStore.fetchClients();
+	await fetchClients();
 })
 
 // Ouvrir modal pour créer un client

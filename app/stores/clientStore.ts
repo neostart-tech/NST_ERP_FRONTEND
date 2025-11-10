@@ -13,7 +13,7 @@ export const useClientStore = defineStore('client', {
 			moral: 0,
 			newThisMonth: 0
 		},
-		loading: false,
+		isLoading: false,
 		errors: {} as ValidationErrors
 	}),
 
@@ -35,7 +35,7 @@ export const useClientStore = defineStore('client', {
 		// Charger les clients
 		async fetchClients() {
 			try {
-				this.loading = true;
+				this.isLoading = true;
 				this.errors = {};
 
 				const { data } = await useApi().get<Client[]>(ApiUrl.CLIENTS);
@@ -46,14 +46,14 @@ export const useClientStore = defineStore('client', {
 				this.errors = useValidationErrors(error);
 				this.clients = []; // Garantir que clients reste un tableau
 			} finally {
-				this.loading = false;
+				this.isLoading = false;
 			}
 		},
 
 		// Charger un client
 		async fetchClient(id: string) {
 			try {
-				this.loading = true;
+				this.isLoading = true;
 				this.errors = {} as ValidationErrors;
 				const { data } = await useApi().get<Client>(ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id));
 				return data;
@@ -62,7 +62,7 @@ export const useClientStore = defineStore('client', {
 				this.errors = useValidationErrors(error);
 				throw error;
 			} finally {
-				this.loading = false;
+				this.isLoading = false;
 			}
 		},
 
