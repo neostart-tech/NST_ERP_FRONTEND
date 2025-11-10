@@ -1,5 +1,5 @@
 <template>
-	<div class="max-w-6xl mx-auto p-6 space-y-6">
+	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
 		<!-- En-tête -->
 		<div class="relative mb-4">
 			<div class="bg-gradient-to-r from-sky-600 to-sky-700 rounded-lg shadow p-4 text-white overflow-hidden">
@@ -43,7 +43,7 @@
 						<p class="text-3xl font-bold text-purple-600">
 							{{ clientStore.stat.newThisMonth || 0 }}
 						</p>
-						<p class="text-xs text-gray-500 mt-1">+5% vs mois dernier</p>
+						<!-- <p class="text-xs text-gray-500 mt-1">+5% vs mois dernier</p> -->
 					</div>
 					<div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
 						<Icon name="heroicons:sparkles" class="w-6 h-6 text-purple-600" />
@@ -305,7 +305,7 @@ import Swal from 'sweetalert2'
 import { defaultClient, type Client } from '~/models/Client'
 import { useClientStore } from '~/app/stores/ClientStore'
 import InvalidInput from '~/app/components/partials/InvalidInput.vue';
-
+// TODO: Ajouter un spinner aux bouton d'enregistrement
 const clientStore = useClientStore();
 const { clients, errors } = storeToRefs(clientStore);
 
