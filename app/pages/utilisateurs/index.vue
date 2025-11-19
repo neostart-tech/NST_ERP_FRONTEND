@@ -1,4 +1,73 @@
 <template>
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+	<!-- Statistiques -->
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+		<!-- Carte Nombre total d'utilisateurs -->
+		<div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+			<div class="flex items-center">
+				<div class="p-3 rounded-full bg-blue-50">
+					<Icon name="heroicons:users" class="h-6 w-6 text-blue-600" />
+				</div>
+				<div class="ml-4">
+					<p class="text-sm font-medium text-gray-500">Total Utilisateurs</p>
+					<h3 class="text-2xl font-semibold text-gray-900">{{ users.length }}</h3>
+				</div>
+			</div>
+		</div>
+
+		<!-- Carte Utilisateurs actifs -->
+		<div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+			<div class="flex items-center">
+				<div class="p-3 rounded-full bg-green-50">
+					<Icon name="heroicons:check-circle" class="h-6 w-6 text-green-600" />
+				</div>
+				<div class="ml-4">
+					<p class="text-sm font-medium text-gray-500">Utilisateurs actifs</p>
+					<h3 class="text-2xl font-semibold text-gray-900">
+						{{ users.filter(u => u.hasConfirmedPassword).length }}
+						<span class="text-sm font-normal text-gray-500">
+							({{ users.length ? Math.round((users.filter(u => u.hasConfirmedPassword).length / users.length) * 100) : 0 }}%)
+						</span>
+					</h3>
+				</div>
+			</div>
+		</div>
+
+		<!-- Carte Rôles -->
+		<div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+			<div class="flex items-center">
+				<div class="p-3 rounded-full bg-purple-50">
+					<Icon name="heroicons:user-group" class="h-6 w-6 text-purple-600" />
+				</div>
+				<div class="ml-4">
+					<p class="text-sm font-medium text-gray-500">Rôles uniques</p>
+					<h3 class="text-2xl font-semibold text-gray-900">
+						{{ new Set(users.map(u => u.role).filter(Boolean)).size }}
+					</h3>
+				</div>
+			</div>
+		</div>
+
+		<!-- Carte Nouveaux (7 derniers jours) -->
+		<div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+			<div class="flex items-center">
+				<div class="p-3 rounded-full bg-amber-50">
+					<Icon name="heroicons:clock" class="h-6 w-6 text-amber-600" />
+				</div>
+				<div class="ml-4">
+					<p class="text-sm font-medium text-gray-500">Nouveaux (7j)</p>
+					<h3 class="text-2xl font-semibold text-gray-900">
+						{{ users.filter(u => {
+							const userDate = new Date(u.createdAt);
+							const weekAgo = new Date();
+							weekAgo.setDate(weekAgo.getDate() - 7);
+							return userDate >= weekAgo;
+						}).length }}
+					</h3>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div class="mb-6">
 		<!-- Conteneur principal -->
@@ -147,7 +216,7 @@
 		</div>
 		<Paginator :totalItems="filteredUsers.length" @range-changed="onRangeChanged" />
 	</template>
-
+</div>
 </template>
 
 <script setup lang="ts">
@@ -157,6 +226,7 @@ import EmptyState from "~/app/components/EmptyState.vue";
 import { AppUrl } from "~/app/composables/appUrl";
 import Paginator from "~/app/components/Paginator.vue";
 import Loader from '~/app/components/Loader.vue';
+import { useAuthStore } from '~/app/stores/AuthStore';
 
 const { users, isLoading } = storeToRefs(useUserStore());
 const { user: currentUser } = storeToRefs(useAuthStore());

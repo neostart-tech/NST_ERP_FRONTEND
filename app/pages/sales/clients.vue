@@ -33,29 +33,6 @@
 				</div>
 			</div>
 
-			<!-- <div class="sm:flex sm:items-center sm:justify-between mb-6">
-				<h1 class="text-2xl font-bold text-gray-900">Liste des Entreprises</h1>
-				<div class="mt-4 sm:mt-0 sm:ml-4 flex flex-col sm:flex-row gap-3"> -->
-			<!-- Champ de recherche -->
-			<!-- <div class="relative flex-1 max-w-xs">
-						<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-							<Icon name="heroicons:magnifying-glass" class="h-5 w-5 text-gray-400" />
-						</div>
-						<input v-model="searchQuery" type="text" placeholder="Rechercher..."
-							class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400" />
-					</div> -->
-
-			<!-- Boutons d'action -->
-			<!-- <div class="flex items-center space-x-3">
-						<button @click="navigateTo('/entreprises/ajouter')"
-							class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-							<Icon name="heroicons:plus-20-solid" class="-ml-1 mr-2 h-5 w-5" />
-							Ajouter une entreprise
-						</button>
-					</div> -->
-			<!-- </div>
-			</div> -->
-
 			<!-- Carte Nouveaux Clients (Mois) -->
 			<div
 				class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
@@ -105,15 +82,6 @@
 				</div>
 			</div>
 		</div>
-
-		<!-- <div class="flex justify-between items-center mb-6">
-			<h2 class="text-lg font-semibold text-gray-800">Liste des Clients</h2>
-			<button @click="openModalForCreate"
-				class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-				<Icon name="heroicons:plus" class="-ml-1 mr-2 h-5 w-5" />
-				Nouveau client
-			</button>
-		</div> -->
 
 		<div class="sm:flex sm:items-center sm:justify-between mb-6">
 			<h1 class="text-2xl font-bold text-gray-900">Liste des clients</h1>

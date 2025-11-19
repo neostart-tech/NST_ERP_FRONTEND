@@ -791,6 +791,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@headlessui/vue@npm:^1.7.23":
+  version: 1.7.23
+  resolution: "@headlessui/vue@npm:1.7.23"
+  dependencies:
+    "@tanstack/vue-virtual": "npm:^3.0.0-beta.60"
+  peerDependencies:
+    vue: ^3.2.0
+  checksum: 10c0/6c570ab66ff7b0c2f115ab062dd8a08ce769263f5236422ecb298bfcb3d19d15fc83272d009f3c4159b8da3777ad048bf0ef49e258368096ae3b71085417fe13
+  languageName: node
+  linkType: hard
+
 "@heroicons/vue@npm:^2.2.0":
   version: 2.2.0
   resolution: "@heroicons/vue@npm:2.2.0"
@@ -2833,6 +2844,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/virtual-core@npm:3.13.12":
+  version: 3.13.12
+  resolution: "@tanstack/virtual-core@npm:3.13.12"
+  checksum: 10c0/483f38761b73db05c181c10181f0781c1051be3350ae5c378e65057e5f1fdd6606e06e17dbaad8a5e36c04b208ea1a1344cacd4eca0dcde60f335cf398e4d698
+  languageName: node
+  linkType: hard
+
+"@tanstack/vue-virtual@npm:^3.0.0-beta.60":
+  version: 3.13.12
+  resolution: "@tanstack/vue-virtual@npm:3.13.12"
+  dependencies:
+    "@tanstack/virtual-core": "npm:3.13.12"
+  peerDependencies:
+    vue: ^2.7.0 || ^3.0.0
+  checksum: 10c0/fd4ce83567f861e1a7d152c62ffdc2be287c3f57dedc3d64d390132fa8fe4ee29ee4341fc46d6b69fb3938a5bb0e39e6d181ebb6a4b216c667a90b57bfe443a3
+  languageName: node
+  linkType: hard
+
 "@tybys/wasm-util@npm:^0.10.1":
   version: 0.10.1
   resolution: "@tybys/wasm-util@npm:0.10.1"
@@ -3570,6 +3599,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"adler-32@npm:~1.3.0":
+  version: 1.3.1
+  resolution: "adler-32@npm:1.3.1"
+  checksum: 10c0/c1b7185526ee1bbe0eac8ed414d5226af4cd02a0540449a72ec1a75f198c5e93352ba4d7b9327231eea31fd83c2d080d13baf16d8ed5710fb183677beb85f612
+  languageName: node
+  linkType: hard
+
 "agent-base@npm:^7.1.0, agent-base@npm:^7.1.2":
   version: 7.1.4
   resolution: "agent-base@npm:7.1.4"
@@ -4053,6 +4089,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cfb@npm:~1.2.1":
+  version: 1.2.2
+  resolution: "cfb@npm:1.2.2"
+  dependencies:
+    adler-32: "npm:~1.3.0"
+    crc-32: "npm:~1.2.0"
+  checksum: 10c0/87f6d9c3878268896ed6ca29dfe32a2aa078b12d0f21d8405c95911b74ab6296823d7312bbf5e18326d00b16cc697f587e07a17018c5edf7a1ba31dd5bc6da36
+  languageName: node
+  linkType: hard
+
 "chalk@npm:^4.1.2":
   version: 4.1.2
   resolution: "chalk@npm:4.1.2"
@@ -4149,6 +4195,13 @@ __metadata:
   version: 4.6.0
   resolution: "co@npm:4.6.0"
   checksum: 10c0/c0e85ea0ca8bf0a50cbdca82efc5af0301240ca88ebe3644a6ffb8ffe911f34d40f8fbcf8f1d52c5ddd66706abd4d3bfcd64259f1e8e2371d4f47573b0dc8c28
+  languageName: node
+  linkType: hard
+
+"codepage@npm:~1.15.0":
+  version: 1.15.0
+  resolution: "codepage@npm:1.15.0"
+  checksum: 10c0/2455b482302cb784b46dea60a8ee83f0c23e794bdd979556bdb107abe681bba722af62a37f5c955ff4efd68fdb9688c3986e719b4fd536c0e06bb25bc82abea3
   languageName: node
   linkType: hard
 
@@ -4414,7 +4467,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crc-32@npm:^1.2.0":
+"crc-32@npm:^1.2.0, crc-32@npm:~1.2.0, crc-32@npm:~1.2.1":
   version: 1.2.2
   resolution: "crc-32@npm:1.2.2"
   bin:
@@ -4615,6 +4668,13 @@ __metadata:
   version: 4.0.1
   resolution: "data-uri-to-buffer@npm:4.0.1"
   checksum: 10c0/20a6b93107597530d71d4cb285acee17f66bcdfc03fd81040921a81252f19db27588d87fc8fc69e1950c55cfb0bf8ae40d0e5e21d907230813eb5d5a7f9eb45b
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "date-fns@npm:4.1.0"
+  checksum: 10c0/b79ff32830e6b7faa009590af6ae0fb8c3fd9ffad46d930548fbb5acf473773b4712ae887e156ba91a7b3dc30591ce0f517d69fd83bd9c38650fdc03b4e0bac8
   languageName: node
   linkType: hard
 
@@ -5689,6 +5749,13 @@ __metadata:
   dependencies:
     fetch-blob: "npm:^3.1.2"
   checksum: 10c0/5392ec484f9ce0d5e0d52fb5a78e7486637d516179b0eb84d81389d7eccf9ca2f663079da56f761355c0a65792810e3b345dc24db9a8bbbcf24ef3c8c88570c6
+  languageName: node
+  linkType: hard
+
+"frac@npm:~1.1.2":
+  version: 1.1.2
+  resolution: "frac@npm:1.1.2"
+  checksum: 10c0/640740eb58b590eb38c78c676955bee91cd22d854f5876241a15c49d4495fa53a84898779dcf7eca30aabfe1c1a4a705752b5f224934257c5dda55c545413ba7
   languageName: node
   linkType: hard
 
@@ -7709,6 +7776,7 @@ __metadata:
   resolution: "nuxt-app@workspace:."
   dependencies:
     "@fortawesome/fontawesome-free": "npm:^7.1.0"
+    "@headlessui/vue": "npm:^1.7.23"
     "@heroicons/vue": "npm:^2.2.0"
     "@nuxt/icon": "npm:^1.15.0"
     "@nuxtjs/i18n": "npm:^10.0.4"
@@ -7719,6 +7787,7 @@ __metadata:
     "@vueuse/core": "npm:^13.8.0"
     axios: "npm:^1.11.0"
     chart.js: "npm:^4.5.0"
+    date-fns: "npm:^4.1.0"
     lodash: "npm:^4.17.21"
     nuxt: "npm:4.0.3"
     pinia: "npm:^3.0.3"
@@ -7730,6 +7799,7 @@ __metadata:
     vue-chart-3: "npm:^3.1.8"
     vue-chartjs: "npm:^5.3.2"
     vue-router: "npm:^4.5.1"
+    xlsx: "npm:^0.18.5"
   languageName: unknown
   linkType: soft
 
@@ -9890,6 +9960,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ssf@npm:~0.11.2":
+  version: 0.11.2
+  resolution: "ssf@npm:0.11.2"
+  dependencies:
+    frac: "npm:~1.1.2"
+  checksum: 10c0/c3fd24a90dc37a9dc5c4154cb4121e27507c33ebfeee3532aaf03625756b2c006cf79c0a23db0ba16c4a6e88e1349455327867e03453fc9d54b32c546bc18ca6
+  languageName: node
+  linkType: hard
+
 "ssri@npm:^12.0.0":
   version: 12.0.0
   resolution: "ssri@npm:12.0.0"
@@ -11246,6 +11325,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"wmf@npm:~1.0.1":
+  version: 1.0.2
+  resolution: "wmf@npm:1.0.2"
+  checksum: 10c0/3fa5806f382632cadfe65d4ef24f7a583b0c0720171edb00e645af5248ad0bb6784e8fcee1ccd9f475a1a12a7523e2512e9c063731fbbdae14dc469e1c033d93
+  languageName: node
+  linkType: hard
+
+"word@npm:~0.3.0":
+  version: 0.3.0
+  resolution: "word@npm:0.3.0"
+  checksum: 10c0/c6da2a9f7a0d81a32fa6768a638d21b153da2be04f94f3964889c7cc1365d74b6ecb43b42256c3f926cd59512d8258206991c78c21000c3da96d42ff1238b840
+  languageName: node
+  linkType: hard
+
 "wrap-ansi-cjs@npm:wrap-ansi@^7.0.0, wrap-ansi@npm:^7.0.0":
   version: 7.0.0
   resolution: "wrap-ansi@npm:7.0.0"
@@ -11306,6 +11399,23 @@ __metadata:
   dependencies:
     is-wsl: "npm:^3.1.0"
   checksum: 10c0/44318f3585eb97be994fc21a20ddab2649feaf1fbe893f1f866d936eea3d5f8c743bec6dc02e49fbdd3c0e69e9b36f449d90a0b165a4f47dd089747af4cf2377
+  languageName: node
+  linkType: hard
+
+"xlsx@npm:^0.18.5":
+  version: 0.18.5
+  resolution: "xlsx@npm:0.18.5"
+  dependencies:
+    adler-32: "npm:~1.3.0"
+    cfb: "npm:~1.2.1"
+    codepage: "npm:~1.15.0"
+    crc-32: "npm:~1.2.1"
+    ssf: "npm:~0.11.2"
+    wmf: "npm:~1.0.1"
+    word: "npm:~0.3.0"
+  bin:
+    xlsx: bin/xlsx.njs
+  checksum: 10c0/787cfa77034a3e86fdcde21572f1011c8976f87823a5e0ee5057f13b2f6e48f17a1710732a91b8ae15d7794945c7cba8a3ca904ea7150e028260b0ab8e1158c8
   languageName: node
   linkType: hard
 

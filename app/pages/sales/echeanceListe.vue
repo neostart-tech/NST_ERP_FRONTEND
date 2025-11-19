@@ -34,12 +34,12 @@
         <i class="fas fa-check-circle text-4xl text-green-400"></i>
       </div>
     </div>
-    
+
 
     <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
       <i class="fas fa-table"></i> Vue d'ensemble des échéances
-    </h2> 
-    
+    </h2>
+
     <div class="bg-white shadow rounded-lg overflow-x-auto">
       <table class="w-full text-sm border border-gray-200">
         <thead class="bg-gray-100 text-gray-700 uppercase">
@@ -68,7 +68,7 @@
           </tr>
         </tbody>
       </table>
-    </div> 
+    </div>
   </div>
 
   <div v-if="showModal && selectedSchedule" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -139,7 +139,7 @@ const stats = computed(() => {
   const allSchedules = scheduleStore.echeancier
   let totalDue = 0
   let totalPaid = 0
-  
+
   allSchedules.forEach(schedule => {
     const installments = JSON.parse(schedule.installments)
     installments.forEach(inst => {
