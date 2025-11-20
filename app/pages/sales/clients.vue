@@ -213,7 +213,7 @@
 			<div class="flex min-h-full items-center justify-center p-4 text-center">
 				<div
 					class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl">
-					<!-- En-tête -->
+
 					<div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
 						<div class="sm:flex sm:items-start">
 							<div
@@ -324,7 +324,7 @@
 	</div>
 
 	<!-- Modal Affichage Client -->
-	<div v-if="showViewModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+	<!-- <div v-if="showViewModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
 		<div class="bg-white p-6 rounded-lg w-96 shadow-lg">
 			<h3 class="text-lg font-semibold mb-4">Informations Client</h3>
 
@@ -349,8 +349,9 @@
 					class="px-4 py-2 bg-red-300 rounded-[15px] hover:bg-red-700 hover:text-white">Fermer</button>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
+	<DetailModal :isOpen="showViewModal" :client="selectedClient" @close="showViewModal = false" />
 </template>
 
 <script setup lang="ts">
@@ -361,6 +362,7 @@ import { useClientStore } from '~/app/stores/ClientStore'
 import InvalidInput from '~/app/components/partials/InvalidInput.vue';
 import Paginator from '~/app/components/Paginator.vue';
 import EmptyState from '~/app/components/EmptyState.vue';
+import DetailModal from '~/app/components/clients/detailModal.vue';
 // TODO: Ajouter un spinner aux bouton d'enregistrement
 const clientStore = useClientStore();
 const { clients, errors, isLoading, stat } = storeToRefs(clientStore);
