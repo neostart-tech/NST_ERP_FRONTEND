@@ -133,14 +133,7 @@
                 class="w-full sm:w-80 pl-12 pr-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all duration-200 text-gray-700 bg-white"
               />
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
+                <Icon name="heroicons:search" class="h-5 w-5 text-gray-400" />
               </div>
             </div>
           </div>
@@ -281,7 +274,7 @@
       <div class="bg-white rounded-xl p-6 w-full max-w-md">
         <h3 class="text-lg font-bold text-gray-900 mb-4">Confirmer la suppression</h3>
         <p class="text-gray-600 mb-6">Êtes-vous sûr de vouloir supprimer ce client ? Cette action est irréversible.</p>
-        
+
         <div class="flex justify-end gap-3">
           <button
             @click="showDeleteModal = false"
@@ -336,7 +329,7 @@ const filteredClients = computed(() => {
 
 const individualClientsCount = computed(() => {
   const clients = clientStore.clients ?? [];
-  return clients.filter(client => 
+  return clients.filter(client =>
     client.client_type && (
       client.client_type.toLowerCase() === 'particulier' ||
       client.client_type.toLowerCase() === 'individual' ||
@@ -347,7 +340,7 @@ const individualClientsCount = computed(() => {
 
 const moralClientsCount = computed(() => {
   const clients = clientStore.clients ?? [];
-  return clients.filter(client => 
+  return clients.filter(client =>
     client.client_type && (
       client.client_type.toLowerCase() === 'moral' ||
       client.client_type.toLowerCase() === 'company' ||

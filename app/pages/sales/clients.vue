@@ -156,12 +156,11 @@
 							</td>
 						</tr>
 						<tr v-if="filteredClients.length === 0">
-							<!-- <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
-								Aucun client trouvé
-							</td> -->
-							<EmptyState v-if="filteredClients.length !== 0" title="Aucun client trouvé"
-								:description="noDataDescription" icon="heroicons:user-group" iconColor="text-indigo-400"
-								@reload="fetchClients" :isLoading="isLoading" :searchQuery="searchQuery" />
+							<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+								<EmptyState title="Aucun client trouvé" :description="noDataDescription" icon="heroicons:user-group"
+									iconColor="text-indigo-400" @reload="fetchClients" :isLoading="isLoading"
+									:searchQuery="searchQuery" />
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -324,6 +323,7 @@ import { defaultClient, type Client } from '~/models/Client'
 import { useClientStore } from '~/app/stores/ClientStore'
 import InvalidInput from '~/app/components/partials/InvalidInput.vue';
 import Paginator from '~/app/components/Paginator.vue';
+import EmptyState from '~/app/components/EmptyState.vue';
 // TODO: Ajouter un spinner aux bouton d'enregistrement
 const clientStore = useClientStore();
 const { clients, errors, isLoading } = storeToRefs(clientStore);
@@ -350,11 +350,11 @@ const filteredClients = computed(() => {
 
 	noDataDescription.value = ""
 	return clients.value.filter(_ =>
-		_.first_name.toLowerCase().includes(searchQuery.value) ||
-		_.last_name.toLowerCase().includes(searchQuery.value) ||
-		_.phone.toLowerCase().includes(searchQuery.value) ||
-		_.company_name.toLowerCase().includes(searchQuery.value) ||
-		_.city.toString().toLowerCase().includes(searchQuery.value)
+		_.first_name?.toLowerCase().includes(searchQuery.value) ||
+		_.last_name?.toLowerCase().includes(searchQuery.value) ||
+		_.phone?.toLowerCase().includes(searchQuery.value) ||
+		_.company_name?.toLowerCase().includes(searchQuery.value) ||
+		_.city?.toString().toLowerCase().includes(searchQuery.value)
 	)
 });
 
@@ -483,6 +483,7 @@ const editClient = (client: Client) => {
 	isEditing.value = true
 	showModal.value = true
 	clientId.value = client.id
+	// @ts-ignore
 	newClient.value = {
 		type: client.client_type || '',
 		first_name: client.first_name || '',
