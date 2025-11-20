@@ -1,19 +1,5 @@
 <template>
 	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-		<!-- En-tête -->
-		<!-- <div class="relative mb-4">
-			<div class="bg-gradient-to-r from-sky-600 to-sky-700 rounded-lg shadow p-4 text-white overflow-hidden">
-				<div class="absolute inset-0 opacity-5">
-					<div class="absolute -top-8 -right-8 w-20 h-20 bg-white rounded-full"></div>
-				</div>
-				<div>
-					<h1 class="text-xl font-bold">Gestion des Clients</h1>
-					<p class="text-sky-100 text-sm mt-1">
-						Créer et suivez vos clients physiques et moraux
-					</p>
-				</div>
-			</div>
-		</div> -->
 
 		<!-- Statistiques -->
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -233,14 +219,21 @@
 						<div class="px-6 py-4">
 							<div class="space-y-6">
 								<!-- Type de client -->
-								<div>
-									<label for="client-type" class="block text-sm font-medium text-gray-700 mb-1">Type de client</label>
-									<select id="client-type" v-model="newClient.client_type"
-										class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 py-3 px-4 border">
-										<option value="">Sélectionnez un type de client</option>
-										<option value="Physique">Particulier</option>
-										<option value="Moral">Entreprise</option>
-									</select>
+								<div class="md:flex md:items-center md:justify-between">
+									<div class="md:w-1/2">
+										<div class="flex items-center">
+											<input id="type-physique" type="radio" value="Physique" v-model="newClient.client_type"
+												class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500" />
+											<label for="type-physique" class="ml-2 text-sm text-gray-700 cursor-pointer">Particulier</label>
+										</div>
+									</div>
+									<div class="md:w-1/2">
+										<div class="flex items-center">
+											<input id="type-moral" type="radio" value="Moral" v-model="newClient.client_type"
+												class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500" />
+											<label for="type-moral" class="ml-2 text-sm text-gray-700 cursor-pointer">Entreprise</label>
+										</div>
+									</div>
 									<InvalidInput :error="errors.client_type" />
 								</div>
 
@@ -271,7 +264,7 @@
 								</div>
 
 								<!-- Formulaire Client Moral -->
-								<div v-if="newClient.client_type !== ''" class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+								<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
 									<div class="space-y-1">
 										<label class="block text-sm font-medium text-gray-700">Email</label>
 										<input v-model="newClient.email" type="email" name="email"
@@ -322,34 +315,6 @@
 			</div>
 		</div>
 	</div>
-
-	<!-- Modal Affichage Client -->
-	<!-- <div v-if="showViewModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-		<div class="bg-white p-6 rounded-lg w-96 shadow-lg">
-			<h3 class="text-lg font-semibold mb-4">Informations Client</h3>
-
-			<div class="space-y-2">
-				<p><strong>Type :</strong> {{ selectedClient!.client_type || selectedClient!.client_type }}</p>
-				<p v-if="selectedClient!.client_type === 'Physique' || selectedClient!.client_type === 'Physique'">
-					<strong>Nom :</strong> {{ selectedClient!.last_name }}<br>
-					<strong>Prénom :</strong> {{ selectedClient!.first_name }}
-				</p>
-				<p v-if="selectedClient!.client_type === 'Moral' || selectedClient!.client_type === 'Moral'">
-					<strong>Raison Sociale :</strong> {{ selectedClient!.company_name || selectedClient!.company_name }}
-				</p>
-				<p><strong>Email :</strong> {{ selectedClient!.email }}</p>
-				<p><strong>Téléphone :</strong> {{ selectedClient!.phone }}</p>
-				<p><strong>Région :</strong> {{ selectedClient!.region }}</p>
-				<p><strong>Ville :</strong> {{ selectedClient!.city }}</p>
-				<p><strong>Pays :</strong> {{ selectedClient!.country }}</p>
-			</div>
-
-			<div class="flex justify-end mt-4">
-				<button @click="showViewModal = false"
-					class="px-4 py-2 bg-red-300 rounded-[15px] hover:bg-red-700 hover:text-white">Fermer</button>
-			</div>
-		</div>
-	</div> -->
 
 	<DetailModal :isOpen="showViewModal" :client="selectedClient" @close="showViewModal = false" />
 </template>

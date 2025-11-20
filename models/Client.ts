@@ -15,7 +15,7 @@ export const defaultClient = () : Client => ({
 	id: Date.now().toString(),
 	first_name: '',
 	last_name: '',
-	client_type: '',
+	client_type: 'Physique',
 	company_name: '',
 	email: '',
 	phone: '',
