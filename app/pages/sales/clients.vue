@@ -222,14 +222,14 @@
 								<div class="md:flex md:items-center md:justify-between">
 									<div class="md:w-1/2">
 										<div class="flex items-center">
-											<input id="type-physique" type="radio" value="Physique" v-model="newClient.client_type"
+											<input id="type-physique" type="radio" name="client_type" value="Physique" v-model="newClient.client_type"
 												class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500" />
 											<label for="type-physique" class="ml-2 text-sm text-gray-700 cursor-pointer">Particulier</label>
 										</div>
 									</div>
 									<div class="md:w-1/2">
 										<div class="flex items-center">
-											<input id="type-moral" type="radio" value="Moral" v-model="newClient.client_type"
+											<input id="type-moral" type="radio" name="client_type" value="Moral" v-model="newClient.client_type"
 												class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500" />
 											<label for="type-moral" class="ml-2 text-sm text-gray-700 cursor-pointer">Entreprise</label>
 										</div>
@@ -299,7 +299,7 @@
 							</div>
 
 							<!-- Pied de page du modal -->
-							<div class="bg-gray-50 px-6 py-4 mt-4 sm:flex sm:flex-row-reverse sm:px-6">
+							<div class="mt-4 sm:flex sm:flex-row-reverse">
 								<button type="submit"
 									class="inline-flex w-full justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto">
 									{{ isEditing ? 'Mettre à jour' : 'Enregistrer' }}
@@ -486,10 +486,10 @@ const saveClient = async () => {
 const editClient = (client: Client) => {
 	isEditing.value = true
 	showModal.value = true
-	clientId.value = client.id
-	// @ts-ignore
+	clientId.value = client.id;
+
 	newClient.value = {
-		type: client.client_type || '',
+		client_type: client.client_type || '',
 		first_name: client.first_name || '',
 		last_name: client.last_name || '',
 		company_name: client.company_name || '',
