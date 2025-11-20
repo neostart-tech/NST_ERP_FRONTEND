@@ -16,36 +16,19 @@
 		</div> -->
 
 		<!-- Statistiques -->
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 			<!-- Carte Total Clients -->
 			<div
-				class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+				class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300 md:col-span-2 lg:col-span-1">
 				<div class="flex items-center justify-between">
 					<div>
 						<p class="text-sm font-medium text-gray-600">Total Clients</p>
 						<p class="text-3xl font-bold text-gray-900">
-							{{ clientStore.stat.total }}
+							{{ stat.total }}
 						</p>
 					</div>
 					<div class="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center">
 						<Icon name="heroicons:user-group" class="w-6 h-6 text-sky-600" />
-					</div>
-				</div>
-			</div>
-
-			<!-- Carte Nouveaux Clients (Mois) -->
-			<div
-				class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-				<div class="flex items-center justify-between">
-					<div>
-						<p class="text-sm font-medium text-gray-600">Nouveaux (Mois)</p>
-						<p class="text-3xl font-bold text-purple-600">
-							{{ clientStore.stat.newThisMonth || 0 }}
-						</p>
-						<!-- <p class="text-xs text-gray-500 mt-1">+5% vs mois dernier</p> -->
-					</div>
-					<div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-						<Icon name="heroicons:sparkles" class="w-6 h-6 text-purple-600" />
 					</div>
 				</div>
 			</div>
@@ -57,7 +40,7 @@
 					<div>
 						<p class="text-sm font-medium text-gray-600">Clients Physiques</p>
 						<p class="text-3xl font-bold text-emerald-600">
-							{{ clientStore.stat.physique }}
+							{{ stat.physique }}
 						</p>
 					</div>
 					<div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
@@ -73,7 +56,7 @@
 					<div>
 						<p class="text-sm font-medium text-gray-600">Clients Moraux</p>
 						<p class="text-3xl font-bold text-amber-600">
-							{{ clientStore.stat.moral }}
+							{{ stat.moral }}
 						</p>
 					</div>
 					<div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
@@ -380,7 +363,7 @@ import Paginator from '~/app/components/Paginator.vue';
 import EmptyState from '~/app/components/EmptyState.vue';
 // TODO: Ajouter un spinner aux bouton d'enregistrement
 const clientStore = useClientStore();
-const { clients, errors, isLoading } = storeToRefs(clientStore);
+const { clients, errors, isLoading, stat } = storeToRefs(clientStore);
 
 const showModal = ref(false)
 const isEditing = ref(false)

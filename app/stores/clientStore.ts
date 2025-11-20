@@ -10,8 +10,7 @@ export const useClientStore = defineStore('client', {
 		stat: {
 			total: 0,
 			physique: 0,
-			moral: 0,
-			newThisMonth: 0
+			moral: 0
 		},
 		isLoading: false,
 		errors: {} as ValidationErrors
@@ -40,7 +39,7 @@ export const useClientStore = defineStore('client', {
 
 				const { data } = await useApi().get<Client[]>(ApiUrl.CLIENTS);
 				this.clients = data;
-
+				this.updateStat();
 			} catch (error) {
 				console.error("Erreur lors du chargement des clients:", error);
 				this.errors = useValidationErrors(error);
@@ -71,6 +70,7 @@ export const useClientStore = defineStore('client', {
 			try {
 				const {data} = await useApi().put<Client>(ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id), clientData);
 				this.clients.map(_ => _.id === id ? data : _);
+				this.updateStat();
 				return data;
 			} catch (error) {
 				console.error("Erreur mise à jour client:", error);
@@ -85,6 +85,7 @@ export const useClientStore = defineStore('client', {
 				await useApi().del<Client>(ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id));
 				// Retirer le client de la liste
 				this.clients = this.clients.filter(_ => _.id !== id);
+				this.updateStat();
 			} catch (error) {
 				this.errors = useValidationErrors(error);
 				throw error;
@@ -94,6 +95,12 @@ export const useClientStore = defineStore('client', {
 		// Réinitialiser l'erreur
 		clearError() {
 			this.errors = {} as ValidationErrors;
+		},
+
+		updateStat() {
+			this.stat.total = this.clients.length;
+			this.stat.physique = this.clients.filter(_ => _.client_type.toLocaleLowerCase() === 'physique').length;
+			this.stat.moral = this.clients.filter(_ => _.client_type.toLocaleLowerCase() === 'moral').length;
 		}
 	}
 });
