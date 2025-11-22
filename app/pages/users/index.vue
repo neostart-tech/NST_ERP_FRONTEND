@@ -1,231 +1,210 @@
 <template>
-    <main class="flex-1 p-6 bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
-      <div class="max-w-7xl mx-auto">
-        <div class="relative mb-8">
-          <div
-            class="bg-gradient-to-r from-sky-600 via-sky-700 to-sky-800 rounded-2xl shadow-xl p-8 text-white overflow-hidden"
-          >
-            <div class="absolute inset-0 opacity-10">
-              <div class="absolute -top-20 -right-20 w-40 h-40 bg-white rounded-full"></div>
-              <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-white rounded-full"></div>
-              <div class="absolute top-1/2 right-1/4 w-24 h-24 bg-white rounded-full"></div>
-            </div>
+	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+		<!-- Statistiques -->
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+			<!-- Carte Total Utilisateurs -->
+			<div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-gray-600">Total Utilisateurs</p>
+						<p class="text-3xl font-bold text-gray-900">{{ kpis.totalUsers }}</p>
+					</div>
+					<div class="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center">
+						<Icon name="heroicons:user-group" class="w-6 h-6 text-sky-600" />
+					</div>
+				</div>
+			</div>
 
-            <div class="relative z-10">
-              <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-                <div>
-                  <h1 class="text-3xl font-bold mb-2">Gestion des Utilisateurs</h1>
-                  <p class="text-sky-100 text-lg">Gérez les comptes utilisateurs et leurs rôles</p>
-                 <div class="flex items-center gap-6 mt-4 text-sm">
-  <div class="flex items-center gap-2">
-    <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-    <span class="text-sky-100">{{ kpis.activeUsers }} Actifs</span>
-  </div>
-  <div class="flex items-center gap-2">
-    <div class="w-2 h-2 bg-red-400 rounded-full"></div>
-    <span class="text-sky-100">0 Inactifs</span>
-  </div>
-</div>
-                </div>
+			<!-- Carte Administrateurs -->
+			<div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-gray-600">Administrateurs</p>
+						<p class="text-3xl font-bold text-purple-600">{{ kpis.adminCount }}</p>
+					</div>
+					<div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+						<Icon name="heroicons:shield-check" class="w-6 h-6 text-purple-600" />
+					</div>
+				</div>
+			</div>
+		</div>
 
-                <div class="flex flex-col sm:flex-row gap-3">
-                  <NuxtLink
-                    to="/users/form"
-                    class="group px-6 py-3 bg-white text-sky-700 font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-3"
-                  >
-                    <div
-                      class="w-5 h-5 bg-sky-100 rounded-full flex items-center justify-center group-hover:bg-sky-200 transition-colors"
-                    >
-                      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
-                    </div>
-                    Nouvel Utilisateur
-                  </NuxtLink>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+		<!-- En-tête avec recherche et actions -->
+		<div class="sm:flex sm:items-center sm:justify-between mb-6">
+			<h1 class="text-2xl font-bold text-gray-900">Liste des utilisateurs</h1>
+			<div class="mt-4 sm:mt-0 sm:ml-4 flex flex-col sm:flex-row gap-3">
+				<!-- Champ de recherche -->
+				<div class="relative flex-1 max-w-xs">
+					<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+						<Icon name="heroicons:magnifying-glass" class="h-5 w-5 text-gray-400" />
+					</div>
+					<input v-model="searchTerm" type="text" placeholder="Rechercher..."
+						class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400" />
+				</div>
 
-       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-  <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-sm font-medium text-gray-600">Total Utilisateurs</p>
-        <p class="text-3xl font-bold text-gray-900">{{ kpis.totalUsers }}</p>
-      </div>
-      <div class="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center">
-        <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
-        </svg>
-      </div>
-    </div>
-  </div>
+				<!-- Bouton Nouveau -->
+				<NuxtLink to="/users/form"
+					class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+					<Icon name="heroicons:plus" class="-ml-1 mr-2 h-5 w-5" />
+					Nouvel utilisateur
+				</NuxtLink>
+			</div>
+		</div>
 
-  <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-sm font-medium text-gray-600">Administrateurs</p>
-        <p class="text-3xl font-bold text-gray-900">{{ kpis.adminCount }}</p>
-      </div>
-      <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.007 12.007 0 002.92 12c0 3.072 1.547 5.726 3.999 7.356A11.942 11.942 0 0012 21c3.064 0 5.618-1.547 7.08-3.999.314-.497.589-1.01.82-1.542.42-1.002.66-2.072.72-3.176.06-.576.06-1.16.06-1.751 0-4.635-3.53-8.406-8.24-8.912z"/>
-        </svg>
-      </div>
-    </div>
-  </div>
-</div>
+		<!-- Vue Tableau (visible uniquement sur écrans lg et plus) -->
+		<div class="hidden lg:block bg-white border p-4 rounded-lg shadow mt-6">
+			<div class="overflow-x-auto">
+				<table class="min-w-full divide-y divide-gray-200">
+					<thead class="bg-gray-50">
+						<tr>
+							<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Nom
+							</th>
+							<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Email
+							</th>
+							<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Téléphone
+							</th>
+							<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Rôle
+							</th>
+							<th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Actions
+							</th>
+						</tr>
+					</thead>
+					<tbody class="bg-white divide-y divide-gray-200">
+						<tr v-for="user in paginatedUsers" :key="user.id + '-table'"
+							class="hover:bg-gray-50 transition-colors duration-150">
+							<td class="px-6 py-4 whitespace-nowrap">
+								<div class="text-sm font-medium text-gray-900">{{ user.first_name }} {{ user.last_name }}</div>
+								<div class="text-sm text-gray-500">{{ user.login }}</div>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								<div class="text-sm text-gray-500">{{ user.email }}</div>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								<div class="text-sm text-gray-500">{{ user.phone || '-' }}</div>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								<span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+									:class="roleClass(user.role)">
+									{{ user.role }}
+								</span>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+								<button @click="viewUser(user.id)" class="text-gray-600 hover:text-gray-900 mr-3" title="Voir les détails">
+									<Icon name="heroicons:eye" class="w-5 h-5" />
+								</button>
+								<button @click="editUser(user.id)" class="text-blue-600 hover:text-blue-900 mr-3" title="Modifier">
+									<Icon name="heroicons:pencil-square" class="w-5 h-5" />
+								</button>
+								<button @click="deleteUser(user.id)" class="text-red-600 hover:text-red-900" title="Supprimer">
+									<Icon name="heroicons:trash" class="w-5 h-5" />
+								</button>
+							</td>
+						</tr>
+						<tr v-if="filteredUsers.length === 0">
+							<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+								<EmptyState title="Aucun utilisateur trouvé" :description="noDataDescription"
+									icon="heroicons:user-group" iconColor="text-indigo-400" @reload="loadUsers"
+									:isLoading="loading" :searchQuery="searchTerm" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
 
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-          <div class="px-8 py-6 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <h2 class="text-xl font-bold text-gray-900">Liste des utilisateurs</h2>
-                <p class="text-gray-600 text-sm mt-1">{{ userStore.users.length }} utilisateur(s)</p>
-              </div>
+		<!-- Vue Cartes (visible uniquement sur écrans md et moins) -->
+		<div class="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+			<template v-if="filteredUsers.length > 0">
+				<div v-for="user in paginatedUsers" :key="user.id + '-card'"
+					class="rounded-lg shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-200 bg-white">
+					<div class="p-4">
+						<div class="flex items-start justify-between">
+							<div class="flex-1">
+								<h3 class="text-lg font-semibold text-gray-900">
+									{{ user.first_name }} {{ user.last_name }}
+								</h3>
+								<p class="text-sm text-gray-500 mb-2">{{ user.login }}</p>
+								<div class="mt-2 space-y-2">
+									<div class="flex items-center text-sm text-gray-600">
+										<Icon name="heroicons:envelope" class="w-4 h-4 mr-2 text-gray-400" />
+										<span>{{ user.email || 'Non renseigné' }}</span>
+									</div>
+									<div class="flex items-center text-sm text-gray-600">
+										<Icon name="heroicons:phone" class="w-4 h-4 mr-2 text-gray-400" />
+										<span>{{ user.phone || 'Non renseigné' }}</span>
+									</div>
+									<div class="flex items-center">
+										<span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+											:class="roleClass(user.role)">
+											{{ user.role }}
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="flex justify-end mt-4 space-x-2">
+							<button @click.stop="viewUser(user.id)" class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full"
+								title="Voir les détails">
+								<Icon name="heroicons:eye" class="w-5 h-5" />
+							</button>
+							<button @click.stop="editUser(user.id)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full"
+								title="Modifier">
+								<Icon name="heroicons:pencil-square" class="w-5 h-5" />
+							</button>
+							<button @click.stop="deleteUser(user.id)" class="p-1.5 text-red-600 hover:bg-red-50 rounded-full"
+								title="Supprimer">
+								<Icon name="heroicons:trash" class="w-5 h-5" />
+							</button>
+						</div>
+					</div>
+				</div>
+			</template>
+			<template v-else>
+				<div class="col-span-full">
+					<EmptyState title="Aucun utilisateur trouvé" :description="noDataDescription"
+						icon="heroicons:user-group" iconColor="text-indigo-400" @reload="loadUsers" :isLoading="loading"
+						:searchQuery="searchTerm" />
+				</div>
+			</template>
+		</div>
 
-              <div class="relative">
-                <input
-                  v-model="searchTerm"
-                  type="text"
-                  placeholder="Rechercher un utilisateur..."
-                  class="w-full sm:w-80 pl-12 pr-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all duration-200 text-gray-700 bg-white"
-                />
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50">
-                <tr>
-                  <th class="px-8 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Nom</th>
-                  <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Email</th>
-                  <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Téléphone</th>
-                  <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Role</th>
-                  <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Statut</th>
-                  <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-             <tbody class="bg-white divide-y divide-gray-100">
-    <tr 
-      v-for="user in filteredUsers" 
-      :key="user.id"
-      class="hover:bg-gray-50 transition-colors"
-    >
-      <td class="px-6 py-4 whitespace-nowrap">
-        <div class="flex items-center">
-          <div class="ml-4">
-            <div class="font-medium text-gray-900">{{ user.first_name }} {{ user.last_name }}</div>
-            <div class="text-gray-500 text-sm">{{ user.login }}</div>
-          </div>
-        </div>
-      </td>
-
-      <td class="px-6 py-4 whitespace-nowrap text-gray-500">
-        {{ user.email }}
-      </td>
-
-      <td class="px-6 py-4 whitespace-nowrap text-gray-500">
-        {{ user.phone || '-' }}
-      </td>
-
-      <td class="px-6 py-4 whitespace-nowrap">
-        <span class="px-2 py-1 rounded-full text-xs font-bold" :class="roleClass(user.role)">
-          {{ user.role }}
-        </span>
-      </td>
-
-      <td class="px-6 py-4 whitespace-nowrap">
-        <span class="px-2 py-1 rounded-full text-xs font-bold bg-green-100 text-green-800">
-          Actif
-        </span>
-      </td>
-
-      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-        <div class="flex items-center gap-2">
-          <button
-            @click="viewUser(user.id)"
-            class="text-sky-600 hover:text-sky-900 p-1 rounded"
-            title="Voir détails"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-            </svg>
-          </button>
-
-          <button
-            @click="editUser(user.id)"
-            class="text-indigo-600 hover:text-indigo-900 p-1 rounded"
-            title="Modifier"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.232z"/>
-            </svg>
-          </button>
-
-          <button
-            @click="deleteUser(user.id)"
-            class="text-red-600 hover:text-red-900 p-1 rounded"
-            title="Supprimer"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-            </svg>
-          </button>
-        </div>
-      </td>
-    </tr>
-
-    <tr v-if="userStore.users.length === 0 && !userStore.loading">
-      <td colspan="6" class="px-6 py-12 text-center">
-        <div class="flex flex-col items-center justify-center">
-          <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
-          </svg>
-          <p class="text-gray-500 text-lg font-medium">Aucun utilisateur trouvé</p>
-          <p class="text-gray-400 text-sm mt-1">Commencez par créer votre premier utilisateur</p>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </main>
+		<Paginator :totalItems="filteredUsers.length" @range-changed="onRangeChanged" />
+	</div>
 </template>
 
 <script setup>
 import { onMounted, computed, reactive, ref } from 'vue'
 import { useUserStore } from '~/app/stores/_user'
 import { useRouter } from 'vue-router'
+import Paginator from '~/app/components/Paginator.vue'
+import EmptyState from '~/app/components/EmptyState.vue'
+import Swal from 'sweetalert2'
 
 const userStore = useUserStore()
 const router = useRouter()
 const loading = ref(false)
 const error = ref(null)
 const searchTerm = ref('')
+const noDataDescription = ref("Il n'y a actuellement aucun utilisateur à afficher.")
+
+const range = reactive({ start: 0, end: 0 })
+
+const onRangeChanged = ({ start, end }) => {
+  range.start = start
+  range.end = end
+}
 
 // KPIs réactifs
 const kpis = reactive({
   totalUsers: computed(() => userStore.users?.length || 0),
   adminCount: computed(() => {
     if (!userStore.users) return 0
-    return userStore.users.filter(user => 
+    return userStore.users.filter(user =>
       user.role?.toLowerCase().includes('admin')
     ).length
   }),
@@ -234,20 +213,29 @@ const kpis = reactive({
     return userStore.users.length
   })
 })
- 
+
 // Filtrage des utilisateurs
 const filteredUsers = computed(() => {
   if (!userStore.users) return []
-  if (!searchTerm.value) return userStore.users
-  
+  if (!searchTerm.value) {
+    noDataDescription.value = "Il n'y a actuellement aucun utilisateur à afficher."
+    return userStore.users
+  }
+
+  noDataDescription.value = ""
   const term = searchTerm.value.toLowerCase()
-  return userStore.users.filter(user => 
+  return userStore.users.filter(user =>
     user.first_name?.toLowerCase().includes(term) ||
     user.last_name?.toLowerCase().includes(term) ||
     user.email?.toLowerCase().includes(term) ||
     user.login?.toLowerCase().includes(term) ||
     user.role?.toLowerCase().includes(term)
   )
+})
+
+// Utilisateurs paginés
+const paginatedUsers = computed(() => {
+  return filteredUsers.value.slice(range.start - 1, range.end)
 })
 
 // Classes pour les rôles
@@ -286,14 +274,26 @@ const editUser = (userId) => {
 
 // Fonction pour supprimer un utilisateur
 const deleteUser = async (userId) => {
-  if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.')) {
-    try {
-      await userStore.deleteUser(userId)
-      alert('Utilisateur supprimé avec succès')
-    } catch (error) {
-      alert('Erreur lors de la suppression: ' + error.message)
+  Swal.fire({
+    title: 'Supprimer l\'utilisateur ?',
+    text: 'Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.',
+    icon: 'question',
+    showCancelButton: true,
+    cancelButtonText: 'Annuler',
+    cancelButtonColor: '#3085d6',
+    confirmButtonColor: '#d33',
+    confirmButtonText: 'Oui, supprimer !'
+  }).then(async result => {
+    if (result.isConfirmed) {
+      try {
+        await userStore.deleteUser(userId)
+        Swal.fire({ icon: 'success', title: 'Succès', text: 'Utilisateur supprimé avec succès', timer: 2000, showConfirmButton: false })
+        await userStore.fetchUsers()
+      } catch (error) {
+        Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de supprimer l\'utilisateur' })
+      }
     }
-  }
+  })
 }
 
 // Charger les données au montage
@@ -301,33 +301,3 @@ onMounted(() => {
   loadUsers()
 })
 </script>
-
-<style scoped>
-/* Animation pour les cartes de statistiques */
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.group:hover .group-hover\:inline {
-  animation: slideInUp 0.2s ease-out;
-}
-
-/* Effet de survol pour les lignes du tableau */
-.group:hover {
-  box-shadow: 0 4px 15px -4px rgba(59, 130, 246, 0.15);
-}
-
-/* Style pour les boutons d'action */
-.group:hover .group-hover\:bg-sky-600,
-.group:hover .group-hover\:bg-red-600,
-.group:hover .group-hover\:bg-gray-600 {
-  transform: scale(1.05);
-}
-</style>

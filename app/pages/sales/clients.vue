@@ -73,122 +73,16 @@
 			</div>
 		</div>
 
-		<!-- Vue Tableau (visible uniquement sur écrans lg et plus) -->
-		<div class="hidden lg:block bg-white border p-4 rounded-lg shadow mt-6">
-			<div class="overflow-x-auto">
-				<table class="min-w-full divide-y divide-gray-200">
-					<thead class="bg-gray-50">
-						<tr>
-							<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-								Nom / Raison Sociale
-							</th>
-							<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-								Email
-							</th>
-							<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-								Téléphone
-							</th>
-							<th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-								Actions
-							</th>
-						</tr>
-					</thead>
-					<tbody class="bg-white divide-y divide-gray-200">
-						<tr v-for="client in paginatedClients" :key="client.id + '-table'"
-							class="hover:bg-gray-50 transition-colors duration-150">
-							<td class="px-6 py-4 whitespace-nowrap">
-								<div class="text-sm font-medium text-gray-900" v-if="client.client_type === 'Physique'">
-									{{ client.last_name }} {{ client.first_name }}
-									<Icon name="heroicons:user" class="w-4 h-4 text-emerald-600 inline-block ml-1" />
-								</div>
-								<div class="text-sm font-medium text-gray-900" v-else>
-									{{ client.company_name }}
-									<Icon name="heroicons:building-office" class="w-4 h-4 text-amber-600 inline-block ml-1" />
-								</div>
-							</td>
-							<td class="px-6 py-4 whitespace-nowrap">
-								<div class="text-sm text-gray-500">{{ client.email || '-' }}</div>
-							</td>
-							<td class="px-6 py-4 whitespace-nowrap">
-								<div class="text-sm text-gray-500">{{ client.phone || '-' }}</div>
-							</td>
-							<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-								<button @click="editClient(client)" class="text-blue-600 hover:text-blue-900 mr-3" title="Modifier">
-									<Icon name="heroicons:pencil-square" class="w-5 h-5" />
-								</button>
-								<button @click="viewClient(client)" class="text-gray-600 hover:text-gray-900 mr-3" title="Voir les détails">
-									<Icon name="heroicons:eye" class="w-5 h-5" />
-								</button>
-								<button @click="deleteClient(client)" class="text-red-600 hover:text-red-900" title="Supprimer">
-									<Icon name="heroicons:trash" class="w-5 h-5" />
-								</button>
-							</td>
-						</tr>
-						<tr v-if="filteredClients.length === 0">
-							<td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
-								<EmptyState title="Aucun client trouvé" :description="noDataDescription" icon="heroicons:user-group"
-									iconColor="text-indigo-400" @reload="fetchClients" :isLoading="isLoading"
-									:searchQuery="searchQuery" />
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-
-		<!-- Vue Cartes (visible uniquement sur écrans md et moins) -->
-		<div class="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-			<template v-if="filteredClients.length > 0">
-				<div v-for="client in paginatedClients" :key="client.id + '-card'"
-					class="rounded-lg shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-200"
-					:class="{ 'bg-amber-100': client.client_type === 'Moral', 'bg-emerald-100': client.client_type === 'Physique' }">
-					<div class="p-4">
-						<div class="flex items-start justify-between">
-							<div>
-								<div class="flex items-center">
-									<h3 class="text-lg font-semibold text-gray-900">
-										<template v-if="client.client_type === 'Physique'">
-											{{ client.last_name }} {{ client.first_name }}
-										</template>
-										<template v-else>
-											{{ client.company_name }}
-										</template>
-									</h3>
-								</div>
-								<div class="mt-2">
-									<div class="flex items-center text-sm text-gray-600">
-										<Icon name="heroicons:envelope" class="w-4 h-4 mr-2 text-gray-400" />
-										<span>{{ client.email || 'Non renseigné' }}</span>
-									</div>
-									<div class="flex items-center text-sm text-gray-600 mt-1">
-										<Icon name="heroicons:phone" class="w-4 h-4 mr-2 text-gray-400" />
-										<span>{{ client.phone || 'Non renseigné' }}</span>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="flex justify-end mt-2">
-								<button @click.stop="editClient(client)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full" title="Modifier">
-									<Icon name="heroicons:pencil-square" class="w-5 h-5" />
-								</button>
-								<button @click.stop="viewClient(client)" class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full" title="Voir les détails">
-									<Icon name="heroicons:eye" class="w-5 h-5" />
-								</button>
-								<button @click.stop="deleteClient(client)" class="p-1.5 text-red-600 hover:bg-red-50 rounded-full" title="Supprimer">
-									<Icon name="heroicons:trash" class="w-5 h-5" />
-								</button>
-							</div>
-					</div>
-				</div>
-			</template>
-			<template v-else>
-				<div class="col-span-full">
-					<EmptyState title="Aucun client trouvé" :description="noDataDescription" icon="heroicons:user-group"
-						iconColor="text-indigo-400" @reload="fetchClients" :isLoading="isLoading"
-						:searchQuery="searchQuery" />
-				</div>
-			</template>
-		</div>
+		<ClientsList
+			:paginatedClients="paginatedClients"
+			:isLoading="isLoading"
+			:searchQuery="searchQuery"
+			:noDataDescription="noDataDescription"
+			@edit="editClient"
+			@view="viewClient"
+			@delete="deleteClient"
+			@reload="fetchClients"
+		/>
 
 		<Paginator :totalItems="filteredClients.length" @range-changed="onRangeChanged" />
 
@@ -320,7 +214,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, reactive, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import Swal from 'sweetalert2'
 import { defaultClient, type Client } from '~/models/Client'
 import { useClientStore } from '~/app/stores/ClientStore'
@@ -328,6 +223,7 @@ import InvalidInput from '~/app/components/partials/InvalidInput.vue';
 import Paginator from '~/app/components/Paginator.vue';
 import EmptyState from '~/app/components/EmptyState.vue';
 import DetailModal from '~/app/components/clients/detailModal.vue';
+import ClientsList from '~/app/components/clients/list.vue';
 // TODO: Ajouter un spinner aux bouton d'enregistrement
 const clientStore = useClientStore();
 const { clients, errors, isLoading, stat } = storeToRefs(clientStore);

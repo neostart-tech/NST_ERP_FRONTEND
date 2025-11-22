@@ -1,9 +1,9 @@
 <template>
-
-	<!-- En-tête de la page -->
-	<div class="sm:flex sm:items-center sm:justify-between mb-6">
-		<h1 class="text-2xl font-bold text-gray-900">Liste des Entreprises</h1>
-		<div class="mt-4 sm:mt-0 sm:ml-4 flex flex-col sm:flex-row gap-3">
+	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+		<!-- En-tête de la page -->
+		<div class="sm:flex sm:items-center sm:justify-between mb-6">
+			<h1 class="text-2xl font-bold text-gray-900">Liste des Entreprises</h1>
+			<div class="mt-4 sm:mt-0 sm:ml-4 flex flex-col sm:flex-row gap-3">
 			<!-- Champ de recherche -->
 			<div class="relative flex-1 max-w-xs">
 				<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -37,114 +37,152 @@
 	<!-- Contenu principal -->
 	<template v-else>
 		<!-- Vue en cartes pour les écrans < lg -->
-		<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:hidden">
-			<div v-for="entreprise in paginatedEnterprises" :key="entreprise.id"
-				class="bg-white overflow-hidden shadow rounded-lg border border-gray-200 flex flex-col hover:shadow-md transition-shadow">
-				<div class="p-5 flex-grow">
-					<h3 class="text-lg font-medium text-gray-900 truncate">
-						<a href="#" @click.prevent="viewEntreprise(entreprise.id)" class="hover:text-blue-600">{{
-							entreprise.name
-						}}</a>
-					</h3>
-					<div class="mt-2 text-sm text-gray-500 space-y-2">
-						<!-- Email - Bleu -->
-						<p class="flex items-center">
-							<Icon name="heroicons:envelope" class="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-500" />
-							<span class="truncate">{{ entreprise.email }}</span>
-						</p>
-
-						<!-- Téléphone - Vert -->
-						<p class="flex items-center">
-							<Icon name="heroicons:phone" class="flex-shrink-0 mr-1.5 h-5 w-5 text-emerald-500" />
-							<span>{{ entreprise.phone }}</span>
-						</p>
-
-						<!-- Adresse - Violet -->
-						<p class="flex items-start pt-1">
-							<Icon name="heroicons:map-pin" class="flex-shrink-0 mr-1.5 h-5 w-5 text-purple-500 mt-0.5" />
-							<span>{{ entreprise.address }}</span>
-						</p>
-
-						<!-- Offres - Orange -->
-						<p class="flex items-center" title="Nombre d'offres">
-							<Icon name="heroicons:document-text" class="flex-shrink-0 mr-1.5 h-5 w-5 text-amber-500" />
-							<span>{{ entreprise.offersCount }}</span>
-						</p>
+		<div class="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+			<div v-for="entreprise in paginatedEnterprises" :key="entreprise.id + '-card'"
+				class="rounded-lg shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-200 bg-white">
+				<div class="p-4">
+					<div class="flex items-start justify-between">
+						<div class="flex-1">
+							<h3 class="text-lg font-semibold text-gray-900 mb-2">
+								{{ entreprise.name }}
+							</h3>
+							<div class="mt-2 space-y-2">
+								<div class="flex items-center text-sm text-gray-600">
+									<Icon name="heroicons:envelope" class="w-4 h-4 mr-2 text-blue-500" />
+									<span class="truncate">{{ entreprise.email }}</span>
+								</div>
+								<div class="flex items-center text-sm text-gray-600">
+									<Icon name="heroicons:phone" class="w-4 h-4 mr-2 text-emerald-500" />
+									<span>{{ entreprise.phone }}</span>
+								</div>
+								<div class="flex items-start text-sm text-gray-600">
+									<Icon name="heroicons:map-pin" class="w-4 h-4 mr-2 text-purple-500 mt-0.5" />
+									<span>{{ entreprise.address }}</span>
+								</div>
+								<div class="flex items-center text-sm text-gray-600">
+									<Icon name="heroicons:document-text" class="w-4 h-4 mr-2 text-amber-500" />
+									<span>{{ entreprise.offersCount }} offre(s)</span>
+								</div>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div class="border-t border-gray-200 px-5 py-3 bg-gray-50 flex justify-end space-x-3">
-					<!-- Bouton Détails -->
-					<button @click="viewEntreprise(entreprise.id)" class="text-sm font-medium text-blue-600 hover:text-blue-800">
-						Détails
-					</button>
-
-					<button @click="editEntreprise(entreprise.id)" class="text-sm font-medium text-gray-700 hover:text-blue-600">
-						Modifier
-					</button>
-
-					<button @click="deleteEntreprise(entreprise.id)" class="text-sm font-medium text-red-600 hover:text-red-800">
-						Supprimer
-					</button>
+					<div class="flex justify-end mt-4 space-x-2">
+						<button @click.stop="viewEntreprise(entreprise.id)"
+							class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full" title="Voir les détails">
+							<Icon name="heroicons:eye" class="w-5 h-5" />
+						</button>
+						<button @click.stop="editEntreprise(entreprise.id)"
+							class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full" title="Modifier">
+							<Icon name="heroicons:pencil-square" class="w-5 h-5" />
+						</button>
+						<button @click.stop="deleteEntreprise(entreprise.id)"
+							class="p-1.5 text-red-600 hover:bg-red-50 rounded-full" title="Supprimer">
+							<Icon name="heroicons:trash" class="w-5 h-5" />
+						</button>
+					</div>
 				</div>
 			</div>
 		</div>
 
-		<!-- Vue en liste pour les écrans >= lg -->
-		<div class="hidden lg:block">
-			<div class="bg-white shadow overflow-hidden sm:rounded-md">
-				<ul role="list" class="divide-y divide-gray-200">
-					<li v-for="entreprise in paginatedEnterprises" :key="entreprise.id"
-						class="px-4 py-4 sm:px-6 flex items-center justify-between hover:bg-gray-50 transition-colors">
-						<div class="flex-1 min-w-0 cursor-pointer" @click="viewEntreprise(entreprise.id)">
-							<p class="text-sm font-medium text-blue-600 truncate">
-								{{ entreprise.name }}
-							</p>
-							<div class="mt-2 flex items-center text-sm text-gray-500">
-								<!-- Email - Bleu -->
-								<Icon name="heroicons:envelope" class="flex-shrink-0 mr-1.5 h-5 w-5 text-blue-500" />
-								<span class="truncate">{{ entreprise.email }}</span>
-								<span class="mx-2 text-gray-300">|</span>
-
-								<!-- Téléphone - Vert -->
-								<Icon name="heroicons:phone" class="flex-shrink-0 mr-1.5 h-5 w-5 text-emerald-500" />
-								<span>{{ entreprise.phone }}</span>
-								<span class="mx-2 text-gray-300">|</span>
-
-								<!-- Adresse - Violet -->
-								<Icon name="heroicons:map-pin" class="flex-shrink-0 mr-1.5 h-5 w-5 text-purple-500" />
-								<span>{{ entreprise.address }}</span>
-								<span class="mx-2 text-gray-300">|</span>
-
-								<!-- Offres - Orange -->
-								<Icon name="heroicons:document-text" class="flex-shrink-0 mr-1.5 h-5 w-5 text-amber-500" />
-								<span>{{ entreprise.offersCount }}</span>
-							</div>
-						</div>
-						<div class="ml-5 flex-shrink-0 flex items-center space-x-2">
-							<button @click="editEntreprise(entreprise.id)"
-								class="text-gray-400 hover:text-blue-600 p-2 rounded-full hover:bg-gray-100" aria-label="Modifier">
-								<Icon name="heroicons:pencil-square-20-solid" class="h-5 w-5" />
-							</button>
-							<button @click="deleteEntreprise(entreprise.id)"
-								class="text-gray-400 hover:text-red-600 p-2 rounded-full hover:bg-gray-100" aria-label="Supprimer">
-								<Icon name="heroicons:trash-20-solid" class="h-5 w-5" />
-							</button>
-						</div>
-					</li>
-				</ul>
+		<!-- Vue Tableau (visible uniquement sur écrans lg et plus) -->
+		<div class="hidden lg:block bg-white border p-4 rounded-lg shadow mt-6">
+			<div class="overflow-x-auto">
+				<table class="min-w-full divide-y divide-gray-200">
+					<thead class="bg-gray-50">
+						<tr>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Nom
+							</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Email
+							</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Téléphone
+							</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Adresse
+							</th>
+							<th scope="col"
+								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Offres
+							</th>
+							<th scope="col"
+								class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+								Actions
+							</th>
+						</tr>
+					</thead>
+					<tbody class="bg-white divide-y divide-gray-200">
+						<tr v-for="entreprise in paginatedEnterprises" :key="entreprise.id + '-table'"
+							class="hover:bg-gray-50 transition-colors duration-150">
+							<td class="px-6 py-4 whitespace-nowrap">
+								<div class="text-sm font-medium text-gray-900">{{ entreprise.name }}</div>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								<div class="text-sm text-gray-500 flex items-center">
+									<Icon name="heroicons:envelope" class="w-4 h-4 mr-2 text-blue-500" />
+									{{ entreprise.email }}
+								</div>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								<div class="text-sm text-gray-500 flex items-center">
+									<Icon name="heroicons:phone" class="w-4 h-4 mr-2 text-emerald-500" />
+									{{ entreprise.phone }}
+								</div>
+							</td>
+							<td class="px-6 py-4">
+								<div class="text-sm text-gray-500 flex items-start">
+									<Icon name="heroicons:map-pin" class="w-4 h-4 mr-2 text-purple-500 mt-0.5" />
+									<span class="line-clamp-2">{{ entreprise.address }}</span>
+								</div>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap">
+								<div class="text-sm text-gray-500 flex items-center">
+									<Icon name="heroicons:document-text" class="w-4 h-4 mr-2 text-amber-500" />
+									{{ entreprise.offersCount }}
+								</div>
+							</td>
+							<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+								<button @click="viewEntreprise(entreprise.id)" class="text-gray-600 hover:text-gray-900 mr-3"
+									title="Voir les détails">
+									<Icon name="heroicons:eye" class="w-5 h-5" />
+								</button>
+								<button @click="editEntreprise(entreprise.id)" class="text-blue-600 hover:text-blue-900 mr-3"
+									title="Modifier">
+									<Icon name="heroicons:pencil-square" class="w-5 h-5" />
+								</button>
+								<button @click="deleteEntreprise(entreprise.id)" class="text-red-600 hover:text-red-900"
+									title="Supprimer">
+									<Icon name="heroicons:trash" class="w-5 h-5" />
+								</button>
+							</td>
+						</tr>
+						<tr v-if="filteredEnterprises.length === 0">
+							<td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">
+								<EmptyState title="Aucune entreprise trouvée" :description="noDataDescription"
+									icon="heroicons:building-office" iconColor="text-indigo-400" @reload="fetchEnterprises"
+									:isLoading="isLoading" :searchQuery="searchQuery" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 
 		<Paginator :totalItems="filteredEnterprises.length" @range-changed="onRangeChanged" />
 	</template>
 
-	<div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-		<div class="bg-white rounded-lg p-6 max-w-md w-full">
-			<EnterpriseModal action="delete" :enterprise="currentEnterprise!" @cancel="showDeleteModal = false"
-				@confirm="handleDeleteEnterprise" />
+		<div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+			<div class="bg-white rounded-lg p-6 max-w-md w-full">
+				<EnterpriseModal action="delete" :enterprise="currentEnterprise!" @cancel="showDeleteModal = false"
+					@confirm="handleDeleteEnterprise" />
+			</div>
 		</div>
 	</div>
-
 </template>
 
 <script setup lang="ts">
