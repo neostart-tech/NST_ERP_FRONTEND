@@ -39,11 +39,12 @@
 							<div class="text-sm text-gray-500">{{ client.phone || '-' }}</div>
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-							<button @click="emit('edit', client)" class="text-blue-600 hover:text-blue-900 mr-3" title="Modifier">
-								<Icon name="heroicons:pencil-square" class="w-5 h-5" />
-							</button>
+
 							<button @click="emit('view', client)" class="text-gray-600 hover:text-gray-900 mr-3" title="Voir les détails">
 								<Icon name="heroicons:eye" class="w-5 h-5" />
+							</button>
+							<button @click="emit('edit', client)" class="text-blue-600 hover:text-blue-900 mr-3" title="Modifier">
+								<Icon name="heroicons:pencil-square" class="w-5 h-5" />
 							</button>
 							<button @click="emit('delete', client)" class="text-red-600 hover:text-red-900" title="Supprimer">
 								<Icon name="heroicons:trash" class="w-5 h-5" />
