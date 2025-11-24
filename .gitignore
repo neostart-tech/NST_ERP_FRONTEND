@@ -6,6 +6,8 @@
 .cache
 dist
 
+app/pages/_Maintenance/
+
 # Node dependencies
 node_modules
 
