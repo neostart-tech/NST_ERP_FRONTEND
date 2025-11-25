@@ -53,6 +53,9 @@ export const ApiUrl = {
 	CLIENT_BY_ID: "/clients/:id",
 	CLIENT_STATS: "/clients/stats",
 
+	TECHNICIANS: "/technicians",
+	TECHNICIAN_BY_ID: "/technicians/:id",
+
 	/**
  * Fonction pour les url à paramètres sous la forme url/:id
  */

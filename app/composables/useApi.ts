@@ -19,25 +19,35 @@ export const useApi = () => {
 		XSRFToken = useCookie('XSRF-TOKEN').value;
 	}
 
-	const getHeaders = (headers: HeadersInit = {}) => ({
-		'X-XSRF-TOKEN': XSRFToken,
-		'Content-Type': 'application/json',
-		'Accept': 'application/json',
-		...(authStore.token && { Authorization: `Bearer ${authStore.token}` }),
-		// credentials: 'include',
-		...headers,
-	});
+	const getHeaders = (headers: HeadersInit = {}, isFormData: boolean = false) => {
+		const defaultHeaders: any = {
+			'X-XSRF-TOKEN': XSRFToken,
+			'Accept': 'application/json',
+			...(authStore.token && { Authorization: `Bearer ${authStore.token}` }),
+		};
+
+		// N'ajouter Content-Type que si ce n'est pas FormData
+		if (!isFormData) {
+			defaultHeaders['Content-Type'] = 'application/json';
+		}
+
+		return {
+			...defaultHeaders,
+			...headers,
+		};
+	};
 
 	const request = async <T>(endpoint: string, config: ApiConfig = {}): Promise<ApiResponse<T>> => {
 		const { method = 'GET', headers = {}, body, signal } = config;
 		const fullUrl = `${baseUrl}${endpoint}`;
+		const isFormData = body instanceof FormData;
 
 		try {
 			const response = await fetch(fullUrl, {
 				method,
 				// @ts-ignore
-				headers: getHeaders(headers),
-				body: body ? JSON.stringify(body) : undefined,
+				headers: getHeaders(headers, isFormData),
+				body: isFormData ? body : (body ? JSON.stringify(body) : undefined),
 				credentials: 'include',
 				signal,
 			});
