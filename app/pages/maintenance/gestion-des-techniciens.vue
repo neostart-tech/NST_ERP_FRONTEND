@@ -226,6 +226,8 @@
 					</div>
 				</div>
 			</div>
+
+			<Paginator :totalItems="filteredTechniciens.length" @range-changed="onRangeChanged" />
 		</template>
 
 		<!-- EmptyState -->
@@ -420,11 +422,19 @@ import { useTechnicianStore } from '@/stores/TechnicianStore'
 import InvalidInput from '~/app/components/partials/InvalidInput.vue'
 import EmptyState from '~/app/components/EmptyState.vue'
 import Swal from 'sweetalert2'
+import Paginator from '~/app/components/Paginator.vue'
 
 const API_BASE_URL = 'http://192.168.210.157:8000/api'
 
 const technicianStore = useTechnicianStore()
-const { validationErrors, technicians, loading } = storeToRefs(technicianStore)
+const { validationErrors, technicians, loading } = storeToRefs(technicianStore);
+
+const range = reactive({ start: 0, end: 0 });
+
+const onRangeChanged = ({ start, end }: { start: number, end: number }) => {
+	range.start = start;
+	range.end = end;
+};
 
 const error = ref('')
 const submitting = ref(false)

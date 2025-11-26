@@ -63,7 +63,7 @@ export const AppUrl = {
 	MAINTENANCE_REPORTS: "/maintenance/reports",
 	MAINTENANCE_DASHBOARD: "/maintenance/dashboard",
 	MAINTENANCE_ADD_CUSTOMER: "/maintenance/ajouter-un-client",
-	MAINTENANCE_ADD_TECHNICIAN: "/maintenance/ajouter-un-technicien",
+	MAINTENANCE_ADD_TECHNICIAN: "/maintenance/gestion-des-techniciens",
 	MAINTENANCE_SAVE_EQUIPMENT: "/maintenance/ajouter-un-equipement",
 	MAINTENANCE_REPORTING_BREAK: "/maintenance/signaler-panne",
 	MAINTENANCE_CUSTOMER_FILE: "/maintenance/fiche-client",

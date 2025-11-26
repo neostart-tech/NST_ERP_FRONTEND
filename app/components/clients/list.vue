@@ -9,6 +9,9 @@
 							Nom / Raison Sociale
 						</th>
 						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+							Type
+						</th>
+						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 							Email
 						</th>
 						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -25,12 +28,17 @@
 						<td class="px-6 py-4 whitespace-nowrap">
 							<div class="text-sm font-medium text-gray-900" v-if="client.client_type === 'Physique'">
 								{{ client.last_name }} {{ client.first_name }}
-								<Icon name="heroicons:user" class="w-4 h-4 text-emerald-600 inline-block ml-1" />
 							</div>
 							<div class="text-sm font-medium text-gray-900" v-else>
 								{{ client.company_name }}
-								<Icon name="heroicons:building-office" class="w-4 h-4 text-amber-600 inline-block ml-1" />
 							</div>
+						</td>
+						<td class="px-6 py-4 whitespace-nowrap">
+							<div class="text-sm px-2 py-1 inline-flex leading-5 rounded-full" :class="{
+								'bg-amber-100 text-amber-500 border border-amber-200': client.client_type === 'Moral',
+								'bg-emerald-100 text-emerald-500 border border-emerald-200': client.client_type === 'Physique'
+							}">
+								{{ client.client_type }}</div>
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap">
 							<div class="text-sm text-gray-500">{{ client.email || '-' }}</div>
@@ -40,7 +48,8 @@
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 
-							<button @click="emit('view', client)" class="text-gray-600 hover:text-gray-900 mr-3" title="Voir les détails">
+							<button @click="emit('view', client)" class="text-gray-600 hover:text-gray-900 mr-3"
+								title="Voir les détails">
 								<Icon name="heroicons:eye" class="w-5 h-5" />
 							</button>
 							<button @click="emit('edit', client)" class="text-blue-600 hover:text-blue-900 mr-3" title="Modifier">
@@ -95,24 +104,26 @@
 						</div>
 					</div>
 					<div class="flex justify-end mt-2">
-							<button @click.stop="emit('edit', client)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full" title="Modifier">
-								<Icon name="heroicons:pencil-square" class="w-5 h-5" />
-							</button>
-							<button @click.stop="emit('view', client)" class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full" title="Voir les détails">
-								<Icon name="heroicons:eye" class="w-5 h-5" />
-							</button>
-							<button @click.stop="emit('delete', client)" class="p-1.5 text-red-600 hover:bg-red-50 rounded-full" title="Supprimer">
-								<Icon name="heroicons:trash" class="w-5 h-5" />
-							</button>
-						</div>
+						<button @click.stop="emit('edit', client)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full"
+							title="Modifier">
+							<Icon name="heroicons:pencil-square" class="w-5 h-5" />
+						</button>
+						<button @click.stop="emit('view', client)" class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full"
+							title="Voir les détails">
+							<Icon name="heroicons:eye" class="w-5 h-5" />
+						</button>
+						<button @click.stop="emit('delete', client)" class="p-1.5 text-red-600 hover:bg-red-50 rounded-full"
+							title="Supprimer">
+							<Icon name="heroicons:trash" class="w-5 h-5" />
+						</button>
+					</div>
 				</div>
 			</div>
 		</template>
 		<template v-else>
 			<div class="col-span-full">
 				<EmptyState title="Aucun client trouvé" :description="noDataDescription" icon="heroicons:user-group"
-					iconColor="text-indigo-400" @reload="emit('reload')" :isLoading="isLoading"
-					:searchQuery="searchQuery" />
+					iconColor="text-indigo-400" @reload="emit('reload')" :isLoading="isLoading" :searchQuery="searchQuery" />
 			</div>
 		</template>
 	</div>
