@@ -453,9 +453,11 @@
 							class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
 							Annuler
 						</button>
-						<button type="submit"
-							class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-							{{ isEditing ? 'Mettre à jour' : 'Enregistrer' }}
+
+						<button type="submit" :disabled="isSaving"
+							class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+							<Spinner :isLoading="isSaving" />
+							{{ isSaving ? 'Enregistrement en cours...' : isEditing ? 'Mettre à jour' : 'Enregistrer' }}
 						</button>
 					</div>
 				</form>
@@ -464,8 +466,8 @@
 	</div>
 
 	<!-- Modal Visualisation -->
-	<DetailModal :isOpen="showViewModal" :equipment="viewedEquipment" @close="closeViewModal" @photoClick="openPhotoModal"
-		@export="generateEquipmentSheet" />
+	<DetailModal :isOpen="showViewModal" :equipment="viewedEquipment" @close="showViewModal = false"
+		@photoClick="openPhotoModal" @export="generateEquipmentSheet" />
 
 	<!-- Modal Photo -->
 	<div v-if="showPhotoModal"
@@ -479,37 +481,6 @@
 		</div>
 	</div>
 
-	<!-- Modal Confirmation Suppression -->
-	<div v-if="showDeleteModal"
-		class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-		<div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
-			<div class="flex items-center mb-4">
-				<div class="bg-red-100 p-3 rounded-lg mr-4">
-					<Icon name="heroicons:exclamation-triangle" class="h-6 w-6 text-red-600" />
-				</div>
-				<div>
-					<h2 class="text-xl font-bold text-gray-900">Confirmer la suppression</h2>
-					<p class="text-gray-600 mt-1">Action irréversible</p>
-				</div>
-			</div>
-
-			<p class="text-gray-700 mb-6">
-				Êtes-vous sûr de vouloir supprimer cet équipement ? Cette action est définitive et toutes les données associées
-				seront perdues.
-			</p>
-
-			<div class="flex justify-end space-x-4">
-				<button @click="closeDeleteModal"
-					class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
-					Annuler
-				</button>
-				<button @click="deleteEquipment"
-					class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors">
-					Supprimer définitivement
-				</button>
-			</div>
-		</div>
-	</div>
 </template>
 
 <script setup lang="ts">
@@ -523,6 +494,9 @@ import RequiredField from '~/app/components/partials/RequiredField.vue';
 import Paginator from '~/app/components/Paginator.vue';
 import EmptyState from '~/app/components/EmptyState.vue';
 import DetailModal from '~/app/components/maintenance/detailModal.vue';
+import Swal from 'sweetalert2';
+import Loader from '~/app/components/Loader.vue';
+import Spinner from '~/app/components/partials/Spinner.vue';
 
 const EquipmentStore = useEquipmentStore();
 const generateEquipmentSheet = EquipmentStore.generateEquipmentSheet;
@@ -532,8 +506,8 @@ const { equipments, loading } = storeToRefs(EquipmentStore);
 const showModal = ref(false);
 const showViewModal = ref(false);
 const showPhotoModal = ref(false);
-const showDeleteModal = ref(false);
 const isEditing = ref(false);
+const isSaving = ref<boolean>(false);
 
 // Filtres
 const filterType = ref('');
@@ -542,9 +516,9 @@ const searchQuery = ref('');
 
 // Données
 const formData = ref<Equipment>(equipmentFormData());
-const viewedEquipment = ref({});
+const viewedEquipment = ref<Equipment>(equipmentFormData());
 const selectedPhoto = ref('');
-const equipmentToDelete = ref(null);
+const equipmentToDelete = ref<Equipment | null>(null);
 const showNetworkFields = ref(false);
 const photoInput = ref(null);
 
@@ -602,23 +576,34 @@ const editEquipment = (equipment: Equipment) => {
 	showModal.value = true;
 };
 
-const viewEquipment = (equipment) => {
-	viewedEquipment.value = { ...equipment };
+const viewEquipment = (equipment: Equipment) => {
+	viewedEquipment.value = equipment;
 	showViewModal.value = true;
 };
 
-const confirmDelete = (equipment) => {
-	equipmentToDelete.value = equipment.id;
-	showDeleteModal.value = true;
-};
+const confirmDelete = (equipment: Equipment) => {
 
-const deleteEquipment = async () => {
-	try {
-		await EquipmentStore.deleteEquipment(equipmentToDelete.value);
-		closeDeleteModal();
-	} catch (error) {
-		console.error('Erreur lors de la suppression:', error);
-	}
+	Swal.fire({
+		title: 'Supprimer le client ?',
+		html: `Êtes-vous sûr de vouloir supprimer l'équipement <b>${equipment.type}</b> <b>${equipment.brand}</b> <b>${equipment.model}</b> <b>${equipment.serial_number}</b> ?`,
+		icon: 'question',
+		showCancelButton: true,
+		cancelButtonText: 'Annuler',
+		cancelButtonColor: '#3085d6',
+		confirmButtonColor: '#d33',
+		confirmButtonText: 'Oui, supprimer !'
+	}).then(async result => {
+		if (result.isConfirmed) {
+			try {
+				await EquipmentStore.deleteEquipment(equipment.id)
+				Swal.fire({ icon: 'success', title: 'Succès', text: 'Client supprimé avec succès', showConfirmButton: false });
+				equipmentToDelete.value = null;
+				await EquipmentStore.fetchEquipments()
+			} catch (error) {
+				Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de supprimer le client' })
+			}
+		}
+	});
 };
 
 const closeModal = () => {
@@ -626,17 +611,8 @@ const closeModal = () => {
 	resetForm();
 };
 
-const closeViewModal = () => {
-	showViewModal.value = false;
-};
-
 const closePhotoModal = () => {
 	showPhotoModal.value = false;
-};
-
-const closeDeleteModal = () => {
-	showDeleteModal.value = false;
-	equipmentToDelete.value = null;
 };
 
 const resetForm = () => {
@@ -706,16 +682,18 @@ const buildFormData = () => {
 const submitForm = async () => {
 	try {
 		const data = buildFormData();
+		isSaving.value = true;
 
 		if (isEditing.value) {
 			await EquipmentStore.updateEquipment(formData.value.id, data);
 		} else {
 			await EquipmentStore.addEquipment(data);
 		}
-
 		closeModal();
 	} catch (err) {
 		console.error("Erreur lors de l'enregistrement :", err);
+	} finally {
+		isSaving.value = false;
 	}
 };
 

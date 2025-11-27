@@ -2,61 +2,59 @@
 	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
 		<!-- Statistiques -->
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-			<!-- Carte Total Techniciens -->
-			<div
-				class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+
+			<!-- Total Techniciens -->
+			<div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
 				<div class="flex items-center justify-between">
 					<div>
-						<p class="text-sm font-medium text-gray-600">Total Techniciens</p>
-						<p class="text-3xl font-bold text-gray-900">{{ technicians?.length || 0 }}</p>
+						<p class="text-sm font-medium text-blue-900">Total Techniciens</p>
+						<p class="text-3xl font-bold text-blue-900 mt-2">{{ technicians?.length || 0 }}</p>
 					</div>
-					<div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-						<Icon name="heroicons:user-group" class="w-6 h-6 text-blue-600" />
+					<div class="p-3 rounded-lg bg-blue-500">
+						<Icon name="heroicons:user-group" class="w-6 h-6 text-white" />
 					</div>
 				</div>
 			</div>
 
-			<!-- Carte Disponibles -->
-			<div
-				class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+			<!-- Disponibles -->
+			<div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 border border-green-200">
 				<div class="flex items-center justify-between">
 					<div>
-						<p class="text-sm font-medium text-gray-600">Disponibles</p>
-						<p class="text-3xl font-bold text-green-600">{{ availableCount }}</p>
+						<p class="text-sm font-medium text-green-900">Disponibles</p>
+						<p class="text-3xl font-bold text-green-900 mt-2">{{ availableCount }}</p>
 					</div>
-					<div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-						<Icon name="heroicons:check-circle" class="w-6 h-6 text-green-600" />
+					<div class="p-3 rounded-lg bg-green-500">
+						<Icon name="heroicons:check-circle" class="w-6 h-6 text-white" />
 					</div>
 				</div>
 			</div>
 
-			<!-- Carte Expérience Moyenne -->
-			<div
-				class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+			<!-- Expérience Moyenne -->
+			<div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6 border border-purple-200">
 				<div class="flex items-center justify-between">
 					<div>
-						<p class="text-sm font-medium text-gray-600">Expérience Moyenne</p>
-						<p class="text-3xl font-bold text-purple-600">{{ averageExperience }} ans</p>
+						<p class="text-sm font-medium text-purple-900">Expérience Moyenne</p>
+						<p class="text-3xl font-bold text-purple-900 mt-2">{{ averageExperience }} ans</p>
 					</div>
-					<div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-						<Icon name="heroicons:clock" class="w-6 h-6 text-purple-600" />
+					<div class="p-3 rounded-lg bg-purple-500">
+						<Icon name="heroicons:clock" class="w-6 h-6 text-white" />
 					</div>
 				</div>
 			</div>
 
-			<!-- Carte Spécialités -->
-			<div
-				class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+			<!-- Spécialités -->
+			<div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-6 border border-orange-200">
 				<div class="flex items-center justify-between">
 					<div>
-						<p class="text-sm font-medium text-gray-600">Spécialités</p>
-						<p class="text-3xl font-bold text-orange-600">{{ specialtiesCount }}</p>
+						<p class="text-sm font-medium text-orange-900">Spécialités</p>
+						<p class="text-3xl font-bold text-orange-900 mt-2">{{ specialtiesCount }}</p>
 					</div>
-					<div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-						<Icon name="heroicons:wrench-screwdriver" class="w-6 h-6 text-orange-600" />
+					<div class="p-3 rounded-lg bg-orange-500">
+						<Icon name="heroicons:wrench-screwdriver" class="w-6 h-6 text-white" />
 					</div>
 				</div>
 			</div>
+
 		</div>
 
 		<!-- En-tête avec recherche et actions -->

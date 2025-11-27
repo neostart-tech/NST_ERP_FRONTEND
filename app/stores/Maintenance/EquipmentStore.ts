@@ -25,35 +25,40 @@ export const useEquipmentStore = defineStore('Equipment', {
 			try {
 				const { data } = await useApi().post<Equipment>(ApiUrl.EQUIPMENT, payload);
 				this.equipments.push(data);
+				useAlert().showAlert("Équipement ajouté avec succès", "success");
 			} catch (error) {
 				this.validationErrors = useValidationErrors(error);
+				throw error;
 			} finally {
 				this.loading = false;
 			}
 		},
+
 		async updateEquipment(id: string, formData: FormData) {
 			this.loading = true;
 			try {
 				const { data } = await useApi().post<Equipment>(ApiUrl.EQUIPMENT_BY_ID.replace(":id", id), formData);
 				this.equipments = this.equipments.map(_ => _.id === id ? data : _);
+				useAlert().showAlert("Équipement mis à jour avec succès", "success");
 			} catch (error) {
 				console.error("Error updating equipment: - equipmentStore.js:44", error);
 				this.validationErrors = useValidationErrors(error);
+				throw error;
 			} finally {
 				this.loading = false;
 			}
 		},
-
-
 
 		async deleteEquipment(id: string) {
 			this.loading = true;
 			try {
 				await useApi().del(ApiUrl.EQUIPMENT_BY_ID.replace(":id", id));
 				this.equipments = this.equipments.filter(_ => _.id !== id);
+				useAlert().showAlert("Équipement supprimé avec succès", "success");
 			} catch (error) {
 				console.error("Error deleting equipment: - equipmentStore.js:60", error);
 				this.validationErrors = useValidationErrors(error);
+				throw error;
 			} finally {
 				this.loading = false;
 			}
@@ -333,6 +338,8 @@ export const useEquipmentStore = defineStore('Equipment', {
 					doc.text(`Généré le ${new Date().toLocaleDateString('fr-FR')}`, pageWidth - margin, 285, { align: 'right' });
 				}
 
+				useAlert().showAlert("Fiche technique générée avec succès", "success");
+
 				// === TÉLÉCHARGEMENT DU PDF ===
 				const fileName = `fiche-technique-${equipment.model}-${equipment.serial_number}.pdf`
 					.toLowerCase()
@@ -354,8 +361,6 @@ export const useEquipmentStore = defineStore('Equipment', {
 			this.loading = false;
 		}
 	},
-
-
 
 
 	// Configuration de la persistance
