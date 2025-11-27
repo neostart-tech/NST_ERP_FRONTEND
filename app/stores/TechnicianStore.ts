@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import type { Technician } from "~/models/Technician";
 import { useValidationErrors, type ValidationErrors } from "@/composables/useValidationErrors";
+import { secureLsStorage } from "@/utils/secureStorage";
+
 
 export const useTechnicianStore = defineStore("TechnicianStore", {
 	state() {
@@ -13,7 +15,7 @@ export const useTechnicianStore = defineStore("TechnicianStore", {
 	actions: {
 		async fetchTechnicians() {
 			try {
-				this.loading = true;
+				if (this.technicians.length === 0) this.loading = true;
 				const { data } = await useApi().get<Technician[]>(ApiUrl.TECHNICIANS);
 				this.technicians = data;
 				this.loading = false;
@@ -66,5 +68,20 @@ export const useTechnicianStore = defineStore("TechnicianStore", {
 				throw error;
 			}
 		},
+
+		cleanStorage() {
+			this.technicians = [];
+			this.validationErrors = {};
+			this.loading = false;
+		}
 	},
+
+	// Configuration de la persistance
+	persist: {
+		storage: secureLsStorage,
+		// Optionnel : personnaliser la clé de stockage
+		key: 'technician-store',
+		// Optionnel : choisir quelles propriétés persister
+		pick: ['technicians']
+	}
 });

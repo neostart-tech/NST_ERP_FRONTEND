@@ -8,6 +8,8 @@ import { useValidationErrors, type ValidationErrors } from '@/composables/useVal
 import { secureLsStorage } from "@/utils/secureStorage";
 import { useEnterpriseStore } from './EnterpriseStore';
 import { formatRelativeDate } from '@/utils/dateParser';
+import { useEquipmentStore } from "./Maintenance/EquipmentStore";
+import { useTechnicianStore } from "./TechnicianStore";
 
 export const useAuthStore = defineStore('AuthStore', {
 	state: () => ({
@@ -49,7 +51,7 @@ export const useAuthStore = defineStore('AuthStore', {
 
 		async logout() {
 			try {
-				useEnterpriseStore().cleanStorage();
+				this.cleanOtherStoresData();
 				await useApi().post(ApiUrl.LOGOUT, {});
 			} catch (error) {
 				console.log("Logout error:", error);
@@ -87,7 +89,13 @@ export const useAuthStore = defineStore('AuthStore', {
 				this.newPasswordErrors = useValidationErrors(error);
 				throw new Error(error.data?.message || error.message || error.error || "Une erreur est survenue");
 			}
-		}
+		},
+
+		cleanOtherStoresData() {
+			useEnterpriseStore().cleanStorage();
+			useEquipmentStore().cleanStorage();
+			useTechnicianStore().cleanStorage();
+		},
 	},
 
 	// Configuration de la persistance

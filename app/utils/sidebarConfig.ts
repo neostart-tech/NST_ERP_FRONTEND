@@ -184,13 +184,13 @@ export const sidebarMenu = [
 				description: 'Information sur un client'
 			},
 			{
-				name: 'Ajout De Technicien',
+				name: 'Gestion des Techniciens',
 				icon: 'M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z M14 2v4a2 2 0 0 0 2 2h4 M10 9H8 M16 13H8 M16 17H8',
 				url: AppUrl.MAINTENANCE_ADD_TECHNICIAN,
 				description: 'Les informations des techniciens'
 			},
 			{
-				name: 'Ajouter un equipement',
+				name: 'Gestion des équipements',
 				icon: 'm7.5 4.27 9 5.15 m-9 15.46 9-5.15 M3.3 8.7L12 3l8.7 5.7 M12 22V12 M20.7 15.3 12 21l-8.7-5.7 M3.3 15.3l8.7 5.7 8.7-5.7',
 				url: AppUrl.MAINTENANCE_SAVE_EQUIPMENT,
 				description: 'Parc matériel'

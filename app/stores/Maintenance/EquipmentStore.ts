@@ -355,13 +355,12 @@ export const useEquipmentStore = defineStore('Equipment', {
 			}
 		},
 
-		resetState() {
+		cleanStorage() {
 			this.equipments = [];
 			this.validationErrors = {};
 			this.loading = false;
 		}
 	},
-
 
 	// Configuration de la persistance
 	persist: {
