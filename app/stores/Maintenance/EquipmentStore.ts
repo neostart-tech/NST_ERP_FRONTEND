@@ -219,12 +219,12 @@ export const useEquipmentStore = defineStore('Equipment', {
 
 					// Informations réseau
 					if (equipment.type === 'Réseau') {
-						if (equipment.role) specificInfo.push({ label: 'Rôle', value: equipment.role });
-						if (equipment.mac_address) specificInfo.push({ label: 'Adresse MAC', value: equipment.mac_address });
-						if (equipment.ip_address) specificInfo.push({ label: 'Adresse IP', value: equipment.ip_address });
+						if (equipment.role) specificInfo.push({ label: 'Rôle', value: equipment.role ?? 'Non défini' });
+						if (equipment.mac_address) specificInfo.push({ label: 'Adresse MAC', value: equipment.mac_address ?? 'Non définie' });
+						if (equipment.ip_address) specificInfo.push({ label: 'Adresse IP', value: equipment.ip_address ?? 'Non définie' });
 					} else {
 						// Informations non-réseau
-						if (equipment.name) specificInfo.push({ label: 'Nom', value: equipment.name });
+						if (equipment.name) specificInfo.push({ label: 'Nom', value: equipment.name ?? 'Non défini' });
 					}
 
 					// Je affiche les informations spécifiques

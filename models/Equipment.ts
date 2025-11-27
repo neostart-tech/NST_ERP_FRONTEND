@@ -8,7 +8,7 @@ export interface Equipment {
 	diagnostic_price: string;
 	characteristics: string;
 	name: string;
-	role: string;
+	role: string | null;
 	mac_address: string;
 	ip_address: string;
 	company_name: string;

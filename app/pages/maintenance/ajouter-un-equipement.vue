@@ -157,9 +157,9 @@
 							<tr v-for="equipment in paginatedEquipments" :key="equipment.id"
 								class="hover:bg-gray-50 transition-colors duration-150">
 								<td class="px-6 py-4 whitespace-nowrap">
-									<img v-if="equipment.photo" :src="`http://127.0.0.1:8000/storage/${equipment.photo}`"
+									<img v-if="equipment.photo" :src="`${equipment.photo}`"
 										class="h-12 w-12 rounded-lg object-cover border-2 border-gray-200 cursor-pointer hover:border-blue-300"
-										@click="openPhotoModal(`http://127.0.0.1:8000/storage/${equipment.photo}`)">
+										@click="openPhotoModal(`${equipment.photo}`)">
 									<div v-else class="h-12 w-12 rounded-lg bg-gray-100 flex items-center justify-center">
 										<Icon name="heroicons:photo" class="w-6 h-6 text-gray-400" />
 									</div>
@@ -205,9 +205,9 @@
 					class="rounded-lg shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-200 bg-white">
 					<div class="p-4">
 						<div class="flex items-start space-x-3">
-							<img v-if="equipment.photo" :src="`http://127.0.0.1:8000/storage/${equipment.photo}`"
+							<img v-if="equipment.photo" :src="`${equipment.photo}`"
 								class="h-16 w-16 rounded-lg object-cover border-2 border-gray-200 cursor-pointer"
-								@click="openPhotoModal(`http://127.0.0.1:8000/storage/${equipment.photo}`)">
+								@click="openPhotoModal(equipment.photo as string)">
 							<div v-else class="h-16 w-16 rounded-lg bg-gray-100 flex items-center justify-center">
 								<Icon name="heroicons:photo" class="w-8 h-8 text-gray-400" />
 							</div>
@@ -470,16 +470,7 @@
 		@photoClick="openPhotoModal" @export="generateEquipmentSheet" />
 
 	<!-- Modal Photo -->
-	<div v-if="showPhotoModal"
-		class="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-		<div class="relative max-w-6xl max-h-full">
-			<button @click="closePhotoModal"
-				class="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors">
-				<Icon name="heroicons:x-mark" class="w-8 h-8" />
-			</button>
-			<img :src="selectedPhoto" class="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl">
-		</div>
-	</div>
+	<PhotoModal :isOpen="showPhotoModal" :photoUrl="selectedPhoto" @close="closePhotoModal" />
 
 </template>
 
@@ -494,8 +485,8 @@ import RequiredField from '~/app/components/partials/RequiredField.vue';
 import Paginator from '~/app/components/Paginator.vue';
 import EmptyState from '~/app/components/EmptyState.vue';
 import DetailModal from '~/app/components/maintenance/detailModal.vue';
+import PhotoModal from '~/app/components/PhotoModal.vue';
 import Swal from 'sweetalert2';
-import Loader from '~/app/components/Loader.vue';
 import Spinner from '~/app/components/partials/Spinner.vue';
 
 const EquipmentStore = useEquipmentStore();
@@ -569,7 +560,7 @@ const editEquipment = (equipment: Equipment) => {
 	formData.value = {
 		...equipment,
 		photo: null,
-		photoPreview: equipment.photo ? `http://127.0.0.1:8000/storage/${equipment.photo}` : ''
+		photoPreview: equipment.photo ? equipment.photo : ''
 	};
 	isEditing.value = true;
 	showNetworkFields.value = equipment.type === 'Réseau';
@@ -644,7 +635,7 @@ const removePhoto = () => {
 	}
 };
 
-const openPhotoModal = (photoUrl) => {
+const openPhotoModal = (photoUrl: string) => {
 	selectedPhoto.value = photoUrl;
 	showPhotoModal.value = true;
 };

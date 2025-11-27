@@ -22,9 +22,9 @@
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<!-- Photo -->
 					<div class="bg-gray-50 rounded-lg border-2 border-gray-200 p-6 h-64 flex items-center justify-center">
-						<img v-if="equipment.photo" :src="`http://127.0.0.1:8000/storage/${equipment.photo}`"
+						<img v-if="equipment.photo" :src="equipment.photo as string"
 							class="max-h-full max-w-full object-contain cursor-pointer"
-							@click="handlePhotoClick(`http://127.0.0.1:8000/storage/${equipment.photo}`)">
+							@click="handlePhotoClick(equipment.photo as string)">
 						<div v-else class="text-center text-gray-400">
 							<Icon name="heroicons:photo" class="h-16 w-16 mx-auto" />
 							<p class="mt-3 text-sm font-medium">Aucune image disponible</p>
