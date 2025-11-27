@@ -197,7 +197,6 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue';
 import type { Equipment } from '~/models/Equipment';
 import RequiredField from '~/app/components/partials/RequiredField.vue';
 import Spinner from '~/app/components/partials/Spinner.vue';

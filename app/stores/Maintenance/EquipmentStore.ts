@@ -14,10 +14,15 @@ export const useEquipmentStore = defineStore('Equipment', {
 	actions: {
 		async fetchEquipments() {
 			try {
+				if (this.equipments.length === 0)
+					this.loading = true;
+
 				const { data } = await useApi().get<Equipment[]>(ApiUrl.EQUIPMENT);
 				this.equipments = data;
 			} catch (error) {
 				console.error("Error fetching equipments: - equipmentStore.js:14", error);
+			} finally {
+				this.loading = false;
 			}
 		},
 
@@ -29,13 +34,10 @@ export const useEquipmentStore = defineStore('Equipment', {
 			} catch (error) {
 				this.validationErrors = useValidationErrors(error);
 				throw error;
-			} finally {
-				this.loading = false;
 			}
 		},
 
 		async updateEquipment(id: string, formData: FormData) {
-			this.loading = true;
 			try {
 				const { data } = await useApi().post<Equipment>(ApiUrl.EQUIPMENT_BY_ID.replace(":id", id), formData);
 				this.equipments = this.equipments.map(_ => _.id === id ? data : _);
@@ -44,13 +46,10 @@ export const useEquipmentStore = defineStore('Equipment', {
 				console.error("Error updating equipment: - equipmentStore.js:44", error);
 				this.validationErrors = useValidationErrors(error);
 				throw error;
-			} finally {
-				this.loading = false;
 			}
 		},
 
 		async deleteEquipment(id: string) {
-			this.loading = true;
 			try {
 				await useApi().del(ApiUrl.EQUIPMENT_BY_ID.replace(":id", id));
 				this.equipments = this.equipments.filter(_ => _.id !== id);
@@ -59,8 +58,6 @@ export const useEquipmentStore = defineStore('Equipment', {
 				console.error("Error deleting equipment: - equipmentStore.js:60", error);
 				this.validationErrors = useValidationErrors(error);
 				throw error;
-			} finally {
-				this.loading = false;
 			}
 		},
 

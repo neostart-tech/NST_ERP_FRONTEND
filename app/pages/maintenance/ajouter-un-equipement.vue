@@ -129,15 +129,8 @@
 			</div>
 		</div>
 		<!-- Loader -->
-		<!-- <div v-if="loading" class="flex justify-center py-12">
+		<div v-if="loading" class="flex justify-center py-12">
 			<div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-		</div> -->
-
-		<!-- EmptyState -->
-		<div v-if="loading || !EquipmentStore.equipments">
-			<EmptyState title="Aucun équipement trouvé" description="Il n'y a actuellement aucun équipement à afficher."
-				icon="heroicons:cpu-chip" iconColor="text-blue-400" @reload="EquipmentStore.fetchEquipments()"
-				:isLoading="loading" :searchQuery="searchQuery" />
 		</div>
 
 		<!-- Contenu principal -->
@@ -263,6 +256,13 @@
 			</div>
 		</template>
 
+		<!-- EmptyState -->
+		<div v-else-if="loading || !EquipmentStore.equipments">
+			<EmptyState title="Aucun équipement trouvé" description="Il n'y a actuellement aucun équipement à afficher."
+				icon="heroicons:cpu-chip" iconColor="text-blue-400" @reload="EquipmentStore.fetchEquipments()"
+				:isLoading="loading" :searchQuery="searchQuery" />
+		</div>
+
 		<!-- Pagination -->
 		<div v-if="filteredEquipments.length > 0" class="mt-6">
 			<Paginator :totalItems="filteredEquipments.length" @range-changed="onRangeChanged" />
@@ -300,14 +300,12 @@ import { ref, computed, onMounted } from 'vue';
 import { useEquipmentStore } from '~/app/stores/Maintenance/EquipmentStore';
 import { equipmentFormData } from '~/models/Equipment';
 import type { Equipment } from '~/models/Equipment';
-import RequiredField from '~/app/components/partials/RequiredField.vue';
 import Paginator from '~/app/components/Paginator.vue';
 import EmptyState from '~/app/components/EmptyState.vue';
 import DetailModal from '~/app/components/maintenance/detailModal.vue';
 import FormModal from '~/app/components/maintenance/formModal.vue';
 import PhotoModal from '~/app/components/PhotoModal.vue';
 import Swal from 'sweetalert2';
-import Spinner from '~/app/components/partials/Spinner.vue';
 
 const EquipmentStore = useEquipmentStore();
 const generateEquipmentSheet = EquipmentStore.generateEquipmentSheet;

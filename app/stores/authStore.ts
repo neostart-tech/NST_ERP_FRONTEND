@@ -51,13 +51,13 @@ export const useAuthStore = defineStore('AuthStore', {
 
 		async logout() {
 			try {
-				this.cleanOtherStoresData();
 				await useApi().post(ApiUrl.LOGOUT, {});
 			} catch (error) {
 				console.log("Logout error:", error);
 			} finally {
 				this.user = null;
 				this.token = null;
+				this.cleanOtherStoresData();
 				navigateTo(AppUrl.LOGIN);
 			}
 		},
