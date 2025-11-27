@@ -24,6 +24,7 @@ export const useApi = () => {
 			'X-XSRF-TOKEN': XSRFToken,
 			'Accept': 'application/json',
 			...(authStore.token && { Authorization: `Bearer ${authStore.token}` }),
+			'ngrok-skip-browser-warning': 'true'
 		};
 
 		// N'ajouter Content-Type que si ce n'est pas FormData
