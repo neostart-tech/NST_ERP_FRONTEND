@@ -53,7 +53,7 @@ const props = defineProps({
 	},
 	iconColor: {
 		type: String,
-		default: 'text-gray-400'
+		default: 'bg-gradient-to-r from-blue-500 to-emerald-500'
 	},
 	showReload: {
 		type: Boolean,
@@ -111,6 +111,6 @@ const handleReload = () => {
 }
 
 .reload-button {
-	@apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed;
+	@apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-blue-500 to-emerald-500 hover:from-blue-600 hover:to-emerald-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed;
 }
 </style>

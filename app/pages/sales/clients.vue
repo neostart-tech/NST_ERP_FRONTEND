@@ -4,49 +4,40 @@
 		<!-- Statistiques -->
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 			<!-- Carte Total Clients -->
-			<div
-				class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300 md:col-span-2 lg:col-span-1">
+			<div class="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-6 border border-sky-200">
 				<div class="flex items-center justify-between">
 					<div>
-						<p class="text-sm font-medium text-gray-600">Total Clients</p>
-						<p class="text-3xl font-bold text-gray-900">
-							{{ stat.total }}
-						</p>
+						<p class="text-sm font-medium text-sky-900">Total Clients</p>
+						<p class="text-3xl font-bold text-sky-900 mt-2">{{ stat.total }}</p>
 					</div>
-					<div class="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center">
-						<Icon name="heroicons:user-group" class="w-6 h-6 text-sky-600" />
+					<div class="p-3 rounded-lg bg-sky-500">
+						<Icon name="heroicons:user-group" class="w-6 h-6 text-white" />
 					</div>
 				</div>
 			</div>
 
 			<!-- Carte Clients Physiques -->
-			<div
-				class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+			<div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg p-6 border border-emerald-200">
 				<div class="flex items-center justify-between">
 					<div>
-						<p class="text-sm font-medium text-gray-600">Clients Physiques</p>
-						<p class="text-3xl font-bold text-emerald-600">
-							{{ stat.physique }}
-						</p>
+						<p class="text-sm font-medium text-emerald-900">Clients Physiques</p>
+						<p class="text-3xl font-bold text-emerald-900 mt-2">{{ stat.physique }}</p>
 					</div>
-					<div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center">
-						<Icon name="heroicons:user" class="w-6 h-6 text-emerald-600" />
+					<div class="p-3 rounded-lg bg-emerald-500">
+						<Icon name="heroicons:user" class="w-6 h-6 text-white" />
 					</div>
 				</div>
 			</div>
 
 			<!-- Carte Clients Moraux -->
-			<div
-				class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+			<div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg p-6 border border-amber-200">
 				<div class="flex items-center justify-between">
 					<div>
-						<p class="text-sm font-medium text-gray-600">Clients Moraux</p>
-						<p class="text-3xl font-bold text-amber-600">
-							{{ stat.moral }}
-						</p>
+						<p class="text-sm font-medium text-amber-900">Clients Moraux</p>
+						<p class="text-3xl font-bold text-amber-900 mt-2">{{ stat.moral }}</p>
 					</div>
-					<div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center">
-						<Icon name="heroicons:building-office" class="w-6 h-6 text-amber-600" />
+					<div class="p-3 rounded-lg bg-amber-500">
+						<Icon name="heroicons:building-office" class="w-6 h-6 text-white" />
 					</div>
 				</div>
 			</div>

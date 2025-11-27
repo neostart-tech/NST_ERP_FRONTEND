@@ -2,6 +2,7 @@ import type { Equipment } from "~/models/Equipment";
 import type { ValidationErrors } from "../../composables/useValidationErrors";
 import { useValidationErrors } from "../../composables/useValidationErrors";
 import jsPDF from "jspdf";
+import { secureLsStorage } from "@/utils/secureStorage";
 
 export const useEquipmentStore = defineStore('Equipment', {
 	state: () => ({
@@ -33,7 +34,7 @@ export const useEquipmentStore = defineStore('Equipment', {
 		async updateEquipment(id: string, formData: FormData) {
 			this.loading = true;
 			try {
-				const { data } = await useApi().put<Equipment>(ApiUrl.EQUIPMENT_BY_ID.replace(":id", id), formData);
+				const { data } = await useApi().post<Equipment>(ApiUrl.EQUIPMENT_BY_ID.replace(":id", id), formData);
 				this.equipments = this.equipments.map(_ => _.id === id ? data : _);
 			} catch (error) {
 				console.error("Error updating equipment: - equipmentStore.js:44", error);
@@ -345,6 +346,24 @@ export const useEquipmentStore = defineStore('Equipment', {
 				console.error('Erreur lors de la génération du PDF:', error);
 				alert('Erreur lors de la génération du PDF. Vérifiez la console pour plus de détails.');
 			}
+		},
+
+		resetState() {
+			this.equipments = [];
+			this.validationErrors = {};
+			this.loading = false;
 		}
+	},
+
+
+
+
+	// Configuration de la persistance
+	persist: {
+		storage: secureLsStorage,
+		// Optionnel : personnaliser la clé de stockage
+		key: 'equipment-store',
+		// Optionnel : choisir quelles propriétés persister
+		pick: ['equipments']
 	}
 });
