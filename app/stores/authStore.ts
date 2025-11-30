@@ -10,6 +10,7 @@ import { useEnterpriseStore } from './EnterpriseStore';
 import { formatRelativeDate } from '@/utils/dateParser';
 import { useEquipmentStore } from "./Maintenance/EquipmentStore";
 import { useTechnicianStore } from "./TechnicianStore";
+import { useInterventionStore } from "./Maintenance/InterventionStore";
 
 export const useAuthStore = defineStore('AuthStore', {
 	state: () => ({
@@ -55,8 +56,7 @@ export const useAuthStore = defineStore('AuthStore', {
 			} catch (error) {
 				console.log("Logout error:", error);
 			} finally {
-				this.user = null;
-				this.token = null;
+				this.cleanStorage();
 				this.cleanOtherStoresData();
 				navigateTo(AppUrl.LOGIN);
 			}
@@ -91,10 +91,16 @@ export const useAuthStore = defineStore('AuthStore', {
 			}
 		},
 
+		cleanStorage() {
+			this.user = null;
+			this.token = null;
+		},
+
 		cleanOtherStoresData() {
 			useEnterpriseStore().cleanStorage();
 			useEquipmentStore().cleanStorage();
 			useTechnicianStore().cleanStorage();
+			useInterventionStore().cleanStorage();
 		},
 	},
 

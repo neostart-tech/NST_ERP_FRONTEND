@@ -44,7 +44,7 @@
 		</div>
 
 		<div class="sm:flex sm:items-center sm:justify-between mb-6">
-			<h1 class="text-2xl font-bold text-gray-900">Liste des clients</h1>
+			<h1 class="text-xl font-bold text-gray-900">Liste des clients</h1>
 			<div class="mt-4 sm:mt-0 sm:ml-4 flex flex-col sm:flex-row gap-3">
 				<!-- Champ de recherche -->
 				<div class="relative flex-1 max-w-xs">
@@ -56,9 +56,9 @@
 				</div>
 
 				<!-- Boutons d'action -->
-				<button @click="openModalForCreate"
-					class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-					<Icon name="heroicons:plus" class="-ml-1 mr-2 h-5 w-5" />
+				<button @click="openModalForCreate" class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 
+				text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all">
+					<Icon name="heroicons:plus" class="h-5 w-5 mr-2" />
 					Nouveau client
 				</button>
 			</div>

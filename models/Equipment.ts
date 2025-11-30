@@ -17,7 +17,7 @@ export interface Equipment {
 	company_city: string;
 	comment: string;
 	photo: string | null | File,
-	photoPreview: string | null
+	photoPreview: string | null | File
 }
 
 export const equipmentFormData = (equipment?: Equipment): Equipment => ({

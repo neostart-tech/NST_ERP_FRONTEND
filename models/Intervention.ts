@@ -5,7 +5,7 @@ import type { Technician } from "./Technician";
 export interface Intervention {
 	id: string,
 	client_id: string,
-	equipment_id: string,
+	equipement_id: string,
 	technician_id: string,
 	problem_description: string,
 	report_date: string,
@@ -36,15 +36,26 @@ export interface Intervention {
 	// client_signature: string
 }
 
-export const InterventionFormData = (intervention?: Intervention) => ({
+export const getInterventionStatus = (_: Intervention) => {
+	return _.status === 'new' ? 'Nouveau'
+		: _.status === 'diagnostic' ? 'En diagnostic'
+		: _.status === 'quotation' ? 'Validation du devis en cours'
+		: _.status === 'repair' ? 'En réparation'
+		: _.status === 'waiting' ? 'En attente de pièces'
+		: _.status === 'finished' ? 'Terminé'
+		: _.status === 'delivered' ? 'Livré'
+		: ''
+}
+
+export const InterventionFormData = (intervention?: Intervention): Intervention => ({
 	id: intervention?.id || '',
 	client_id: intervention?.client_id || '',
-	equipment_id: intervention?.equipment_id || '',
+	equipement_id: intervention?.equipement_id || '',
 	technician_id: intervention?.technician_id || '',
 	problem_description: intervention?.problem_description || '',
 	report_date: intervention?.report_date || new Date().toISOString().slice(0, 16),
 	contact_time: intervention?.contact_time || '',
-	status: intervention?.status || 'Nouveau',
+	status: intervention?.status || 'new',
 	department: intervention?.department || '',
 	location: intervention?.location || '',
 	is_tested_certified: intervention?.is_tested_certified || false,

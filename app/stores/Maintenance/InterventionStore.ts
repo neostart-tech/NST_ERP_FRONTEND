@@ -74,6 +74,13 @@ export const useInterventionStore = defineStore('Intervention', {
 				throw error;
 			}
 		},
+
+		
+		cleanStorage() {
+			this.interventions = [];
+			this.validationErrors = {};
+			this.loading = false;
+		}
 	},
 
 		// Configuration de la persistance

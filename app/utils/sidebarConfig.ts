@@ -192,7 +192,7 @@ export const sidebarMenu = [
 			{
 				name: 'Gestion des équipements',
 				icon: 'm7.5 4.27 9 5.15 m-9 15.46 9-5.15 M3.3 8.7L12 3l8.7 5.7 M12 22V12 M20.7 15.3 12 21l-8.7-5.7 M3.3 15.3l8.7 5.7 8.7-5.7',
-				url: AppUrl.MAINTENANCE_SAVE_EQUIPMENT,
+				url: AppUrl.MAINTENANCE_EQUIPMENTS,
 				description: 'Parc matériel'
 			},
 			{

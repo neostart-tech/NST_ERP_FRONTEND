@@ -2,7 +2,7 @@
 	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
 
 		<!-- Cartes de statistiques -->
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
 			<!-- Total Équipements -->
 			<div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
 				<div class="flex items-center justify-between">
@@ -56,8 +56,10 @@
 			</div>
 		</div>
 
-		<div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-sm border border-white/50 mb-8">
-			<div class="flex items-center justify-between mb-6">
+		<div class="bg-white/80 backdrop-blur-sm rounded-2xl mb-4 overflow-hidden">
+			<!-- En-tête du collapse -->
+			<button @click="isFiltersCollapsed = !isFiltersCollapsed"
+				class="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
 				<h3 class="text-lg font-semibold text-slate-800 flex items-center">
 					<svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -65,68 +67,80 @@
 					</svg>
 					Filtres et Recherche
 				</h3>
-				<!-- Bouton de réinitialisation des filtres -->
-				<button @click="resetFilters"
-					class="text-sm text-slate-600 hover:text-blue-600 flex items-center transition-colors">
-					<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-							d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-					</svg>
-					Réinitialiser
-				</button>
-			</div>
+				<svg class="w-5 h-5 text-slate-600 transition-transform duration-300"
+					:class="{ 'rotate-180': !isFiltersCollapsed }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+				</svg>
+			</button>
 
-			<!-- Grille de filtres -->
-			<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-				<!-- Filtre par type d'équipement -->
-				<div>
-					<label class="block text-sm font-medium text-slate-700 mb-2">Type d'équipement</label>
-					<select v-model="filterType"
-						class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/50 backdrop-blur-sm transition-all duration-200">
-						<option value="">Tous les types</option>
-						<option value="Réseau">Réseau</option>
-						<option value="Non réseau">Non réseau</option>
-					</select>
-				</div>
-
-				<!-- Filtre par marque -->
-				<div>
-					<label class="block text-sm font-medium text-slate-700 mb-2">Marque</label>
-					<select v-model="filterBrand"
-						class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/50 backdrop-blur-sm transition-all duration-200">
-						<option value="">Toutes les marques</option>
-						<option v-for="brand in uniqueBrands" :key="brand" :value="brand">{{ brand }}</option>
-					</select>
-				</div>
-
-				<!-- Champ de recherche texte -->
-				<div>
-					<label class="block text-sm font-medium text-slate-700 mb-2">Recherche</label>
-					<input v-model="searchQuery" type="text" placeholder="Modèle, série, fabricant..."
-						class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/50 backdrop-blur-sm transition-all duration-200">
-				</div>
-
-				<!-- Bouton d'export -->
-				<div class="flex items-end">
-					<button @click="null"
-						class="w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center">
-						<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<!-- Contenu du collapse -->
+			<div v-show="!isFiltersCollapsed" class="px-6 pb-6">
+				<div class="flex items-center justify-end mb-4">
+					<!-- Bouton de réinitialisation des filtres -->
+					<button @click="resetFilters"
+						class="text-sm text-slate-600 hover:text-blue-600 flex items-center transition-colors">
+						<svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-								d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+								d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
 						</svg>
-						Exporter
+						Réinitialiser
 					</button>
 				</div>
 
+				<!-- Grille de filtres -->
+				<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+					<!-- Filtre par type d'équipement -->
+					<div>
+						<label class="block text-sm font-medium text-slate-700 mb-2">Type d'équipement</label>
+						<select v-model="filterType"
+							class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/50 backdrop-blur-sm transition-all duration-200">
+							<option value="">Tous les types</option>
+							<option value="Réseau">Réseau</option>
+							<option value="Non réseau">Non réseau</option>
+						</select>
+					</div>
+
+					<!-- Filtre par marque -->
+					<div>
+						<label class="block text-sm font-medium text-slate-700 mb-2">Marque</label>
+						<select v-model="filterBrand"
+							class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/50 backdrop-blur-sm transition-all duration-200">
+							<option value="">Toutes les marques</option>
+							<option v-for="brand in uniqueBrands" :key="brand" :value="brand">{{ brand }}</option>
+						</select>
+					</div>
+
+					<!-- Champ de recherche texte -->
+					<div>
+						<label class="block text-sm font-medium text-slate-700 mb-2">Recherche</label>
+						<input v-model="searchQuery" type="text" placeholder="Modèle, série, fabricant..."
+							class="w-full px-4 py-3 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/50 backdrop-blur-sm transition-all duration-200">
+					</div>
+
+					<!-- Bouton d'export -->
+					<div class="flex items-end">
+						<button @click="null"
+							class="w-full px-4 py-3 border border-slate-300 rounded-xl text-slate-700 hover:bg-slate-50 transition-colors flex items-center justify-center">
+							<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+									d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+							</svg>
+							Exporter
+						</button>
+					</div>
+
+				</div>
 			</div>
-			<!-- En-tête avec titre et bouton d'ajout -->
-			<div class="flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4 my-3">
-				<button @click="openAddModal"
-					class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200">
-					<Icon name="heroicons:plus" class="w-5 h-5 mr-2" />
-					<span>Nouvel Équipement</span>
-				</button>
-			</div>
+		</div>
+
+		<!-- En-tête avec titre et bouton d'ajout -->
+		<div class="flex flex-col sm:flex-row justify-end items-start sm:items-center gap-4 my-3">
+			<button @click="openAddModal"
+				class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600
+			text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all">
+				<Icon name="heroicons:plus" class="w-5 h-5 mr-2" />
+				<span>Nouvel Équipement</span>
+			</button>
 		</div>
 		<!-- Loader -->
 		<div v-if="loading" class="flex justify-center py-12">
@@ -136,26 +150,31 @@
 		<!-- Contenu principal -->
 		<template v-else-if="filteredEquipments.length > 0">
 			<!-- Vue Tableau (visible uniquement sur écrans lg et plus) -->
-			<div class="hidden lg:block bg-white border p-4 rounded-lg shadow mt-6">
+			<div class="hidden lg:block bg-white border rounded-lg shadow mt-6 overflow-hidden">
 				<div class="overflow-x-auto">
 					<table class="min-w-full divide-y divide-gray-200">
-						<thead class="bg-gradient-to-r from-blue-500 to-emerald-500">
+						<thead class="bg-gradient-to-r from-blue-50 to-green-50">
 							<tr>
-								<th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
+								<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
+									N°</th>
+								<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 									Photo</th>
-								<th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
+								<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 									Type</th>
-								<th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
+								<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 									Marque</th>
-								<th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
+								<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 									Modèle</th>
-								<th scope="col" class="px-6 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">
+								<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 									Actions</th>
 							</tr>
 						</thead>
 						<tbody class="bg-white divide-y divide-gray-200">
-							<tr v-for="equipment in paginatedEquipments" :key="equipment.id"
+							<tr v-for="(equipment, index) in paginatedEquipments" :key="equipment.id"
 								class="hover:bg-gray-50 transition-colors duration-150">
+								<td class="px-4 py-4 whitespace-nowrap">
+									{{ ++index }}
+								</td>
 								<td class="px-6 py-4 whitespace-nowrap">
 									<img v-if="equipment.photo" :src="`${equipment.photo}`"
 										class="h-12 w-12 rounded-lg object-cover border-2 border-gray-200 cursor-pointer hover:border-blue-300"
@@ -257,7 +276,7 @@
 		</template>
 
 		<!-- EmptyState -->
-		<div v-else-if="loading || !EquipmentStore.equipments">
+		<div v-else-if="loading || !EquipmentStore.equipments || filteredEquipments">
 			<EmptyState title="Aucun équipement trouvé" description="Il n'y a actuellement aucun équipement à afficher."
 				icon="heroicons:cpu-chip" iconColor="text-blue-400" @reload="EquipmentStore.fetchEquipments()"
 				:isLoading="loading" :searchQuery="searchQuery" />
@@ -317,6 +336,7 @@ const showViewModal = ref(false);
 const showPhotoModal = ref(false);
 const isEditing = ref(false);
 const isSaving = ref<boolean>(false);
+const isFiltersCollapsed = ref(true);
 
 // Filtres
 const filterType = ref('');
@@ -467,7 +487,7 @@ const buildFormData = () => {
 	data.append("serial_number", formData.value.serial_number);
 	data.append("diagnostic_price", formData.value.diagnostic_price || '');
 	data.append("name", formData.value.name);
-	data.append("role", formData.value.role);
+	data.append("role", formData.value.role || '');
 	data.append("mac_address", formData.value.mac_address);
 	data.append("ip_address", formData.value.ip_address);
 	data.append("characteristics", formData.value.characteristics);

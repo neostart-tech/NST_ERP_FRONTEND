@@ -1,23 +1,23 @@
 <template>
 	<!-- Vue Tableau (visible uniquement sur écrans lg et plus) -->
-	<div class="hidden lg:block bg-white border p-4 rounded-lg shadow mt-6">
+	<div class="hidden lg:block bg-white border rounded-lg shadow mt-6 overflow-hidden">
 		<div class="overflow-x-auto">
 			<table class="min-w-full divide-y divide-gray-200">
-				<thead class="bg-gray-50">
+				<thead class="bg-gradient-to-r from-blue-50 to-green-50">
 					<tr>
-						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Nom / Raison Sociale
 						</th>
-						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Type
 						</th>
-						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Email
 						</th>
-						<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Téléphone
 						</th>
-						<th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+						<th scope="col" class="px-4 py-4 text-right text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Actions
 						</th>
 					</tr>
@@ -103,14 +103,14 @@
 							</div>
 						</div>
 					</div>
-					<div class="flex justify-end mt-2">
-						<button @click.stop="emit('edit', client)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full"
-							title="Modifier">
-							<Icon name="heroicons:pencil-square" class="w-5 h-5" />
-						</button>
+					<div class="flex justify-end mt-2 border-t border-gray-200">
 						<button @click.stop="emit('view', client)" class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full"
 							title="Voir les détails">
 							<Icon name="heroicons:eye" class="w-5 h-5" />
+						</button>
+						<button @click.stop="emit('edit', client)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full"
+							title="Modifier">
+							<Icon name="heroicons:pencil-square" class="w-5 h-5" />
 						</button>
 						<button @click.stop="emit('delete', client)" class="p-1.5 text-red-600 hover:bg-red-50 rounded-full"
 							title="Supprimer">

@@ -413,6 +413,7 @@
 </template>
 
 <script setup lang="ts">
+useHead({title: "Gestion des Techniciens"});
 import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { technicianFormDefaultValue, type Technician } from '~/models/Technician'
