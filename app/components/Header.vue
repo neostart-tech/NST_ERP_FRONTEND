@@ -137,6 +137,11 @@ const pageTitle = computed(() => {
 			icon: "heroicons:user-group",
 			title: "Gestion des Techniciens",
 			description: "Surveillez et gérez vos techniciens en temps réel"
+		},
+		"maintenance-signaler-une-panne": {
+			icon: "heroicons:document-text",
+			title: "Signalement de panne",
+			// description: "Signalement de panne"
 		}
 	};
 	return titleMap[route.name as string] || {

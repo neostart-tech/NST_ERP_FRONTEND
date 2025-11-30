@@ -4,7 +4,7 @@
 		<!-- Statistiques -->
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 			<!-- Carte Total Clients -->
-			<div class="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-6 border border-sky-200">
+			<div class="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-6 border border-sky-200 md:col-span-2 lg:col-span-1">
 				<div class="flex items-center justify-between">
 					<div>
 						<p class="text-sm font-medium text-sky-900">Total Clients</p>
@@ -205,6 +205,7 @@
 </template>
 
 <script setup lang="ts">
+useHead({ title: "Gestion des Clients" });
 import { ref, onMounted, nextTick, reactive, computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import Swal from 'sweetalert2'
