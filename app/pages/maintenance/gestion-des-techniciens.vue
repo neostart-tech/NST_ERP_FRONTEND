@@ -59,10 +59,10 @@
 
 		<!-- En-tête avec recherche et actions -->
 		<div class="sm:flex sm:items-center sm:justify-between mb-6">
-			<h1 class="text-2xl font-bold text-gray-900">Liste des techniciens</h1>
+			<h1 class="text-xl font-bold text-gray-900">Liste des techniciens</h1>
 			<div class="mt-4 sm:mt-0 sm:ml-4 flex flex-col sm:flex-row gap-3">
 				<!-- Champ de recherche -->
-				<div class="relative flex-1 max-w-xs">
+				<div class="relative flex-1 max-w-xs w-full md:w-auto">
 					<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 						<Icon name="heroicons:magnifying-glass" class="h-5 w-5 text-gray-400" />
 					</div>
@@ -71,8 +71,8 @@
 				</div>
 
 				<!-- Bouton Nouveau -->
-				<button @click="openAddModal"
-					class="inline-flex items-center px-4 py-2.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
+				<button @click="openAddModal" class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600
+					 text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all">
 					<Icon name="heroicons:plus" class="-ml-1 mr-2 h-5 w-5" />
 					Nouveau technicien
 				</button>
@@ -87,30 +87,30 @@
 		<!-- Contenu principal -->
 		<template v-else-if="!error && filteredTechniciens.length > 0">
 			<!-- Vue Tableau (visible uniquement sur écrans lg et plus) -->
-			<div class="hidden lg:block bg-white border p-4 rounded-lg shadow mt-6">
+			<div class="hidden lg:block bg-white border rounded-lg shadow mt-6 overflow-hidden">
 				<div class="overflow-x-auto">
 					<table class="min-w-full divide-y divide-gray-200">
-						<thead class="bg-gray-50">
+						<thead class="bg-gradient-to-r from-blue-50 to-green-50">
 							<tr>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								<th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-blue-800 tracking-wider">
 									Photo
 								</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								<th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-blue-800 tracking-wider">
 									Nom
 								</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								<th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-blue-800 tracking-wider">
 									Spécialité
 								</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								<th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-blue-800 tracking-wider">
 									Expérience
 								</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								<th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-blue-800 tracking-wider">
 									Contact
 								</th>
-								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+								<th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-blue-800 tracking-wider">
 									Disponibilité
 								</th>
-								<th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+								<th scope="col" class="px-6 py-3 text-right text-xs font-semibold text-blue-800 tracking-wider">
 									Actions
 								</th>
 							</tr>
@@ -334,8 +334,8 @@
 									class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
 									Annuler
 								</button>
-								<button type="submit" :disabled="submitting"
-									class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50">
+								<button type="submit" :disabled="submitting" class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600
+					 text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all">
 									{{ submitting ? 'Traitement...' : (isEditing ? 'Mettre à jour' : 'Créer') }}
 								</button>
 							</div>
@@ -413,7 +413,7 @@
 </template>
 
 <script setup lang="ts">
-useHead({title: "Gestion des Techniciens"});
+useHead({ title: "Gestion des Techniciens" });
 import { ref, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { technicianFormDefaultValue, type Technician } from '~/models/Technician'

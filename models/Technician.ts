@@ -32,7 +32,7 @@ export const technicianFormDefaultValue = (technician: Technician | null = null)
 	email: technician?.email || '',
 	phone: technician?.phone || '',
 	address: technician?.address || '',
-	availability: technician?.availability || '',
+	availability: technician?.availability || 'Disponible',
 	date_added: technician?.date_added || '',
 	photo: technician?.photo || null,
 	photoPreview: technician?.photo || '', // URL de prévisualisation

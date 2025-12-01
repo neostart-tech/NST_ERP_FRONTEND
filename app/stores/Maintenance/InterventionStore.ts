@@ -20,7 +20,12 @@ export const useInterventionStore = defineStore('Intervention', {
 					this.loading = true;
 
 				const { data } = await useApi().get<Intervention[]>(ApiUrl.INTERVENTION);
-				this.interventions = data;
+				this.interventions = data.map(_ => ({ 
+					..._, 
+					technician_id: _.technician?.id,
+					client_id: _.client?.id,
+					equipement_id: _.equipment?.id
+				}));
 			} catch (error) {
 				console.error("Error fetching interventions: - interventionStore.js:14", error);
 			} finally {
@@ -34,7 +39,6 @@ export const useInterventionStore = defineStore('Intervention', {
 					this.loading = true;
 
 				const { data } = await useApi().get<Intervention>(ApiUrl.parameterized(ApiUrl.INTERVENTION_BY_ID, id));
-				// this.interventions = data;
 			} catch (error) {
 				console.error("Error fetching intervention: - interventionStore.js:24", error);
 			} finally {

@@ -19,25 +19,25 @@
 						<Icon name="heroicons:magnifying-glass" class="h-5 w-5 text-gray-400" />
 					</div>
 					<input v-model="searchQuery" type="text" placeholder="Rechercher par équipement, client ou technicien..."
-						class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg 
+						class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg
 						 focus:ring-blue-500 focus:border-blue-500">
 				</div>
 
 				<!-- Sélecteur -->
-				<select v-model="statusFilter" class="block w-full px-3 py-2 border border-gray-300 rounded-lg 
+				<select v-model="statusFilter" class="block w-full px-3 py-2 border border-gray-300 rounded-lg
 					 focus:ring-blue-500 focus:border-blue-500">
 					<option value="">Tous les statuts</option>
-					<option value="Nouveau">Nouveau</option>
-					<option value="En diagnostic">En diagnostic</option>
-					<option value="Validation du devis en cours">Validation du devis en cours</option>
-					<option value="En réparation">En réparation</option>
-					<option value="En attente de pièces">En attente de pièces</option>
-					<option value="Terminé">Terminé</option>
-					<option value="Livré">Livré</option>
+					<option value="new">Nouveau</option>
+					<option value="diagnostic">En diagnostic</option>
+					<option value="devis">Validation du devis en cours</option>
+					<option value="repair">En réparation</option>
+					<option value="pieces">En attente de pièces</option>
+					<option value="finished">Terminé</option>
+					<option value="delivered">Livré</option>
 				</select>
 
 				<!-- Bouton -->
-				<button @click="showForm = true" class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 
+				<button @click="showForm = true" class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600
 					 text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all">
 					<Icon name="heroicons:plus" class="h-5 w-5 mr-2" />
 					Nouveau signalement
@@ -137,9 +137,9 @@
 				<div v-for="report in paginatedInterventions" :key="report.id"
 					class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
 					<div class="flex justify-between items-start mb-3">
-						<div class="text-lg font-semibold text-gray-900">#{{ report.id }}</div>
+						<div class="text-lg font-semibold text-gray-900">{{ report.equipment!.brand }}</div>
 						<span :class="`px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(report.status)}`">
-							{{ report.status }}
+							{{ getInterventionStatus(report) }}
 						</span>
 					</div>
 
@@ -147,8 +147,8 @@
 						<div class="flex items-start">
 							<Icon name="heroicons:cube" class="h-5 w-5 text-gray-400 mr-2 mt-0.5" />
 							<div>
-								<div class="text-sm font-medium text-gray-900">{{ report.equipment_name }}</div>
-								<div class="text-xs text-gray-500">{{ report.equipment_serial }}</div>
+								<div class="text-sm font-medium text-gray-900">{{ report.equipment?.name }}</div>
+								<div class="text-xs text-gray-500">{{ report.equipment?.serial_number }}</div>
 							</div>
 						</div>
 
@@ -159,7 +159,7 @@
 
 						<div class="flex items-center">
 							<Icon name="heroicons:user" class="h-5 w-5 text-gray-400 mr-2" />
-							<span class="text-sm text-gray-600">{{ report.technician_name }}</span>
+							<span class="text-sm text-gray-600">{{ report.technician!.full_name }}</span>
 						</div>
 					</div>
 
@@ -191,11 +191,11 @@
 		</div>
 
 		<!-- Form Modal -->
-		<ReportForm v-model="showForm" :formData="form" :equipments="equipments" :clients="clients"
-			:technicians="technicians" :editing="editing" @submit="submitForm" @equipment-change="loadEquipmentDetails" />
+		<ReportForm v-model="showForm" :formData="form" :editing="editing" @submit="submitForm"
+			@close="showForm = false; editing = false" />
 
 		<!-- Fiche d'Intervention Modal -->
-		<div v-if="viewingReport"
+		<div v-if="viewingReport && isViewing"
 			class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 print-modal">
 			<div
 				class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-screen overflow-y-auto print:w-full print:max-w-none print:shadow-none print:rounded-none print:overflow-visible">
@@ -524,7 +524,7 @@
 							<Icon name="heroicons:document-arrow-down" class="h-5 w-5 mr-2" />
 							Enregistrer en PDF
 						</button>
-						<button @click="viewingReport = null"
+						<button @click="viewingReport = null; isViewing = false;"
 							class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg transition-colors shadow-md">
 							Fermer
 						</button>
@@ -542,21 +542,10 @@ import Swal from 'sweetalert2';
 import { ref, onMounted, watch, computed } from 'vue';
 import ReportForm from '~/app/components/maintenance/ReportForm.vue';
 import InterventionStats from '~/app/components/maintenance/InterventionStats.vue';
-import { useEquipmentStore } from '~/app/stores/Maintenance/EquipmentStore';
 import { useInterventionStore } from '~/app/stores/Maintenance/InterventionStore';
-import type { Client } from '~/models/Client';
-import type { Equipment } from '~/models/Equipment';
-import { getInterventionStatus, InterventionFormData, type Intervention } from '~/models/Intervention';
+import { getInterventionStatus, getStatusColor, InterventionFormData, type Intervention } from '~/models/Intervention';
 import EmptyState from '~/app/components/EmptyState.vue';
 import Paginator from '~/app/components/Paginator.vue';
-
-const axios = {};
-
-const API_BASE_URL = 'http://192.168.210.157:8000/api'
-
-const api = {
-	updateIntervention: (id, data) => axios.put(`${API_BASE_URL}/interventions/${id}`, data),
-}
 
 const companyInfo = ref({
 	name: 'TechRepair Pro',
@@ -576,20 +565,8 @@ const onRangeChanged = ({ start, end }: { start: number, end: number }) => {
 
 const editingCompanyInfo = ref(false)
 
-const formatDateForAPI = (dateString) => {
-	if (!dateString) return null
-	return new Date(dateString).toISOString().slice(0, 19).replace('T', ' ')
-}
-
 onMounted(() => {
-	const savedCompanyInfo = localStorage.getItem('companyInfo')
-	if (savedCompanyInfo) {
-		companyInfo.value = JSON.parse(savedCompanyInfo)
-	}
-	loadInterventions()
-	loadEquipmentList()
-	loadClientList()
-	loadTechnicians()
+	loadInterventions();
 })
 
 const saveCompanyInfo = () => {
@@ -597,14 +574,8 @@ const saveCompanyInfo = () => {
 	editingCompanyInfo.value = false
 }
 
-const clientStore = useClientStore()
-const technicianStore = useTechnicianStore();
-const equipmentStore = useEquipmentStore();
 const interventionStore = useInterventionStore();
 
-const { equipments } = storeToRefs(equipmentStore);
-const { clients } = storeToRefs(clientStore);
-const { technicians } = storeToRefs(technicianStore);
 const { interventions, loading } = storeToRefs(interventionStore);
 
 // Search and filter
@@ -614,16 +585,8 @@ const error = ref('')
 
 const showForm = ref(false)
 const editing = ref(false)
-const viewingReport = ref(null)
-const selectedEquipment = ref<Equipment | null>(null)
-const selectedClient = ref<Client | null>(null)
-const isRecording = ref(false)
-const mediaRecorder = ref(null)
-const audioChunks = ref([])
-const showSignaturePad = ref(false)
-const signatureType = ref('')
-const signaturePad = ref(null)
-const signaturePadInstance = ref(null)
+const viewingReport = ref<Intervention | null>(null)
+const isViewing = ref(false)
 
 const form = ref<Intervention>(InterventionFormData())
 
@@ -635,11 +598,12 @@ const filteredInterventions = computed(() => {
 	if (searchQuery.value) {
 		const query = searchQuery.value.toLowerCase()
 		filtered = filtered.filter(intervention =>
-			intervention.equipment_name?.toLowerCase().includes(query) ||
-			intervention.equipment_serial?.toLowerCase().includes(query) ||
-			intervention.technician_name?.toLowerCase().includes(query) ||
-			intervention.client_name?.toLowerCase().includes(query) ||
-			intervention.client_company_name?.toLowerCase().includes(query)
+			intervention.equipment?.name?.toLowerCase().includes(query) ||
+			intervention.equipment?.characteristics?.toLowerCase().includes(query) ||
+			intervention.technician?.full_name?.toLowerCase().includes(query) ||
+			intervention.client?.first_name?.toLowerCase().includes(query) ||
+			intervention.client?.last_name?.toLowerCase().includes(query) ||
+			intervention.client?.company_name?.toLowerCase().includes(query)
 		)
 	}
 
@@ -668,30 +632,6 @@ const loadInterventions = async () => {
 	}
 };
 
-const loadEquipmentList = async () => {
-	try {
-		await equipmentStore.fetchEquipments()
-	} catch (error) {
-		useAlert().showAlert('Impossible de charger la liste des équipements', 'error', 5000)
-	}
-};
-
-const loadClientList = async () => {
-	try {
-		await clientStore.fetchClients();
-	} catch (error) {
-		useAlert().showAlert('Impossible de charger la liste des clients', 'error', 5000);
-	}
-};
-
-const loadTechnicians = async () => {
-	try {
-		await technicianStore.fetchTechnicians()
-	} catch (error) {
-		useAlert().showAlert('Impossible de charger la liste des techniciens', 'error', 5000)
-	}
-};
-
 const validateForm = (form: Intervention) => {
 
 	if (!form.client_id) {
@@ -716,7 +656,7 @@ const submitForm = async (_form: Intervention) => {
 		if (!validateForm(_form)) return
 
 		if (editing.value) {
-			await interventionStore.updateIntervention(viewingReport.value.id, _form);
+			await interventionStore.updateIntervention(_form.id, _form);
 			viewingReport.value = InterventionFormData();
 		} else {
 			await interventionStore.createIntervention(_form);
@@ -727,70 +667,23 @@ const submitForm = async (_form: Intervention) => {
 		Swal.fire(editing.value ? 'Intervention mise à jour avec succès' : 'Intervention créée avec succès', 'success');
 
 	} catch (error) {
-		console.error('Erreur détaillée lors de l\'enregistrement:', error)
-		console.error('Réponse complète de l\'erreur:', error.response?.data)
-
-		const errorMessage = error.response?.data?.message ||
-			error.response?.data?.error ||
-			error.message ||
-			'Erreur inconnue lors de l\'enregistrement'
-		alert(`Erreur lors de l'enregistrement: ${errorMessage}`)
+		Swal.fire('Erreur lors de l\'enregistrement', 'error');
 	}
 }
 
-const editReport = (report) => {
+const editReport = (report: Intervention) => {
 	viewingReport.value = report
 	editing.value = true
 	showForm.value = true
+	form.value = InterventionFormData(report);
+	console.log("Form:", form.value);
 
-	const equip = equipments.value.find(e => e.id == report.equipement_id)
-	const client = clients.value.find(c => c.id == report.client_id)
-	const technician = technicians.value.find(t => t.id == report.technicien_id)
-
-	form.value = {
-		client_id: client?.id || '',
-		equipement_id: equip?.id || '',
-		technicien_id: technician?.id || '',
-		problem_description: report.problem_description,
-		report_date: report.report_date ? new Date(report.report_date).toISOString().slice(0, 16) : new Date().toISOString().slice(0, 16),
-		contact_time: report.contact_time,
-		status: report.status,
-		department: report.department,
-		location: report.location,
-		is_tested_certified: !!report.is_tested_certified,
-		is_sent_for_maintenance: !!report.is_sent_for_maintenance,
-		needs_delivery: !!report.needs_delivery,
-		delivery_price: report.delivery_price || 0,
-		under_contract: !!report.under_contract,
-		repair_start_date: report.repair_start_date ? new Date(report.repair_start_date).toISOString().slice(0, 16) : '',
-		repair_end_date: report.repair_end_date ? new Date(report.repair_end_date).toISOString().slice(0, 16) : '',
-		repair_duration: report.repair_duration,
-		technician_findings: report.technician_findings,
-		quotation_file_name: report.quotation_file_name || '',
-		quotation_file: null,
-		quotation_amount: report.quotation_amount || '',
-		audio_recording_url: report.audio_recording_url || '',
-		quotation_email_sent: !!report.quotation_email_sent,
-		quotation_email_date: report.quotation_email_date ? new Date(report.quotation_email_date).toISOString().slice(0, 16) : new Date().toISOString().slice(0, 16),
-		quotation_comments: report.quotation_comments || '',
-		technician_signature: report.technician_signature || '',
-		client_signature: report.client_signature || ''
-	}
-
-	if (equip) {
-		selectedEquipment.value = equip
-	}
-
-	if (client) {
-		selectedClient.value = client
-	}
 }
 
-const viewReport = (report) => {
-	viewingReport.value = report
-	console.log('Rapport visualisé:', report)
-	console.log('Signature technicien:', report.technician_signature)
-	console.log('Signature client:', report.client_signature)
+const viewReport = (report: Intervention) => {
+	viewingReport.value = report;
+	isViewing.value = true;
+	console.log('Rapport visualisé:', report);
 }
 
 const deleteReport = async (id: string) => {
@@ -821,9 +714,7 @@ const closeForm = () => {
 	showForm.value = false
 	editing.value = false
 	viewingReport.value = null
-	selectedClient.value = null
 	form.value = InterventionFormData();
-	selectedEquipment.value = null
 }
 
 const printReport = () => {
@@ -884,19 +775,6 @@ const formatDate = (dateString) => {
 		})
 	} catch (error) {
 		return dateString
-	}
-}
-
-const getStatusColor = (status) => {
-	switch (status) {
-		case 'Nouveau': return 'bg-blue-100 text-blue-800'
-		case 'En diagnostic': return 'bg-purple-100 text-purple-800'
-		case 'Validation du devis en cours': return 'bg-yellow-100 text-yellow-800'
-		case 'En réparation': return 'bg-indigo-100 text-indigo-800'
-		case 'En attente de pièces': return 'bg-orange-100 text-orange-800'
-		case 'Terminé': return 'bg-green-100 text-green-800'
-		case 'Livré': return 'bg-teal-100 text-teal-800'
-		default: return 'bg-gray-100 text-gray-800'
 	}
 }
 

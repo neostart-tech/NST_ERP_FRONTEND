@@ -266,24 +266,30 @@ import type { Equipment } from '~/models/Equipment'
 import type { Intervention } from '~/models/Intervention'
 import type { Technician } from '~/models/Technician';
 import InvalidInput from '../partials/InvalidInput.vue';
+import { useEquipmentStore } from '~/app/stores/Maintenance/EquipmentStore';
 
 const { validationErrors } = storeToRefs(useInterventionStore());
 
 interface Props {
 	modelValue: boolean
 	formData: Intervention
-	equipments: Equipment[]
-	clients: Client[]
-	technicians: Technician[]
 	editing?: boolean
 }
+
+const clientStore = useClientStore()
+const technicianStore = useTechnicianStore();
+const equipmentStore = useEquipmentStore();
+
+const { equipments } = storeToRefs(equipmentStore);
+const { clients } = storeToRefs(clientStore);
+const { technicians } = storeToRefs(technicianStore);
 
 const props = withDefaults(defineProps<Props>(), {
 	editing: false
 });
 
 const emit = defineEmits<{
-	'update:modelValue': [value: boolean]
+	'close': []
 	'submit': [formData: Intervention]
 	'equipment-change': [equipmentId: string | number]
 	// 'client-change': [clientId: string | number]
@@ -302,24 +308,54 @@ watch(() => props.modelValue, (newValue) => {
 	if (newValue) {
 		localForm.value = { ...props.formData }
 	}
-})
+});
 
 const onEquipmentChange = () => {
-	const equipment = props.equipments.find(e => e.id === localForm.value.equipement_id)
+	const equipment = equipments.value.find(e => e.id === localForm.value.equipement_id)
 	selectedEquipment.value = equipment || null
 	emit('equipment-change', localForm.value.equipement_id)
 }
 
 const onClientChange = () => {
-	const client = props.clients.find(c => c.id === localForm.value.client_id)
+	const client = clients.value.find(c => c.id === localForm.value.client_id)
 	selectedClient.value = client || null
 }
 
 const close = () => {
-	emit('update:modelValue', false)
+	emit('close')
 }
 
 const handleSubmit = () => {
 	emit('submit', localForm.value)
 }
+
+onMounted(() => {
+	loadEquipments();
+	loadClients();
+	loadTechnicians();
+})
+
+const loadEquipments = async () => {
+	try {
+		await equipmentStore.fetchEquipments()
+	} catch (error) {
+		useAlert().showAlert('Impossible de charger la liste des équipements', 'error', 5000)
+	}
+};
+
+const loadClients = async () => {
+	try {
+		await clientStore.fetchClients();
+	} catch (error) {
+		useAlert().showAlert('Impossible de charger la liste des clients', 'error', 5000);
+	}
+};
+
+const loadTechnicians = async () => {
+	try {
+		await technicianStore.fetchTechnicians()
+	} catch (error) {
+		useAlert().showAlert('Impossible de charger la liste des techniciens', 'error', 5000)
+	}
+};
 </script>

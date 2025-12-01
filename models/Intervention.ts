@@ -47,6 +47,19 @@ export const getInterventionStatus = (_: Intervention) => {
 		: ''
 }
 
+export const getStatusColor = (status: string) => {
+	switch (status) {
+		case 'new': return 'bg-blue-100 text-blue-800'
+		case 'diagnostic': return 'bg-purple-100 text-purple-800'
+		case 'devis': return 'bg-yellow-100 text-yellow-800'
+		case 'repair': return 'bg-indigo-100 text-indigo-800'
+		case 'pieces': return 'bg-orange-100 text-orange-800'
+		case 'finished': return 'bg-green-100 text-green-800'
+		case 'delivered': return 'bg-teal-100 text-teal-800'
+		default: return 'bg-gray-100 text-gray-800'
+	}
+}
+
 export const InterventionFormData = (intervention?: Intervention): Intervention => ({
 	id: intervention?.id || '',
 	client_id: intervention?.client_id || '',
