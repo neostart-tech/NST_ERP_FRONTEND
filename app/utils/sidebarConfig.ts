@@ -171,18 +171,12 @@ export const sidebarMenu = [
 		name: 'Maintenance',
 		icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z',
 		submenus: [
-			{
-				name: 'Dashboard',
-				icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z',
-				url: AppUrl.MAINTENANCE_DASHBOARD,
-				description: 'Gestion maintenance'
-			},
-			{
-				name: 'Ajouter Client',
-				icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M16 3.13a4 4 0 0 1 0 7.75M9 7a4 4 0 1 1 0-8 4 4 0 0 1 0 8z',
-				url: AppUrl.MAINTENANCE_ADD_CUSTOMER,
-				description: 'Information sur un client'
-			},
+			// {
+			// 	name: 'Dashboard',
+			// 	icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z',
+			// 	url: AppUrl.MAINTENANCE_DASHBOARD,
+			// 	description: 'Gestion maintenance'
+			// },
 			{
 				name: 'Gestion des Techniciens',
 				icon: 'M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z M14 2v4a2 2 0 0 0 2 2h4 M10 9H8 M16 13H8 M16 17H8',
@@ -191,22 +185,22 @@ export const sidebarMenu = [
 			},
 			{
 				name: 'Gestion des équipements',
-				icon: 'm7.5 4.27 9 5.15 m-9 15.46 9-5.15 M3.3 8.7L12 3l8.7 5.7 M12 22V12 M20.7 15.3 12 21l-8.7-5.7 M3.3 15.3l8.7 5.7 8.7-5.7',
+				icon: 'heroicons-solid:cpu-chip',
 				url: AppUrl.MAINTENANCE_EQUIPMENTS,
 				description: 'Parc matériel'
 			},
 			{
-				name: 'Signaler Panne',
-				icon: 'M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+				name: 'Gestion des Pannes',
+				icon: 'heroicons-solid:exclamation-triangle',
 				url: AppUrl.MAINTENANCE_REPORTING_BREAK,
 				description: ''
 			},
-			{
-				name: 'Fiche Client',
-				icon: 'M12 11h4 M12 16h4 M8 11h.01 M8 16h.01 M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2',
-				url: AppUrl.MAINTENANCE_CUSTOMER_FILE,
-				description: ''
-			},
+			// {
+			// 	name: 'Fiche Client',
+			// 	icon: 'M12 11h4 M12 16h4 M8 11h.01 M8 16h.01 M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2',
+			// 	url: AppUrl.MAINTENANCE_CUSTOMER_FILE,
+			// 	description: ''
+			// },
 			{
 				name: 'Contrats',
 				icon: 'm9 14 2 2 4-4 M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2',
