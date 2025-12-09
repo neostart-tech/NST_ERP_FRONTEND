@@ -195,343 +195,15 @@
 			@close="showForm = false; editing = false" />
 
 		<!-- Fiche d'Intervention Modal -->
-		<div v-if="viewingReport && isViewing"
-			class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 print-modal">
-			<div
-				class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-screen overflow-y-auto print:w-full print:max-w-none print:shadow-none print:rounded-none print:overflow-visible">
-				<div class="p-8 print:p-6">
-					<!-- En-tête du cabinet - Configurable -->
-					<div class="flex justify-between items-start mb-10 print:mb-8">
-						<div class="bg-gradient-to-r from-blue-600 to-green-600 p-6 rounded-lg text-white">
-							<h1 class="text-3xl font-bold mb-2">{{ companyInfo.name }}</h1>
-							<p class="text-blue-100">{{ companyInfo.tagline }}</p>
-							<p class="text-blue-100 text-sm mt-2">{{ companyInfo.address }}</p>
-							<p class="text-blue-100 text-sm">Tél: {{ companyInfo.phone }} | Email: {{ companyInfo.email }}</p>
-							<p class="text-blue-100 text-sm" v-if="companyInfo.website">Site: {{ companyInfo.website }}</p>
-						</div>
-						<div class="text-right">
-							<div
-								class="bg-gradient-to-r from-blue-500 to-green-500 text-white px-6 py-3 rounded-lg inline-block shadow-lg">
-								<span class="text-lg font-bold">FICHE D'INTERVENTION</span>
-							</div>
-							<p class="text-gray-500 text-sm mt-3">Référence: FI-{{ String(viewingReport.id).padStart(5, '0') }}
-							</p>
-							<p class="text-gray-500 text-sm mt-1">Date: {{ formatDate(viewingReport.report_date) }}</p>
-						</div>
-					</div>
-
-					<!-- Bouton de configuration de l'en-tête (visible seulement en mode édition) -->
-					<div v-if="editingCompanyInfo" class="mb-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-						<h3 class="text-lg font-medium text-yellow-800 mb-3">Configuration de l'en-tête</h3>
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-1">Nom de l'entreprise</label>
-								<input v-model="companyInfo.name" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-1">Slogan</label>
-								<input v-model="companyInfo.tagline" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
-								<input v-model="companyInfo.address" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
-								<input v-model="companyInfo.phone" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-								<input v-model="companyInfo.email" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-							</div>
-							<div>
-								<label class="block text-sm font-medium text-gray-700 mb-1">Site web</label>
-								<input v-model="companyInfo.website" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-							</div>
-						</div>
-						<div class="flex justify-end mt-4 space-x-3">
-							<button @click="editingCompanyInfo = false"
-								class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg">
-								Annuler
-							</button>
-							<button @click="saveCompanyInfo" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-								Enregistrer
-							</button>
-						</div>
-					</div>
-
-					<!-- Informations sur l'intervention -->
-					<div class="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-xl mb-10 print:mb-8 shadow-sm">
-						<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-							<div>
-								<p class="text-sm text-blue-600 font-medium">Date du signalement</p>
-								<p class="text-lg font-bold text-gray-800">{{ formatDate(viewingReport.report_date) }}</p>
-							</div>
-							<div>
-								<p class="text-sm text-blue-600 font-medium">Statut</p>
-								<span
-									:class="`px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full ${getStatusColor(viewingReport.status)}`">
-									{{ viewingReport.status }}
-								</span>
-							</div>
-						</div>
-					</div>
-
-					<!-- Détails de l'équipement -->
-					<div class="mb-10 print:mb-8">
-						<h2 class="text-xl font-bold text-gray-800 mb-6 pb-2 border-b-2 border-blue-500 inline-block">Détails de
-							l'équipement</h2>
-						<div class="bg-blue-50 p-6 rounded-xl shadow-sm">
-							<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-blue-600 font-medium mb-1">Nom</p>
-									<p class="font-medium text-gray-800">{{ viewingReport.equipment_name }}</p>
-								</div>
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-blue-600 font-medium mb-1">Numéro de série</p>
-									<p class="font-medium text-gray-800">{{ viewingReport.equipment_serial }}</p>
-								</div>
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-blue-600 font-medium mb-1">Fabricant</p>
-									<p class="font-medium text-gray-800">{{ viewingReport.equipment_manufacturer }}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Informations sur le client -->
-					<div class="mb-10 print:mb-8">
-						<h2 class="text-xl font-bold text-gray-800 mb-6 pb-2 border-b-2 border-green-500 inline-block">Informations
-							client</h2>
-						<div class="bg-green-50 p-6 rounded-xl shadow-sm">
-							<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-green-600 font-medium mb-1">Client</p>
-									<p class="font-medium text-gray-800">{{ viewingReport.client_name || viewingReport.client_company_name
-									}}</p>
-								</div>
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-green-600 font-medium mb-1">Service/Département</p>
-									<p class="font-medium text-gray-800">{{ viewingReport.department }}</p>
-								</div>
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-green-600 font-medium mb-1">Localisation</p>
-									<p class="font-medium text-gray-800">{{ viewingReport.location }}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Description du problème -->
-					<div class="mb-10 print:mb-8">
-						<h2 class="text-xl font-bold text-gray-800 mb-6 pb-2 border-b-2 border-purple-500 inline-block">Description
-							du problème</h2>
-						<div class="bg-purple-50 p-6 rounded-xl shadow-sm">
-							<p class="font-medium text-gray-800">{{ viewingReport.problem_description }}</p>
-						</div>
-					</div>
-
-					<!-- Informations sur le technicien -->
-					<div class="mb-10 print:mb-8">
-						<h2 class="text-xl font-bold text-gray-800 mb-6 pb-2 border-b-2 border-yellow-500 inline-block">Informations
-							sur le technicien</h2>
-						<div class="bg-yellow-50 p-6 rounded-xl shadow-sm">
-							<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-yellow-600 font-medium mb-1">Technicien assigné</p>
-									<div class="flex items-center mt-1">
-										<div class="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-											<span class="text-blue-600 font-medium text-sm">{{viewingReport.technician_name ?
-												viewingReport.technician_name.split(' ').map(n => n[0]).join('') : ''}}</span>
-										</div>
-										<div class="ml-3">
-											<div class="text-sm font-medium text-gray-900">{{ viewingReport.technician_name }}</div>
-										</div>
-									</div>
-								</div>
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-yellow-600 font-medium mb-1">Heure de contact</p>
-									<p class="font-medium text-gray-800">{{ viewingReport.contact_time }}</p>
-								</div>
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-yellow-600 font-medium mb-1">Défaut constaté</p>
-									<p class="font-medium text-gray-800 text-sm">{{ viewingReport.technician_findings }}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Détails de la réparation -->
-					<div class="mb-10 print:mb-8">
-						<h2 class="text-xl font-bold text-gray-800 mb-6 pb-2 border-b-2 border-indigo-500 inline-block">Détails de
-							la réparation</h2>
-						<div class="bg-indigo-50 p-6 rounded-xl shadow-sm">
-							<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-indigo-600 font-medium mb-1">Date début réparation</p>
-									<p class="font-medium text-gray-800">{{ formatDate(viewingReport.repair_start_date) }}</p>
-								</div>
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-indigo-600 font-medium mb-1">Date fin réparation</p>
-									<p class="font-medium text-gray-800">{{ formatDate(viewingReport.repair_end_date) }}</p>
-								</div>
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-indigo-600 font-medium mb-1">Durée de réparation</p>
-									<p class="font-medium text-gray-800">{{ viewingReport.repair_duration }}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Status Flags -->
-					<div class="mb-10 print:mb-8">
-						<h2 class="text-xl font-bold text-gray-800 mb-6 pb-2 border-b-2 border-pink-500 inline-block">État de
-							l'intervention</h2>
-						<div class="bg-pink-50 p-6 rounded-xl shadow-sm">
-							<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-								<div class="bg-white p-4 rounded-lg shadow-sm flex items-center">
-									<span
-										:class="`h-4 w-4 rounded-full ${viewingReport.is_tested_certified ? 'bg-green-500' : 'bg-gray-300'}`"></span>
-									<span class="ml-3 text-sm font-medium text-gray-800">Testé et certifié</span>
-								</div>
-								<div class="bg-white p-4 rounded-lg shadow-sm flex items-center">
-									<span
-										:class="`h-4 w-4 rounded-full ${viewingReport.is_sent_for_maintenance ? 'bg-green-500' : 'bg-gray-300'}`"></span>
-									<span class="ml-3 text-sm font-medium text-gray-800">Envoyé pour maintenance</span>
-								</div>
-								<div class="bg-white p-4 rounded-lg shadow-sm flex items-center">
-									<span
-										:class="`h-4 w-4 rounded-full ${viewingReport.needs_delivery ? 'bg-green-500' : 'bg-gray-300'}`"></span>
-									<span class="ml-3 text-sm font-medium text-gray-800">Livraison demandée</span>
-								</div>
-								<div class="bg-white p-4 rounded-lg shadow-sm flex items-center">
-									<span
-										:class="`h-4 w-4 rounded-full ${viewingReport.under_contract ? 'bg-green-500' : 'bg-gray-300'}`"></span>
-									<span class="ml-3 text-sm font-medium text-gray-800">Sous contrat</span>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Section Devis -->
-					<div class="mb-10 print:mb-8">
-						<h2 class="text-xl font-bold text-gray-800 mb-6 pb-2 border-b-2 border-blue-500 inline-block">Devis</h2>
-						<div class="bg-blue-50 p-6 rounded-xl shadow-sm">
-							<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-blue-600 font-medium mb-1">Fichier du devis</p>
-									<div v-if="viewingReport.quotation_file_name" class="flex items-center mt-2">
-										<Icon name="heroicons:document" class="h-5 w-5 text-blue-500 mr-2" />
-										<span class="font-medium text-gray-800">{{ viewingReport.quotation_file_name }}</span>
-										<button @click="downloadQuotation(viewingReport.id)" class="ml-2 text-blue-600 hover:text-blue-800">
-											<Icon name="heroicons:arrow-down-tray" class="h-5 w-5" />
-										</button>
-									</div>
-									<p v-else class="text-gray-500 italic">Aucun fichier joint</p>
-								</div>
-
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-blue-600 font-medium mb-1">Montant</p>
-									<p class="font-medium text-gray-800">{{ viewingReport.quotation_amount ?
-										`${viewingReport.quotation_amount} FCFA` : 'Non spécifié' }}</p>
-								</div>
-
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-blue-600 font-medium mb-1">Enregistrement audio</p>
-									<div v-if="viewingReport.audio_recording_path" class="mt-2">
-										<button @click="downloadAudio(viewingReport.id)"
-											class="text-blue-600 hover:text-blue-800 flex items-center">
-											<Icon name="heroicons:arrow-down-tray" class="h-5 w-5 mr-1" />
-											Télécharger l'audio
-										</button>
-									</div>
-									<p v-else class="text-gray-500 italic">Aucun enregistrement</p>
-								</div>
-
-								<div class="bg-white p-4 rounded-lg shadow-sm">
-									<p class="text-sm text-blue-600 font-medium mb-1">Email envoyé</p>
-									<div class="flex items-center">
-										<span
-											:class="`h-4 w-4 rounded-full ${viewingReport.quotation_email_sent ? 'bg-green-500' : 'bg-gray-300'}`"></span>
-										<span class="ml-3 text-sm font-medium text-gray-800">
-											{{ viewingReport.quotation_email_sent ? `Oui (${formatDate(viewingReport.quotation_email_date)})`
-												: 'Non' }}
-										</span>
-									</div>
-								</div>
-							</div>
-
-							<div v-if="viewingReport.quotation_comments" class="mt-6 bg-white p-4 rounded-lg shadow-sm">
-								<p class="text-sm text-blue-600 font-medium mb-1">Commentaires</p>
-								<p class="text-gray-800 whitespace-pre-line">{{ viewingReport.quotation_comments }}</p>
-							</div>
-						</div>
-					</div>
-
-					<!-- Signatures -->
-					<div class="mb-10 print:mb-8">
-						<h2 class="text-xl font-bold text-gray-800 mb-6 pb-2 border-b-2 border-teal-500 inline-block">Signatures
-						</h2>
-						<div class="bg-teal-50 p-6 rounded-xl shadow-sm">
-							<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-								<div class="bg-white p-6 rounded-lg shadow-sm text-center">
-									<p class="text-sm text-teal-600 font-medium mb-3">Technicien</p>
-									<div
-										class="border-2 border-dashed border-gray-300 rounded-lg h-32 bg-gray-50 flex items-center justify-center mb-3">
-										<img v-if="viewingReport.technician_signature" :src="viewingReport.technician_signature"
-											alt="Signature technicien" class="max-h-28 max-w-full">
-										<span v-else class="text-gray-400">Non signé</span>
-									</div>
-									<p class="text-sm font-medium text-gray-800">{{ viewingReport.technician_name }}</p>
-								</div>
-								<div class="bg-white p-6 rounded-lg shadow-sm text-center">
-									<p class="text-sm text-teal-600 font-medium mb-3">Client</p>
-									<div
-										class="border-2 border-dashed border-gray-300 rounded-lg h-32 bg-gray-50 flex items-center justify-center mb-3">
-										<img v-if="viewingReport.client_signature" :src="viewingReport.client_signature"
-											alt="Signature client" class="max-h-28 max-w-full">
-										<span v-else class="text-gray-400">Non signé</span>
-									</div>
-									<p class="text-sm font-medium text-gray-800">{{ viewingReport.client_name ||
-										viewingReport.client_company_name }}</p>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<!-- Footer -->
-					<div class="mt-12 pt-6 border-t border-gray-200 text-center text-sm text-gray-600 print:mt-10">
-						<p class="font-medium">{{ companyInfo.name }} - {{ companyInfo.tagline }}</p>
-						<p class="mt-1">{{ companyInfo.address }} | Tél: {{ companyInfo.phone }}</p>
-						<p class="mt-1">Email: {{ companyInfo.email }} <span v-if="companyInfo.website">| Site web: {{
-							companyInfo.website }}</span></p>
-					</div>
-
-					<!-- Boutons d'action (non imprimables) -->
-					<div class="flex justify-end space-x-4 mt-8 no-print">
-						<button @click="editingCompanyInfo = !editingCompanyInfo"
-							class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg flex items-center transition-colors shadow-md">
-							<Icon name="heroicons:pencil" class="h-5 w-5 mr-2" />
-							Modifier en-tête
-						</button>
-						<button @click="printReport"
-							class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center transition-colors shadow-md">
-							<Icon name="heroicons:printer" class="h-5 w-5 mr-2" />
-							Imprimer
-						</button>
-						<button @click="generatePDF(viewingReport.id)"
-							class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg flex items-center transition-colors shadow-md">
-							<Icon name="heroicons:document-arrow-down" class="h-5 w-5 mr-2" />
-							Enregistrer en PDF
-						</button>
-						<button @click="viewingReport = null; isViewing = false;"
-							class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg transition-colors shadow-md">
-							Fermer
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
+		<InterventionSheetModal
+			v-model="isViewing"
+			:report="viewingReport"
+			@close="viewingReport = null; isViewing = false"
+			@print="printReport"
+			@generate-pdf="generatePDF"
+			@download-quotation="downloadQuotation"
+			@download-audio="downloadAudio"
+		/>
 	</div>
 </template>
 
@@ -542,19 +214,11 @@ import Swal from 'sweetalert2';
 import { ref, onMounted, watch, computed } from 'vue';
 import ReportForm from '~/app/components/maintenance/ReportForm.vue';
 import InterventionStats from '~/app/components/maintenance/InterventionStats.vue';
+import InterventionSheetModal from '~/app/components/maintenance/InterventionSheetModal.vue';
 import { useInterventionStore } from '~/app/stores/Maintenance/InterventionStore';
 import { getInterventionStatus, getStatusColor, InterventionFormData, type Intervention } from '~/models/Intervention';
 import EmptyState from '~/app/components/EmptyState.vue';
 import Paginator from '~/app/components/Paginator.vue';
-
-const companyInfo = ref({
-	name: 'TechRepair Pro',
-	tagline: 'Service de maintenance et réparation',
-	address: '123 Avenue de la Technologie, 75000 Paris',
-	phone: '+33 1 23 45 67 89',
-	email: 'contact@techrepair.fr',
-	website: 'www.techrepair.fr'
-});
 
 const range = reactive({ start: 0, end: 0 })
 
@@ -563,16 +227,9 @@ const onRangeChanged = ({ start, end }: { start: number, end: number }) => {
 	range.end = end;
 };
 
-const editingCompanyInfo = ref(false)
-
 onMounted(() => {
 	loadInterventions();
 })
-
-const saveCompanyInfo = () => {
-	localStorage.setItem('companyInfo', JSON.stringify(companyInfo.value))
-	editingCompanyInfo.value = false
-}
 
 const interventionStore = useInterventionStore();
 
@@ -715,6 +372,16 @@ const closeForm = () => {
 	editing.value = false
 	viewingReport.value = null
 	form.value = InterventionFormData();
+}
+
+const downloadQuotation = async (id: string) => {
+	// TODO: Implement quotation download logic
+	console.log('Téléchargement du devis pour l\'intervention:', id)
+}
+
+const downloadAudio = async (id: string) => {
+	// TODO: Implement audio download logic
+	console.log('Téléchargement de l\'audio pour l\'intervention:', id)
 }
 
 const printReport = () => {

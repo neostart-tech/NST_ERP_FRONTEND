@@ -264,7 +264,6 @@ import { useInterventionStore } from '~/app/stores/Maintenance/InterventionStore
 import type { Client } from '~/models/Client'
 import type { Equipment } from '~/models/Equipment'
 import type { Intervention } from '~/models/Intervention'
-import type { Technician } from '~/models/Technician';
 import InvalidInput from '../partials/InvalidInput.vue';
 import { useEquipmentStore } from '~/app/stores/Maintenance/EquipmentStore';
 
