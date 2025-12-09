@@ -1,13 +1,23 @@
 <template>
-  <div class="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6 mt-8">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4">Enregistrer une commande</h2>
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+		<!-- En-tête de la page -->
+		<div class="sm:flex sm:items-center sm:justify-between mb-6">
+			<h1 class="text-2xl font-bold text-gray-900">Enregistrer une commande</h1>
+			<div class="mt-4 sm:mt-0 sm:ml-4">
+				<NuxtLink :to="AppUrl.ORDERINFO"
+					class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+					<Icon name="heroicons:list-bullet" class="-ml-1 mr-2 h-5 w-5" />
+					Liste des commandes
+				</NuxtLink>
+			</div>
+		</div>
 
     <!-- Sélection Proforma -->
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">
         Facture Pro Forma <span class="text-yellow-300">*</span>
       </label>
-      <select v-model="selectedQuote" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500">
+      <select v-model="selectedQuote" class="block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
         <option value="">-- Aucune sélection --</option>
         <option
           v-for="proforma in proformaStore.proforma"
@@ -21,35 +31,28 @@
 
     <!-- Sélection Client (visible si pas de proforma) -->
     <div v-if="!selectedQuote">
-      <!-- <label class="block text-sm font-medium text-gray-700 mb-1">Client <span class="text-red-500">*</span></label>
-      <select v-model="selectedClient" class="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-500">
-        <option value="">-- Sélectionner un client --</option>
-        <option v-for="client in clientStore.clients" :key="client.id" :value="client.id">
-          {{ client.name }} 
-        </option>
-      </select> -->
       <!-- Client -->
       <div class="w-72 relative">
         <label for="client" class="block font-medium mb-1">Client</label>
-        <input 
+        <input
           id="client"
           type="text"
           v-model="searchClient"
           @input="filterClients"
           @focus="showClientSuggestions = true"
           placeholder="Rechercher un client..."
-          class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-indigo-500"
+          class="block w-full border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2.5"
         />
 
         <!-- Suggestions -->
-        <ul 
-          v-if="showClientSuggestions && filteredClients.length" 
+        <ul
+          v-if="showClientSuggestions && filteredClients.length"
           class="absolute bg-white border border-gray-300 rounded w-full mt-1 shadow-lg z-10 max-h-40 overflow-auto"
         >
-          <li 
-            v-for="client in filteredClients" 
-            :key="client.id" 
-            @click="selectClient(client)" 
+          <li
+            v-for="client in filteredClients"
+            :key="client.id"
+            @click="selectClient(client)"
             class="p-2 hover:bg-indigo-100 cursor-pointer"
           >
             {{ client.first_name }} {{ client.last_name }}
@@ -61,12 +64,12 @@
     </div>
 
     <!-- Fichier bon de commande -->
-    <div class="border border-dashed border-gray-300 rounded-lg p-4">
+    <div class="border border-dashed border-gray-300 rounded-lg p-4 mt-4">
       <label class="block text-sm font-medium text-gray-700 mb-2">Joindre le bon de commande (optionnel)</label>
       <div class="flex items-center gap-4">
         <label class="cursor-pointer">
-          <span class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-md text-sm">Sélectionner un fichier</span>
-          <input type="file" @change="handleFileUpload" class="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx" />
+          <span class="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 shadow-sm">Sélectionner un fichier</span>
+          <input type="file" @change="handleFileUpload" class="sr-only" accept=".pdf,.doc,.docx,.xls,.xlsx" />
         </label>
         <span v-if="fileName" class="text-sm text-gray-600">
           {{ fileName }}
@@ -76,7 +79,7 @@
     </div>
 
     <!-- Tableau Articles -->
-    <div>
+    <div class="mt-6">
       <h3 class="text-lg font-semibold mb-3">Articles</h3>
       <table class="w-full border border-gray-300 text-sm">
         <thead class="bg-gray-50">
@@ -95,22 +98,22 @@
                 type="text"
                 v-model="item.name"
                 @input="filterArticles(index)"
-                @blur="validateArticle(index)"
+                @blur="() => { item.showSuggestions = false; validateArticle(index); }"
                 class="w-full text-center"
                 placeholder="Saisir un article..."
-                
+
               />
               <ul v-if="item.showSuggestions" class="absolute bg-white border border-gray-300 w-full z-50 max-h-40 overflow-auto">
                 <li
                   v-for="article in item.filteredArticles"
                   :key="article.id"
                   @click="selectArticle(index, article)"
-                  class="p-2 hover:bg-blue-100 cursor-pointer"
+                  class="p-2 hover:bg-blue-100 cursor-pointer text-left"
                 >
                   {{ article.label }}
                 </li>
               </ul>
-             
+
             </td>
             <td class="border">
               <input
@@ -118,7 +121,7 @@
                 min="1"
                 v-model.number="item.qty"
                 class="w-full text-center"
-                
+
               />
             </td>
             <td class="border">
@@ -127,7 +130,7 @@
                 min="0"
                 v-model.number="item.price"
                 class="w-full text-center"
-                
+
               />
             </td>
             <td class="border text-center">{{ (item.qty * item.price) }}</td>
@@ -141,25 +144,36 @@
       </table>
       <button
         @click="addItem"
-        class="mt-2 bg-blue-500 text-white px-3 py-1 rounded"
+        class="mt-2 inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
        ><i class="fas fa-add"></i> Ajouter</button>
       <p v-if="itemsError" class="text-red-500 mt-2">{{ itemsError }}</p>
     </div>
 
     <!-- Totaux -->
-    <div class="p-4 rounded-lg text-right">
-      <p>Sous-total : <span class="font-semibold">{{ formatCurrency(subtotal) }}</span></p>
-      <p>TVA ({{ taux }}%) : <span class="font-semibold">{{ formatCurrency(tvaAmount) }}</span></p>
-      <p class="text-lg font-bold">Total TTC : {{ formatCurrency(total)}}</p>
+    <div class="mt-6 flex justify-end">
+      <div class="w-full max-w-sm space-y-2">
+        <div class="flex justify-between text-sm text-gray-600">
+          <span>Sous-total :</span>
+          <span class="font-medium">{{ formatCurrency(subtotal) }}</span>
+        </div>
+        <div class="flex justify-between text-sm text-gray-600">
+          <span>TVA ({{ taux }}%) :</span>
+          <span class="font-medium">{{ formatCurrency(tvaAmount) }}</span>
+        </div>
+        <div class="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t">
+          <span>Total TTC :</span>
+          <span>{{ formatCurrency(total)}}</span>
+        </div>
+      </div>
     </div>
 
     <!-- Boutons -->
-    <div class="flex justify-end gap-4">
-      <button @click="resetForm" class="px-4 py-2 bg-gray-200 rounded">Annuler</button>
+    <div class="pt-5 mt-6 border-t border-gray-200 flex justify-end gap-3">
+      <button @click="resetForm" type="button" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Annuler</button>
       <button
         @click="submitOrder"
         :disabled="isSubmitting"
-        class="px-4 py-2 bg-blue-600 text-white rounded disabled:opacity-50"
+        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
       >
         {{ isSubmitting ? 'En cours...' : 'Enregistrer' }}
       </button>
@@ -355,7 +369,7 @@ const submitOrder = async () => {
       title:'Erreur',
       text:'Veuillez ajouter au moins un article.'
     })
-      
+
     return
     }
     if (item.qty < 1) {
@@ -365,7 +379,7 @@ const submitOrder = async () => {
       title:'Erreur',
       text:'Quantité doit etre positive (>1).'
     })
-      
+
     return
     }
     if (item.price < 0) {
@@ -414,7 +428,7 @@ const submitOrder = async () => {
       showConfirmButton:false
 
     })
-     router.push(AppUrl.ORDERINFO)  
+     router.push(AppUrl.ORDERINFO)
     resetForm()
   } catch (error) {
     console.error('Erreur lors de la soumission:', error)
