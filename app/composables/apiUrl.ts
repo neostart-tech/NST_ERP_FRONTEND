@@ -62,6 +62,9 @@ export const ApiUrl = {
 	INTERVENTION: "/interventions",
 	INTERVENTION_BY_ID: "/interventions/:id",
 
+	INVOICES: "/invoices",
+	INVOICE_BY_ID: "/invoices/:id",
+
 	/**
  * Fonction pour les url à paramètres sous la forme url/:id
  */

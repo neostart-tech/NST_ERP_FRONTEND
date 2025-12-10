@@ -384,7 +384,7 @@ onMounted(async () => {
 });
 
 const stats = computed(() => {
-	const invoices = invoiceStore.facture;
+	const invoices = invoiceStore.invoices;
 	const paidInvoices = invoices.filter((i) => i.status === "paid");
 	const pendingInvoices = invoices.filter((i) => i.status === "pending");
 
@@ -410,7 +410,7 @@ const filteredInvoices = computed(() => {
 	const query = searchQuery.value.toLowerCase().trim();
 	const status = selectedStatus.value;
 
-	return invoiceStore.facture.filter((invoice) => {
+	return invoiceStore.invoices.filter((invoice) => {
 		const matchesSearch =
 			!query ||
 			invoice.reference.toLowerCase().includes(query) ||
