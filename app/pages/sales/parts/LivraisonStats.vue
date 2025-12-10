@@ -20,6 +20,46 @@
       </div>
     </div>
 
+    <!-- Tableau des livraisons -->
+    <div class="bg-white shadow rounded-lg p-6">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th
+              scope="col"
+              class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+            >
+              N° Livraison
+            </th>
+            <th
+              scope="col"
+              class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+            >
+              Client
+            </th>
+            <th
+              scope="col"
+              class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+            >
+              Date
+            </th>
+            <th
+              scope="col"
+              class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+            >
+              Référence
+            </th>
+            <th
+              scope="col"
+              class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+            >
+              Statut
+            </th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+
     <!-- Graphiques -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
       <div class="bg-white shadow rounded-lg p-6">

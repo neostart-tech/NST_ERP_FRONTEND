@@ -32,7 +32,7 @@ export const useInvoiceStore=defineStore('facture',{
          async downloadInvoice(invoice){
             try{
                 window.open(`http://127.0.0.1:8000/api/invoice/download/${invoice.id}`,'_blank')
-            //   const res=await fetch(`http://127.0.0.1:8000/api/invoice/download/${invoice.id}`) 
+            //   const res=await fetch(`http://127.0.0.1:8000/api/invoice/download/${invoice.id}`)
             //   const blob =await res.blob()
             //   const urlBlob=window.URL.createObjectURL(blob)
             //   const a = document.createElement('a')

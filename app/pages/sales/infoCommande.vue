@@ -3,11 +3,9 @@
 		class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-6"
 	>
 		<!-- En-tête avec titre et bouton -->
-		<div
-			class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-		>
-			<h1 class="text-2xl font-bold text-gray-900">Gestion des Commandes</h1>
-			<div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+		<div class="sm:flex sm:items-center sm:justify-between mb-6">
+			<h1 class="text-xl font-bold text-gray-900">Gestion des Commandes</h1>
+			<div class="mt-4 sm:mt-0 sm:ml-4 flex flex-col sm:flex-row gap-3">
 				<!-- Barre de recherche -->
 				<div class="relative flex-grow">
 					<div
@@ -21,16 +19,16 @@
 					<input
 						type="text"
 						v-model="searchQuery"
-						placeholder="Rechercher par référence, client..."
-						class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+						placeholder="Rechercher..."
+						class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400"
 						@input="filterOrders"
 					/>
 				</div>
 				<NuxtLink
 					:to="AppUrl.ORDER"
-					class="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+					class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all text-sm"
 				>
-					<Icon name="heroicons:plus" class="h-4 w-4 mr-1.5" />
+					<Icon name="heroicons:plus" class="h-5 w-5 mr-2" />
 					Nouvelle commande
 				</NuxtLink>
 			</div>
@@ -39,61 +37,53 @@
 		<!-- Cartes de statistiques -->
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 			<!-- Carte Total Commandes -->
-			<div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-				<div class="flex items-center">
-					<div class="p-3 rounded-full bg-gray-100">
-						<Icon name="heroicons:shopping-cart" class="h-6 w-6 text-gray-600"/>
+			<div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-blue-900">Total Commandes</p>
+						<p class="text-3xl font-bold text-blue-900 mt-2">{{ stats.total || 0 }}</p>
 					</div>
-					<div class="ml-4">
-						<p class="text-sm font-medium text-gray-500">Total Commandes</p>
-						<h3 class="text-2xl font-semibold text-gray-900">
-							{{ stats.total || 0 }}
-						</h3>
+					<div class="p-3 rounded-lg bg-blue-500">
+						<Icon name="heroicons:shopping-cart" class="w-6 h-6 text-white" />
 					</div>
 				</div>
 			</div>
 
 			<!-- Carte En Cours -->
-			<div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-				<div class="flex items-center">
-					<div class="p-3 rounded-full bg-yellow-50">
-						<Icon name="heroicons:arrow-path" class="h-6 w-6 text-yellow-600" />
+			<div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-lg p-6 border border-yellow-200">
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-yellow-900">En Cours</p>
+						<p class="text-3xl font-bold text-yellow-900 mt-2">{{ stats.pending || 0 }}</p>
 					</div>
-					<div class="ml-4">
-						<p class="text-sm font-medium text-gray-500">En Cours</p>
-						<h3 class="text-2xl font-semibold text-yellow-700">
-							{{ stats.pending || 0 }}
-						</h3>
+					<div class="p-3 rounded-lg bg-yellow-500">
+						<Icon name="heroicons:arrow-path" class="w-6 h-6 text-white" />
 					</div>
 				</div>
 			</div>
 
 			<!-- Carte Livrées -->
-			<div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-				<div class="flex items-center">
-					<div class="p-3 rounded-full bg-green-50">
-						<Icon name="heroicons:check-circle" class="h-6 w-6 text-green-600"/>
+			<div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 border border-green-200">
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-green-900">Livrées</p>
+						<p class="text-3xl font-bold text-green-900 mt-2">{{ stats.delivered || 0 }}</p>
 					</div>
-					<div class="ml-4">
-						<p class="text-sm font-medium text-gray-500">Livrées</p>
-						<h3 class="text-2xl font-semibold text-green-700">
-							{{ stats.delivered || 0 }}
-						</h3>
+					<div class="p-3 rounded-lg bg-green-500">
+						<Icon name="heroicons:check-circle" class="w-6 h-6 text-white" />
 					</div>
 				</div>
 			</div>
 
 			<!-- Carte Annulées -->
-			<div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-				<div class="flex items-center">
-					<div class="p-3 rounded-full bg-red-50">
-						<Icon name="heroicons:x-circle" class="h-6 w-6 text-red-600" />
+			<div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-6 border border-red-200">
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-red-900">Annulées</p>
+						<p class="text-3xl font-bold text-red-900 mt-2">{{ stats.cancelled || 0 }}</p>
 					</div>
-					<div class="ml-4">
-						<p class="text-sm font-medium text-gray-500">Annulées</p>
-						<h3 class="text-2xl font-semibold text-red-700">
-							{{ stats.canceled || 0 }}
-						</h3>
+					<div class="p-3 rounded-lg bg-red-500">
+						<Icon name="heroicons:x-circle" class="w-6 h-6 text-white" />
 					</div>
 				</div>
 			</div>
@@ -118,35 +108,35 @@
 		<div class="bg-white border p-4 rounded-lg shadow mt-6">
 			<div class="overflow-x-auto">
 				<table class="min-w-full divide-y divide-gray-200">
-					<thead class="bg-gray-50">
+					<thead class="bg-gradient-to-r from-blue-50 to-blue-100">
 						<tr>
 							<th
 								scope="col"
-								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
 							>
 								REF
 							</th>
 							<th
 								scope="col"
-								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
 							>
 								Client
 							</th>
 							<th
 								scope="col"
-								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
 							>
 								Statut
 							</th>
 							<th
 								scope="col"
-								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
 							>
 								Actions
 							</th>
 							<th
 								scope="col"
-								class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
 							>
 								Modifier Statut
 							</th>
@@ -247,11 +237,36 @@
 				<table class="w-full text-sm border">
 					<thead class="bg-gray-100">
 						<tr>
-							<th class="px-4 py-2 text-left border">Article</th>
-							<th class="px-4 py-2 text-left border">Description</th>
-							<th class="px-4 py-2 text-right border">Quantité</th>
-							<th class="px-4 py-2 text-right border">Prix Unitaire</th>
-							<th class="px-4 py-2 text-right border">Total</th>
+							<th
+								scope="col"
+								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+							>
+								Article
+							</th>
+							<th
+								scope="col"
+								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+							>
+								Description
+							</th>
+							<th
+								scope="col"
+								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+							>
+								Quantité
+							</th>
+							<th
+								scope="col"
+								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+							>
+								Prix Unitaire
+							</th>
+							<th
+								scope="col"
+								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+							>
+								Total
+							</th>
 						</tr>
 					</thead>
 					<tbody>

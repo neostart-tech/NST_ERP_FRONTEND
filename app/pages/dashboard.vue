@@ -66,7 +66,7 @@ const features = [
     icon: "heroicons:shopping-cart",
     bgColor: "bg-green-100",
     textColor: "text-green-600",
-    route: AppUrl.INVOICES
+    route: AppUrl.INFOPROPO
   },
   {
     title: "Maintenance",

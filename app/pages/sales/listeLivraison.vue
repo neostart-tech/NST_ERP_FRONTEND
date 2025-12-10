@@ -1,122 +1,59 @@
 <template>
 	<div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-		<div class="flex justify-between items-center mb-6">
-			<h1 class="text-3xl font-extrabold text-gray-900">
-				Suivi des Bordereaux de Livraison
-			</h1>
-			<NuxtLink
-				:to="AppUrl.DELIVERY"
-				class="bg-indigo-600 text-white px-4 py-2 rounded shadow hover:bg-indigo-700"
-			>
-				<i class="fas fa-add"></i> Nouvelle livraison
-			</NuxtLink>
+		<!-- En-tête avec titre -->
+		<div class="mb-6">
+			<h1 class="text-2xl font-bold text-gray-900">Suivi des Bordereaux de Livraison</h1>
 		</div>
 	</div>
-	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+	<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
 		<!-- Carte Total Livraisons -->
-		<div
-			class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
-		>
+		<div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-6 border border-blue-200">
 			<div class="flex items-center justify-between">
 				<div>
-					<p class="text-sm font-medium text-gray-600">Total Livraisons</p>
-					<p class="text-3xl font-bold text-blue-600">150</p>
-					<p class="text-xs text-gray-500 mt-1">+12% vs mois dernier</p>
+					<p class="text-sm font-medium text-blue-900">Total Livraisons</p>
+					<p class="text-3xl font-bold text-blue-900 mt-2">150</p>
 				</div>
-				<div
-					class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center"
-				>
-					<Icon name="heroicons:truck" class="w-6 h-6 text-blue-600" />
+				<div class="p-3 rounded-lg bg-blue-500">
+					<Icon name="heroicons:truck" class="w-6 h-6 text-white" />
 				</div>
 			</div>
 		</div>
 
 		<!-- Carte Livraisons Effectuées -->
-		<div
-			class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300"
-		>
-			<div class="p-5">
-				<div class="flex items-center justify-between">
-					<div>
-						<p
-							class="text-sm font-medium text-gray-500 uppercase tracking-wider"
-						>
-							Effectuées
-						</p>
-						<p class="mt-2 text-2xl font-semibold text-green-600">120</p>
-					</div>
-					<div class="p-3 rounded-full bg-green-50 text-green-600">
-						<Icon name="heroicons:check-circle" class="text-xl" />
-					</div>
+		<div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-6 border border-green-200">
+			<div class="flex items-center justify-between">
+				<div>
+					<p class="text-sm font-medium text-green-900">Effectuées</p>
+					<p class="text-3xl font-bold text-green-900 mt-2">120</p>
 				</div>
-				<div class="mt-4 pt-4 border-t border-gray-100">
-					<div class="flex items-center justify-between">
-						<span class="text-xs font-medium text-gray-500"
-							>Taux de réussite</span
-						>
-						<span
-							class="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800"
-						>
-							80%
-						</span>
-					</div>
+				<div class="p-3 rounded-lg bg-green-500">
+					<Icon name="heroicons:check-circle" class="w-6 h-6 text-white" />
 				</div>
 			</div>
 		</div>
 
 		<!-- Carte En Cours -->
-		<div
-			class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300"
-		>
-			<div class="p-5">
-				<div class="flex items-center justify-between">
-					<div>
-						<p
-							class="text-sm font-medium text-gray-500 uppercase tracking-wider"
-						>
-							En Cours
-						</p>
-						<p class="mt-2 text-2xl font-semibold text-amber-500">25</p>
-					</div>
-					<div class="p-3 rounded-full bg-amber-50 text-amber-500">
-						<Icon name="heroicons:clock" class="text-xl" />
-					</div>
+		<div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg p-6 border border-amber-200">
+			<div class="flex items-center justify-between">
+				<div>
+					<p class="text-sm font-medium text-amber-900">En Cours</p>
+					<p class="text-3xl font-bold text-amber-900 mt-2">25</p>
 				</div>
-				<div class="mt-4 pt-4 border-t border-gray-100">
-					<div class="w-full bg-gray-200 rounded-full h-2">
-						<div class="bg-amber-500 h-2 rounded-full" style="width: 60%"></div>
-					</div>
-					<p class="text-xs text-gray-500 mt-1 text-right">
-						En attente de livraison
-					</p>
+				<div class="p-3 rounded-lg bg-amber-500">
+					<Icon name="heroicons:clock" class="w-6 h-6 text-white" />
 				</div>
 			</div>
 		</div>
 
 		<!-- Carte Retards -->
-		<div
-			class="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-300"
-		>
-			<div class="p-5">
-				<div class="flex items-center justify-between">
-					<div>
-						<p
-							class="text-sm font-medium text-gray-500 uppercase tracking-wider"
-						>
-							Retards
-						</p>
-						<p class="mt-2 text-2xl font-semibold text-red-600">5</p>
-					</div>
-					<div class="p-3 rounded-full bg-red-50 text-red-600">
-						<Icon name="heroicons:exclamation-triangle" class="text-xl" />
-					</div>
+		<div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-6 border border-red-200">
+			<div class="flex items-center justify-between">
+				<div>
+					<p class="text-sm font-medium text-red-900">Retards</p>
+					<p class="text-3xl font-bold text-red-900 mt-2">5</p>
 				</div>
-				<div class="mt-4 pt-4 border-t border-gray-100">
-					<div class="flex items-center">
-						<span class="text-xs font-medium text-red-600"
-							>+1 cette semaine</span
-						>
-					</div>
+				<div class="p-3 rounded-lg bg-red-500">
+					<Icon name="heroicons:exclamation-triangle" class="w-6 h-6 text-white" />
 				</div>
 			</div>
 		</div>
@@ -135,42 +72,42 @@
 	</div>
 
 	<div class="bg-white shadow-lg rounded-lg overflow-x-auto">
-		<table class="w-full text-sm">
-			<thead class="bg-gray-100 text-gray-700 uppercase">
+		<table class="min-w-full divide-y divide-gray-200">
+			<thead class="bg-gradient-to-r from-blue-50 to-blue-100">
 				<tr>
 					<th
 						scope="col"
-						class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+						class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
 					>
 						Client
 					</th>
 					<th
 						scope="col"
-						class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+						class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
 					>
 						Commande
 					</th>
 					<th
 						scope="col"
-						class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+						class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
 					>
 						Type
 					</th>
 					<th
 						scope="col"
-						class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+						class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
 					>
 						Date
 					</th>
 					<th
 						scope="col"
-						class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+						class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
 					>
 						Adresse
 					</th>
 					<th
 						scope="col"
-						class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+						class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
 					>
 						Actions
 					</th>
