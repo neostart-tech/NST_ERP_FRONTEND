@@ -1,48 +1,107 @@
 <template>
-  <div class="flex-1 p-8 bg-gray-100 min-h-screen">
-    <div class="max-w-6xl mx-auto">
-      <!-- Nouveau header avec dégradé bleu -->
-      <div class="mb-8 bg-gradient-to-r from-sky-600 via-sky-700 to-sky-800 rounded-2xl shadow-xl p-8 text-white overflow-hidden relative">
-        <div class="absolute inset-0 opacity-10">
-          <div class="absolute -top-20 -right-20 w-40 h-40 bg-white rounded-full"></div>
-          <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-white rounded-full"></div>
-          <div class="absolute top-1/2 right-1/4 w-24 h-24 bg-white rounded-full"></div>
-        </div>
-
-        <div class="relative z-10">
-          <h2 class="text-3xl font-bold mb-2">Gestion des Mouvements de Stock</h2>
-          <p class="text-sky-100 text-lg">Gérez les entrées et sorties de votre inventaire</p>
-          
-          <div class="flex items-center gap-6 mt-4 text-sm">
-            <div class="flex items-center gap-2">
-              <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-              <span class="text-sky-100">Actifs</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="w-2 h-2 bg-red-400 rounded-full"></div>
-              <span class="text-sky-100">Inactifs</span>
-            </div>
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <!-- Cartes de statistiques -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Carte Total Mouvements -->
+      <div class="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-6 border border-sky-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-sky-900">Total Mouvements</p>
+            <p class="text-3xl font-bold text-sky-900 mt-2">
+              {{ stats.totalMovements || 0 }}
+            </p>
+          </div>
+          <div class="p-3 rounded-lg bg-sky-500">
+            <Icon name="heroicons:arrow-path" class="h-6 w-6 text-white" />
           </div>
         </div>
       </div>
 
-      <!-- VOTRE CODE ORIGINAL INTACT CI-DESSOUS -->
-      <div class="max-w-6xl mx-auto p-8 bg-white shadow-lg rounded-xl border border-gray-200">
-        <div class="flex justify-center mb-6">
-          <button
-            @click="refreshData"
-            :disabled="loading"
-            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {{ loading ? 'Chargement...' : 'Rafraîchir Produits & Mouvements' }}
-          </button>
+      <!-- Carte Entrées -->
+      <div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg p-6 border border-emerald-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-emerald-900">Entrées</p>
+            <p class="text-3xl font-bold text-emerald-900 mt-2">
+              {{ stats.entries || 0 }}
+            </p>
+          </div>
+          <div class="p-3 rounded-lg bg-emerald-500">
+            <Icon name="heroicons:arrow-down-tray" class="h-6 w-6 text-white" />
+          </div>
         </div>
+      </div>
 
-        <!-- Formulaire d'enregistrement de mouvement - TOUS VOS CHAMPS CONSERVÉS -->
+      <!-- Carte Sorties -->
+      <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg p-6 border border-amber-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-amber-900">Sorties</p>
+            <p class="text-3xl font-bold text-amber-900 mt-2">
+              {{ stats.exits || 0 }}
+            </p>
+          </div>
+          <div class="p-3 rounded-lg bg-amber-500">
+            <Icon name="heroicons:arrow-up-tray" class="h-6 w-6 text-white" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Carte Ajustements -->
+      <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-6 border border-purple-200">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-purple-900">Ajustements</p>
+            <p class="text-3xl font-bold text-purple-900 mt-2">
+              {{ stats.adjustments || 0 }}
+            </p>
+          </div>
+          <div class="p-3 rounded-lg bg-purple-500">
+            <Icon name="heroicons:adjustments-horizontal" class="h-6 w-6 text-white" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sm:flex sm:items-center sm:justify-between mb-6">
+      <h1 class="text-xl font-bold text-gray-900">Gestion des Mouvements de Stock</h1>
+      <div class="mt-4 sm:mt-0">
+        <button
+          @click="refreshData"
+          :disabled="loading"
+          class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white px-4 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all"
+        >
+          <Icon name="heroicons:arrow-path" class="h-5 w-5 mr-2" />
+          {{ loading ? 'Chargement...' : 'Rafraîchir' }}
+        </button>
+      </div>
+    </div>
+
+      <div class="max-w-6xl mx-auto p-8 bg-white shadow-lg rounded-xl border border-gray-200">
+        
+        <!-- Formulaire d'enregistrement de mouvement -->
         <div class="mb-10 p-6 bg-gray-50 rounded-lg border border-gray-200">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Enregistrer un Nouveau Mouvement</h3>
-          <form @submit.prevent="addMovement">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-semibold text-gray-800">
+              <Icon name="heroicons:plus-circle" class="h-5 w-5 inline-block mr-2 text-blue-600" />
+              Enregistrer un Nouveau Mouvement
+            </h3>
+            <button
+              type="button"
+              @click="showMovementForm = !showMovementForm"
+              class="text-sm text-blue-600 hover:text-blue-800 flex items-center"
+            >
+              <span v-if="showMovementForm">
+                <Icon name="heroicons:chevron-up" class="h-4 w-4 mr-1" /> Réduire
+              </span>
+              <span v-else>
+                <Icon name="heroicons:chevron-down" class="h-4 w-4 mr-1" /> Afficher
+              </span>
+            </button>
+          </div>
+
+          <form @submit.prevent="addMovement" v-if="showMovementForm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div>
                 <label for="productSelect" class="block text-sm font-medium text-gray-700 mb-1">Produit</label>
                 <select
@@ -110,12 +169,15 @@
           </form>
         </div>
 
-        <!-- Historique des mouvements de stock - TOUTES LES COLONNES CONSERVÉES -->
-        <div class="p-6 bg-gray-50 rounded-lg border border-gray-200">
-          <h3 class="text-xl font-semibold text-gray-800 mb-4">Historique des Mouvements</h3>
+        <!-- Historique des mouvements de stock -->
+        <div class="p-6 bg-white rounded-lg border border-gray-200">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">
+            <Icon name="heroicons:clock" class="h-5 w-5 inline-block mr-2 text-blue-600" />
+            Historique des Mouvements
+          </h3>
 
           <!-- Filtres pour l'historique -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <select
               v-model="historyFilterProduct"
               class="shadow-sm appearance-none border border-gray-300 rounded-md w-full py-2 px-3 text-gray-800 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
@@ -142,15 +204,40 @@
             />
           </div>
 
-          <div class="overflow-x-auto rounded-lg shadow border border-gray-200">
-            <table class="min-w-full border border-gray-200 divide-y divide-gray-200">
-              <thead class="bg-sky-300">
+          <div class="overflow-x-auto rounded-lg border border-gray-200">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
                 <tr>
-                  <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-gray-200">Date</th>
-                  <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-gray-200">Produit</th>
-                  <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-gray-200">Type</th>
-                  <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-gray-200">Quantité</th>
-                  <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-gray-200">Raison</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <div class="flex items-center">
+                      <Icon name="heroicons:calendar" class="h-4 w-4 mr-1" />
+                      Date
+                    </div>
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <div class="flex items-center">
+                      <Icon name="heroicons:cube" class="h-4 w-4 mr-1" />
+                      Produit
+                    </div>
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <div class="flex items-center">
+                      <Icon name="heroicons:tag" class="h-4 w-4 mr-1" />
+                      Type
+                    </div>
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <div class="flex items-center">
+                      <Icon name="heroicons:cube-transparent" class="h-4 w-4 mr-1" />
+                      Quantité
+                    </div>
+                  </th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <div class="flex items-center">
+                      <Icon name="heroicons:document-text" class="h-4 w-4 mr-1" />
+                      Raison
+                    </div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -170,11 +257,14 @@
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900 border-b border-gray-200">
                     {{ getProductName(movement.product_id) }}
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 font-medium border-b border-gray-200">
-                    {{ getMovementTypeLabel(movement.movement_type) }}
+                  <td class="px-6 py-4 whitespace-nowrap text-sm">
+                    <span :class="getMovementTypeLabel(movement.movement_type).class">
+                      <Icon :name="getMovementTypeLabel(movement.movement_type).icon" class="h-3.5 w-3.5 mr-1" />
+                      {{ getMovementTypeLabel(movement.movement_type).text }}
+                    </span>
                   </td>
                   <td
-                    :class="[ 
+                    :class="[
                       'px-6 py-4 whitespace-nowrap text-sm font-semibold border-b border-gray-200',
                       movement.movement_type === 'entry' || movement.movement_type === 'adjustment_positive'
                         ? 'text-green-700'
@@ -206,12 +296,12 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import { useToast } from 'vue-toastification';
 
 definePageMeta({
   layout: 'default',
@@ -224,6 +314,8 @@ useHead({
 const availableProducts = ref([]);
 const stockMovements = ref([]);
 
+// État du formulaire
+const showMovementForm = ref(true);
 const newMovement = ref({
   product_id: '',
   movement_type: '',
@@ -231,7 +323,16 @@ const newMovement = ref({
   reason: '',
 });
 
+// Statistiques
+const stats = ref({
+  totalMovements: 0,
+  entries: 0,
+  exits: 0,
+  adjustments: 0
+});
+
 const formLoading = ref(false);
+const toast = useToast();
 const formMessage = ref('');
 const formMessageClass = ref('');
 
@@ -246,7 +347,21 @@ const movementTypeLabels = {
   adjustment_negative: 'Ajustement négatif',
 };
 
-const getMovementTypeLabel = (type) => movementTypeLabels[type] || type;
+const getMovementTypeLabel = (type) => {
+  const labels = {
+    'entry': { text: 'Entrée', icon: 'heroicons:arrow-down-tray', color: 'green' },
+    'exit': { text: 'Sortie', icon: 'heroicons:arrow-up-tray', color: 'red' },
+    'adjustment_positive': { text: 'Ajustement +', icon: 'heroicons:plus-circle', color: 'blue' },
+    'adjustment_negative': { text: 'Ajustement -', icon: 'heroicons:minus-circle', color: 'orange' }
+  };
+
+  const movement = labels[type] || { text: type, icon: 'heroicons:question-mark-circle', color: 'gray' };
+
+  return {
+    ...movement,
+    class: `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-${movement.color}-100 text-${movement.color}-800`
+  };
+};
 
 const getProductName = (productId) => {
   const product = availableProducts.value.find((p) => p.id === productId);
@@ -280,9 +395,22 @@ const fetchStockMovements = async () => {
   try {
     const response = await axios.get('/api/stock-movements');
     stockMovements.value = response.data.data || response.data;
+
+    // Mise à jour des statistiques
+    updateStats(stockMovements.value);
   } catch (error) {
     console.error('Erreur lors du chargement des mouvements :', error);
   }
+};
+
+// Mettre à jour les statistiques
+const updateStats = (movements) => {
+  stats.value = {
+    totalMovements: movements.length,
+    entries: movements.filter(m => m.movement_type === 'entry').length,
+    exits: movements.filter(m => m.movement_type === 'exit').length,
+    adjustments: movements.filter(m => m.movement_type.includes('adjustment')).length
+  };
 };
 
 const loading = ref(false);
@@ -313,16 +441,15 @@ const addMovement = async () => {
 
     await fetchStockMovements();
 
-    formMessage.value = 'Mouvement enregistré avec succès !';
-    formMessageClass.value = 'bg-green-100 text-green-800';
+    toast.success('Mouvement enregistré avec succès !');
 
     resetForm();
   } catch (error) {
     console.error('Erreur lors de l\'enregistrement du mouvement :', error);
     if (error.response?.status === 400 && error.response?.data?.error) {
-      formMessage.value = error.response.data.error; 
+      formMessage.value = error.response.data.error;
     } else {
-      formMessage.value = error.response?.data?.message || 'Erreur lors de l\'enregistrement du mouvement.';
+      toast.error(error.response?.data?.message || 'Erreur lors de l\'enregistrement du mouvement.');
     }
     formMessageClass.value = 'bg-red-100 text-red-800';
   } finally {
@@ -353,7 +480,7 @@ const filteredMovements = computed(() => {
   }
   if (historyFilterDate.value) {
     filtered = filtered.filter((m) =>
-      m.created_at.startsWith(historyFilterDate.value) 
+      m.created_at.startsWith(historyFilterDate.value)
     );
   }
 
@@ -387,32 +514,85 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-table {
-  border-collapse: separate;
-  border-spacing: 0;
+/* Styles pour les entêtes de tableau */
+th {
+  @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
 }
 
-.overflow-x-auto {
-  max-width: 100vw;
+/* Styles pour les cellules du tableau */
+td {
+  @apply px-6 py-4 whitespace-nowrap text-sm text-gray-700 border-b border-gray-200;
 }
 
-th, td {
-  border-right: 1px solid #e5e7eb;
+/* Style pour les lignes du tableau */
+tbody tr {
+  @apply hover:bg-gray-50 transition-colors duration-150;
 }
-th:last-child, td:last-child {
+
+/* Style pour les boutons d'action */
+.action-btn {
+  @apply p-1.5 rounded-md hover:bg-gray-100 transition-colors duration-200;
+}
+
+/* Style pour les badges de statut */
+.status-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+/* Style pour les champs de formulaire */
+input,
+select {
+  @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm;
+}
+
+/* Style pour les boutons */
+.btn {
+  @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2;
+}
+
+.btn-primary {
+  @apply bg-blue-600 hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.btn-secondary {
+  @apply bg-gray-600 hover:bg-gray-700 focus:ring-gray-500;
+}
+
+/* Animation de chargement */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Styles spécifiques pour le tableau */
+th:last-child,
+td:last-child {
   border-right: none;
 }
 
-thead tr th {
-  border-radius: 0.375rem 0.375rem 0 0;
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
 }
 
-tbody tr {
-  background-color: white;
-  transition: background-color 0.15s ease-in-out;
+.overflow-x-auto {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+thead tr th:first-child {
+  border-top-left-radius: 0.375rem;
+}
+
+thead tr th:last-child {
+  border-top-right-radius: 0.375rem;
 }
 
 tbody tr:hover {
-  background-color: #e0f2fe;
+  background-color: #f8fafc;
 }
 </style>

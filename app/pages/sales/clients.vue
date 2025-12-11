@@ -56,7 +56,7 @@
 				</div>
 
 				<!-- Boutons d'action -->
-				<button @click="openModalForCreate" class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 
+				<button @click="openModalForCreate" class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600
 				text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all">
 					<Icon name="heroicons:plus" class="h-5 w-5 mr-2" />
 					Nouveau client

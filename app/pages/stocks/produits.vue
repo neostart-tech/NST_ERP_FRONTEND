@@ -1,339 +1,970 @@
 <template>
+	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+		<!-- Cartes de statistiques -->
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+			<!-- Carte Total Produits -->
+			<div
+				class="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-6 border border-sky-200"
+			>
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-sky-900">Total Produits</p>
+						<p class="text-3xl font-bold text-sky-900 mt-2">
+							{{ stats.total || 0 }}
+						</p>
+					</div>
+					<div class="p-3 rounded-lg bg-sky-500">
+						<Icon name="heroicons:cube" class="h-6 w-6 text-white" />
+					</div>
+				</div>
+			</div>
 
-  <PageHeader
-    title="Gestion des Articles"
-    subtitle="Gérez votre inventaire et vos produits"
-    :stats="[
-      { label: 'Actifs', color: 'bg-green-400' },
-      { label: 'Inactifs', color: 'bg-red-400' }
-    ]"
-  >
-    <template #actions>
-      <button
-        @click="openProductForm()"
-        class="group px-6 py-3 bg-white text-sky-700 font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-3"
-      >
-        <div class="w-5 h-5 bg-sky-100 rounded-full flex items-center justify-center group-hover:bg-sky-200 transition-colors">
-          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-        </div>
-        Ajouter Produit
-      </button>
-    </template>
-  </PageHeader>
+			<!-- Carte Produits en Stock -->
+			<div
+				class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg p-6 border border-emerald-200"
+			>
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-emerald-900">En Stock</p>
+						<p class="text-3xl font-bold text-emerald-900 mt-2">
+							{{ stats.inStock || 0 }}
+						</p>
+					</div>
+					<div class="p-3 rounded-lg bg-emerald-500">
+						<Icon name="heroicons:check-circle" class="h-6 w-6 text-white" />
+					</div>
+				</div>
+			</div>
 
-  <!-- Section Produits -->
-  <Card title="Liste des Produits">
-    <template #headerActions>
-      <div class="flex space-x-3">
-        <select
-          v-model="filterStatus"
-          class="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm"
-        >
-          <option value="">Tous statuts</option>
-          <option value="active">Actif</option>
-          <option value="inactive">Inactif</option>
-        </select>
-      </div>
-    </template>
+			<!-- Carte Stock Faible -->
+			<div
+				class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg p-6 border border-amber-200"
+			>
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-amber-900">Stock Faible</p>
+						<p class="text-3xl font-bold text-amber-900 mt-2">
+							{{ stats.lowStock || 0 }}
+						</p>
+					</div>
+					<div class="p-3 rounded-lg bg-amber-500">
+						<Icon
+							name="heroicons:exclamation-triangle"
+							class="h-6 w-6 text-white"
+						/>
+					</div>
+				</div>
+			</div>
 
-    <!-- Tableau des produits -->
-    <div class="overflow-x-auto rounded-lg shadow border border-sky-400">
-      <table class="min-w-full border border-sky-400 divide-y divide-sky-400">
-        <thead class="bg-sky-300">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-sky-400">Nom</th>
-            <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-sky-400">Référence</th>
-            <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-sky-400">Prix Achat</th>
-            <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-sky-400">Prix Vente</th>
-            <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-sky-400">Stock</th>
-            <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-sky-400">Prix Min</th>
-            <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-sky-400">Prix Max</th>
-            <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-sky-400">Statut</th>
-            <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-sky-900 border-b border-sky-400">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="productsLoading">
-            <td colspan="9" class="px-6 py-4 text-center border-b border-sky-400">
-              <div class="animate-pulse flex justify-center">
-                <div class="h-4 w-4 bg-blue-500 rounded-full mx-1"></div>
-                <div class="h-4 w-4 bg-blue-500 rounded-full mx-1"></div>
-                <div class="h-4 w-4 bg-blue-500 rounded-full mx-1"></div>
-              </div>
-            </td>
-          </tr>
-          <tr v-else-if="filteredProducts.length === 0">
-            <td colspan="9" class="px-6 py-4 text-center text-gray-500 border-b border-sky-400">
-              Aucun produit trouvé
-            </td>
-          </tr>
-          <tr v-for="product in filteredProducts" :key="product.id" class="bg-white hover:bg-sky-100 transition-colors duration-150 border-b border-sky-400">
-            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900 border-b border-sky-400">{{ product.name }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-gray-500 border-b border-sky-400">{{ product.reference }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-gray-500 border-b border-sky-400">{{ formatPrice(product.unit_price_purchase) }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-gray-500 border-b border-sky-400">{{ formatPrice(product.unit_price_sale) }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-gray-500 border-b border-sky-400">
-              {{ product.current_stock }}
-              <span v-if="product.min_stock_alert && product.current_stock <= product.min_stock_alert" class="ml-1 text-red-500">⚠</span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-gray-500 border-b border-sky-400">{{ formatPrice(product.min_sale_price_company) }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-gray-500 border-b border-sky-400">{{ formatPrice(product.max_sale_price_company) }}</td>
-            <td class="px-6 py-4 whitespace-nowrap border-b border-sky-400">
-              <span :class="product.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
-                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                {{ product.is_active ? 'Actif' : 'Inactif' }}
-              </span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap flex gap-2 border-b border-sky-400">
-              <button
-                @click="openProductForm(product.id)"
-                class="text-blue-600 hover:text-blue-800 cursor-pointer p-2 rounded transition action-btn"
-                title="Modifier"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l6.536-6.536a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-2.828 0L9 13zm0 0v2a2 2 0 002 2h2"/>
-                </svg>
-              </button>
-              <button
-                @click="confirmDelete(product.id)"
-                class="text-red-600 hover:text-red-800 cursor-pointer p-2 rounded transition action-btn"
-                title="Supprimer"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </Card>
+			<!-- Carte Produits Inactifs -->
+			<div
+				class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-6 border border-red-200"
+			>
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-red-900">Produits Inactifs</p>
+						<p class="text-3xl font-bold text-red-900 mt-2">
+							{{ stats.inactive || 0 }}
+						</p>
+					</div>
+					<div class="p-3 rounded-lg bg-red-500">
+						<Icon
+							name="heroicons:archive-box-x-mark"
+							class="h-6 w-6 text-white"
+						/>
+					</div>
+				</div>
+			</div>
+		</div>
 
-  <!-- Modale de formulaire produit -->
-  <div v-if="showProductFormModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-    <div class="bg-white rounded-lg shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-      <div class="p-6">
-        <h3 class="text-lg font-bold mb-4">{{ editingProductId ? 'Modifier' : 'Ajouter' }} un produit</h3>
+		<div class="sm:flex sm:items-center sm:justify-between mb-6">
+			<h1 class="text-xl font-bold text-gray-900">Liste des articles</h1>
+			<div class="mt-4 sm:mt-0 sm:ml-4 flex flex-col sm:flex-row gap-3">
+				<!-- Champ de recherche -->
+				<div class="relative flex-1 max-w-xs">
+					<div
+						class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+					>
+						<Icon
+							name="heroicons:magnifying-glass"
+							class="h-5 w-5 text-gray-400"
+						/>
+					</div>
+					<input
+						v-model="searchQuery"
+						type="text"
+						placeholder="Rechercher..."
+						class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400"
+					/>
+				</div>
+				<div class="relative flex-1 max-w-xs w-full md:w-auto">
+					<select
+						v-model="filterStatus"
+						class="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm"
+					>
+						<option value="">Tous les statuts</option>
+						<option value="active">Actifs</option>
+						<option value="inactive">Inactifs</option>
+					</select>
+				</div>
 
-        <form @submit.prevent="submitProductForm">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Colonne 1 -->
-            <div class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Nom du produit*</label>
-                <input v-model="currentProduct.name" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Référence*</label>
-                <input v-model="currentProduct.reference" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea v-model="currentProduct.description" rows="3" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"></textarea>
-              </div>
-              <div class="flex items-center">
-                <input type="checkbox" v-model="currentProduct.is_active" id="is_active" class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                <label for="is_active" class="ml-2 block text-sm text-gray-700">Produit actif</label>
-              </div>
-            </div>
+				<!-- Boutons d'action -->
+				<button
+					@click="openProductForm()"
+					class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all"
+				>
+					<Icon name="heroicons:plus" class="h-5 w-5 mr-2" />
+					Nouvel Article
+				</button>
+			</div>
+		</div>
 
-            <!-- Colonne 2 -->
-            <div class="space-y-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Prix d'achat (FCFA)*</label>
-                <input type="number" v-model.number="currentProduct.unit_price_purchase" min="0" step="0.01" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Prix de vente (FCFA)*</label>
-                <input type="number" v-model.number="currentProduct.unit_price_sale" min="0" step="0.01" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                <p v-if="currentProduct.unit_price_sale && currentProduct.unit_price_purchase && currentProduct.unit_price_sale < currentProduct.unit_price_purchase" class="text-red-600 text-sm mt-1">
-                  ⚠ Le prix de vente doit être supérieur ou égal au prix d'achat.
-                </p>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Stock actuel*</label>
-                <input type="number" v-model.number="currentProduct.current_stock" min="0" required class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Seuil d'alerte stock</label>
-                <input type="number" v-model.number="currentProduct.min_stock_alert" min="0" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Prix min entreprise (FCFA)</label>
-                <input type="number" v-model.number="currentProduct.min_sale_price_company" min="0" step="0.01" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Prix max entreprise (FCFA)</label>
-                <input type="number" v-model.number="currentProduct.max_sale_price_company" min="0" step="0.01" class="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500">
-                <p v-if="currentProduct.min_sale_price_company && currentProduct.max_sale_price_company && currentProduct.min_sale_price_company > currentProduct.max_sale_price_company" class="text-red-600 text-sm mt-1">
-                  ⚠ Le prix minimum ne doit pas dépasser le prix maximum.
-                </p>
-              </div>
-            </div>
-          </div>
+		<!-- Tableau des produits -->
+		<div class="overflow-x-auto rounded-lg border border-gray-200">
+			<table class="min-w-full divide-y divide-gray-200">
+				<thead class="bg-gray-50">
+					<tr>
+						<th
+							scope="col"
+							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+						>
+							Produit
+						</th>
+						<th
+							scope="col"
+							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+						>
+							Référence
+						</th>
+						<th
+							scope="col"
+							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+						>
+							Prix Achat
+						</th>
+						<th
+							scope="col"
+							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+						>
+							Prix Vente
+						</th>
+						<th
+							scope="col"
+							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+						>
+							Stock
+						</th>
+						<th
+							scope="col"
+							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+						>
+							Statut
+						</th>
+						<th
+							scope="col"
+							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
+						>
+							Actions
+						</th>
+					</tr>
+				</thead>
+				<tbody class="bg-white divide-y divide-gray-200">
+					<!-- État de chargement -->
+					<tr v-if="productsLoading">
+						<td colspan="7" class="px-6 py-8 text-center">
+							<div class="flex justify-center items-center space-x-2">
+								<div
+									class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
+								></div>
+								<span class="text-gray-600">Chargement des produits...</span>
+							</div>
+						</td>
+					</tr>
 
-          <div class="flex justify-end space-x-3 mt-6">
-            <button type="button" @click="showProductFormModal = false" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
-              Annuler
-            </button>
-            <button type="submit" :disabled="formLoading" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50">
-              {{ formLoading ? 'Enregistrement...' : 'Enregistrer' }}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
+					<!-- Aucun résultat -->
+					<tr v-else-if="!filteredProducts.length">
+						<td colspan="7" class="px-6 py-8 text-center text-gray-500">
+							<div class="flex flex-col items-center justify-center">
+								<Icon
+									name="heroicons:inbox"
+									class="h-12 w-12 text-gray-300 mb-2"
+								/>
+								<p class="text-sm">Aucun produit trouvé</p>
+								<p class="text-xs text-gray-400 mt-1">
+									Essayez de modifier vos filtres de recherche
+								</p>
+							</div>
+						</td>
+					</tr>
+
+					<!-- Liste des produits -->
+					<tr
+						v-for="product in filteredProducts"
+						:key="product.id"
+						class="hover:bg-gray-50 transition-colors"
+					>
+						<td class="px-6 py-4 whitespace-nowrap">
+							<div class="flex items-center">
+								<div
+									class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center"
+								>
+									<Icon name="heroicons:cube" class="h-5 w-5 text-blue-600" />
+								</div>
+								<div class="ml-4">
+									<div class="text-sm font-medium text-gray-900">
+										{{ product.name }}
+									</div>
+									<div class="text-xs text-gray-500">
+										{{ product.category?.name || "Sans catégorie" }}
+									</div>
+								</div>
+							</div>
+						</td>
+						<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+							{{ product.reference || "N/A" }}
+						</td>
+						<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+							{{ formatPrice(product.unit_price_purchase) }}
+						</td>
+						<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+							<span
+								:class="{
+									'text-green-600':
+										product.unit_price_sale > product.unit_price_purchase,
+									'text-red-600':
+										product.unit_price_sale <= product.unit_price_purchase,
+								}"
+							>
+								{{ formatPrice(product.unit_price_sale) }}
+							</span>
+						</td>
+						<td class="px-6 py-4 whitespace-nowrap">
+							<div class="flex items-center">
+								<div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
+									<div
+										class="h-full"
+										:class="{
+											'bg-green-500': product.quantity > 10,
+											'bg-yellow-500':
+												product.quantity > 0 && product.quantity <= 10,
+											'bg-red-500': product.quantity === 0,
+										}"
+										:style="{
+											width: `${Math.min(
+												100,
+												(product.quantity / (product.quantity + 10)) * 100
+											)}%`,
+										}"
+									></div>
+								</div>
+								<span class="ml-2 text-sm font-medium text-gray-700">
+									{{ product.quantity }} {{ product.unit || "unité"
+									}}{{ product.quantity !== 1 ? "s" : "" }}
+								</span>
+							</div>
+						</td>
+						<td class="px-6 py-4 whitespace-nowrap">
+							<span
+								@click="toggleProductStatus(product)"
+								class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium cursor-pointer"
+								:class="
+									product.status === 'active'
+										? 'bg-green-100 text-green-800 hover:bg-green-200'
+										: 'bg-red-100 text-red-800 hover:bg-red-200'
+								"
+							>
+								{{ product.status === "active" ? "Actif" : "Inactif" }}
+							</span>
+						</td>
+						<td
+							class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+						>
+							<div class="flex justify-end space-x-2">
+								<button
+									@click="openProductForm(product.id)"
+									class="text-blue-600 hover:text-blue-900"
+									title="Modifier"
+								>
+									<Icon name="heroicons:pencil-square" class="h-5 w-5" />
+								</button>
+								<button
+									@click="confirmDelete(product)"
+									class="text-red-600 hover:text-red-900"
+									title="Supprimer"
+								>
+									<Icon name="heroicons:trash" class="h-5 w-5" />
+								</button>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<!-- Pagination -->
+		<div class="mt-4 flex items-center justify-between">
+			<div class="text-sm text-gray-500">
+				Affichage de
+				<span class="font-medium">{{ (currentPage - 1) * perPage + 1 }}</span> à
+				<span class="font-medium">{{
+					Math.min(currentPage * perPage, filteredProducts.length)
+				}}</span>
+				sur
+				<span class="font-medium">{{ filteredProducts.length }}</span> résultats
+			</div>
+			<div class="flex space-x-2">
+				<button
+					@click="currentPage--"
+					:disabled="currentPage === 1"
+					class="px-3 py-1 border rounded-md text-sm font-medium disabled:opacity-50"
+				>
+					Précédent
+				</button>
+				<button
+					@click="currentPage++"
+					:disabled="currentPage * perPage >= filteredProducts.length"
+					class="px-3 py-1 border rounded-md text-sm font-medium disabled:opacity-50"
+				>
+					Suivant
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modale de confirmation de suppression -->
+	<div v-if="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto">
+		<div class="flex min-h-full items-center justify-center p-4 text-center">
+			<div
+				class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+				@click="showDeleteModal = false"
+			></div>
+
+			<div
+				class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+			>
+				<div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+					<div class="sm:flex sm:items-start">
+						<div
+							class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
+						>
+							<Icon
+								name="heroicons:exclamation-triangle"
+								class="h-6 w-6 text-red-600"
+							/>
+						</div>
+						<div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+							<h3 class="text-base font-semibold leading-6 text-gray-900">
+								Supprimer le produit
+							</h3>
+							<div class="mt-2">
+								<p class="text-sm text-gray-500">
+									Êtes-vous sûr de vouloir supprimer "{{
+										productToDelete?.name
+									}}" ? Cette action est irréversible.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+					<button
+						type="button"
+						class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+						:disabled="deleteLoading"
+						@click="deleteProduct"
+					>
+						<span v-if="deleteLoading" class="flex items-center">
+							<Icon
+								name="heroicons:arrow-path"
+								class="animate-spin h-4 w-4 mr-2"
+							/>
+							Suppression...
+						</span>
+						<span v-else>Supprimer</span>
+					</button>
+					<button
+						type="button"
+						class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+						:disabled="deleteLoading"
+						@click="showDeleteModal = false"
+					>
+						Annuler
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modale de formulaire produit -->
+	<div
+		v-if="showProductFormModal"
+		class="fixed inset-0 z-50 overflow-y-auto"
+		aria-labelledby="modal-title"
+		role="dialog"
+		aria-modal="true"
+	>
+		<div
+			class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+		>
+			<div
+				class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+				@click="showProductFormModal = false"
+			></div>
+
+			<div
+				class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6"
+			>
+				<div class="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
+					<button
+						type="button"
+						class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
+						@click="showProductFormModal = false"
+					>
+						<span class="sr-only">Fermer</span>
+						<Icon name="heroicons:x-mark" class="h-6 w-6" />
+					</button>
+				</div>
+
+				<div class="sm:flex sm:items-start">
+					<div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+						<h3
+							class="text-base font-semibold leading-6 text-gray-900"
+							id="modal-title"
+						>
+							{{
+								editingProductId
+									? "Modifier le produit"
+									: "Ajouter un nouveau produit"
+							}}
+						</h3>
+
+						<div class="mt-6">
+							<!-- Formulaire de produit -->
+							<form @submit.prevent="submitProductForm" class="space-y-6">
+								<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+									<!-- Colonne gauche -->
+									<div class="space-y-4">
+										<!-- Nom du produit -->
+										<div>
+											<label
+												for="name"
+												class="block text-sm font-medium text-gray-700"
+												>Nom du produit</label
+											>
+											<input
+												type="text"
+												id="name"
+												v-model="currentProduct.name"
+												required
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+											/>
+										</div>
+
+										<!-- Référence -->
+										<div>
+											<label
+												for="reference"
+												class="block text-sm font-medium text-gray-700"
+												>Référence</label
+											>
+											<input
+												type="text"
+												id="reference"
+												v-model="currentProduct.reference"
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+											/>
+										</div>
+
+										<!-- Catégorie -->
+										<div>
+											<label
+												for="category"
+												class="block text-sm font-medium text-gray-700"
+												>Catégorie</label
+											>
+											<select
+												id="category"
+												v-model="currentProduct.category_id"
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+											>
+												<option value="">Sélectionner une catégorie</option>
+												<option
+													v-for="category in categories"
+													:key="category.id"
+													:value="category.id"
+												>
+													{{ category.name }}
+												</option>
+											</select>
+										</div>
+
+										<!-- Description -->
+										<div>
+											<label
+												for="description"
+												class="block text-sm font-medium text-gray-700"
+												>Description</label
+											>
+											<textarea
+												id="description"
+												v-model="currentProduct.description"
+												rows="3"
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+											></textarea>
+										</div>
+									</div>
+
+									<!-- Colonne droite -->
+									<div class="space-y-4">
+										<!-- Prix d'achat -->
+										<div>
+											<label
+												for="purchase_price"
+												class="block text-sm font-medium text-gray-700"
+												>Prix d'achat (FCFA)</label
+											>
+											<input
+												type="number"
+												id="purchase_price"
+												v-model.number="currentProduct.unit_price_purchase"
+												min="0"
+												step="0.01"
+												required
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+											/>
+										</div>
+
+										<!-- Prix de vente -->
+										<div>
+											<label
+												for="sale_price"
+												class="block text-sm font-medium text-gray-700"
+												>Prix de vente (FCFA)</label
+											>
+											<input
+												type="number"
+												id="sale_price"
+												v-model.number="currentProduct.unit_price_sale"
+												min="0"
+												step="0.01"
+												required
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+											/>
+										</div>
+
+										<!-- Quantité en stock -->
+										<div>
+											<label
+												for="quantity"
+												class="block text-sm font-medium text-gray-700"
+												>Quantité en stock</label
+											>
+											<input
+												type="number"
+												id="quantity"
+												v-model.number="currentProduct.quantity"
+												min="0"
+												required
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+											/>
+										</div>
+
+										<!-- Unité de mesure -->
+										<div>
+											<label
+												for="unit"
+												class="block text-sm font-medium text-gray-700"
+												>Unité de mesure</label
+											>
+											<input
+												type="text"
+												id="unit"
+												v-model="currentProduct.unit"
+												placeholder="Ex: pièce, kg, L, etc."
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+											/>
+										</div>
+
+										<!-- Statut -->
+										<div>
+											<label class="block text-sm font-medium text-gray-700"
+												>Statut</label
+											>
+											<div class="mt-2 space-x-4">
+												<label class="inline-flex items-center">
+													<input
+														type="radio"
+														v-model="currentProduct.status"
+														value="active"
+														class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+													/>
+													<span class="ml-2 text-sm text-gray-700">Actif</span>
+												</label>
+												<label class="inline-flex items-center">
+													<input
+														type="radio"
+														v-model="currentProduct.status"
+														value="inactive"
+														class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+													/>
+													<span class="ml-2 text-sm text-gray-700"
+														>Inactif</span
+													>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="mt-6 flex justify-end space-x-3">
+									<button
+										type="button"
+										@click="showProductFormModal = false"
+										class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+									>
+										Annuler
+									</button>
+									<button
+										type="submit"
+										:disabled="formLoading"
+										class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
+									>
+										<span v-if="formLoading" class="flex items-center">
+											<Icon
+												name="heroicons:arrow-path"
+												class="animate-spin h-4 w-4 mr-2"
+											/>
+											Enregistrement...
+										</span>
+										<span v-else>Enregistrer</span>
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useRuntimeConfig } from '#app';
-import Card from '~/app/components/ui/Card.vue';
-import PageHeader from '~/app/components/ui/PageHeader.vue';
+import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const config = useRuntimeConfig();
-const apiBase = config.public.apiBase || '/api';
+const apiBase = config.public.apiBase || "/api";
 
+// États
 const products = ref([]);
-const productsLoading = ref(true);
-const filterStatus = ref('');
-const showProductFormModal = ref(false);
-const editingProductId = ref(null);
-const currentProduct = ref(getDefaultProduct());
+const categories = ref([]);
+const productsLoading = ref(false);
 const formLoading = ref(false);
+const deleteLoading = ref(false);
+const showProductFormModal = ref(false);
+const showDeleteModal = ref(false);
+const editingProductId = ref(null);
+const productToDelete = ref(null);
+const searchQuery = ref("");
+const filterStatus = ref("");
+const currentPage = ref(1);
+const perPage = 10;
 
-const filteredProducts = computed(() => {
-  let results = products.value;
-  if (filterStatus.value) {
-    results = results.filter(p =>
-      filterStatus.value === 'active' ? p.is_active : !p.is_active
-    );
-  }
-  return results;
+// Données du produit courant
+const currentProduct = ref({
+	name: "",
+	reference: "",
+	description: "",
+	category_id: "",
+	unit_price_purchase: 0,
+	unit_price_sale: 0,
+	quantity: 0,
+	unit: "unité",
+	status: "active",
 });
 
-function getDefaultProduct() {
-  return {
-    name: '',
-    reference: '',
-    description: '',
-    unit_price_purchase: 0,
-    unit_price_sale: 0,
-    current_stock: 0,
-    min_stock_alert: 0,
-    min_sale_price_company: null,
-    max_sale_price_company: null,
-    is_active: true
-  };
-}
+// Statistiques
+const stats = computed(() => {
+	const total = products.value.length;
+	const inStock = products.value.filter((p) => p.quantity > 0).length;
+	const lowStock = products.value.filter(
+		(p) => p.quantity > 0 && p.quantity <= 10
+	).length;
+	const inactive = products.value.filter((p) => p.status === "inactive").length;
 
-function formatPrice(price) {
-  if (price === null || price === undefined) return 'N/A';
-  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(price);
-}
+	return { total, inStock, lowStock, inactive };
+});
 
+// Produits filtrés
+const filteredProducts = computed(() => {
+	let results = [...products.value];
+
+	// Filtre par recherche
+	if (searchQuery.value) {
+		const search = searchQuery.value.toLowerCase();
+		results = results.filter(
+			(p) =>
+				p.name.toLowerCase().includes(search) ||
+				(p.reference && p.reference.toLowerCase().includes(search)) ||
+				(p.description && p.description.toLowerCase().includes(search))
+		);
+	}
+
+	// Filtre par statut
+	if (filterStatus.value) {
+		results = results.filter((p) => p.status === filterStatus.value);
+	}
+
+	return results;
+});
+
+// Pagination
+const paginatedProducts = computed(() => {
+	const start = (currentPage.value - 1) * perPage;
+	const end = start + perPage;
+	return filteredProducts.value.slice(start, end);
+});
+
+// Formater le prix
+const formatPrice = (price) => {
+	if (price === null || price === undefined) return "N/A";
+	return new Intl.NumberFormat("fr-FR", {
+		style: "currency",
+		currency: "XOF",
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 0,
+	}).format(price);
+};
+
+// Charger les produits
 const fetchProducts = async () => {
-  try {
-    productsLoading.value = true;
-    const data = await $fetch(`${apiBase}/products`);
-    products.value = data || [];
-  } catch (error) {
-    console.error("Erreur chargement produits:", error);
-  } finally {
-    productsLoading.value = false;
-  }
+	try {
+		productsLoading.value = true;
+		const response = await $fetch(`${apiBase}/products`);
+		products.value = response.data || [];
+	} catch (error) {
+		console.error("Erreur lors du chargement des produits:", error);
+		toast.error("Erreur lors du chargement des produits");
+	} finally {
+		productsLoading.value = false;
+	}
 };
 
-const openProductForm = (id = null) => {
-  editingProductId.value = id;
-  currentProduct.value = id
-    ? { ...products.value.find(p => p.id === id) }
-    : getDefaultProduct();
-  showProductFormModal.value = true;
+// Charger les catégories
+const fetchCategories = async () => {
+	try {
+		const response = await $fetch(`${apiBase}/categories`);
+		categories.value = response.data || [];
+	} catch (error) {
+		console.error("Erreur lors du chargement des catégories:", error);
+	}
 };
 
+// Ouvrir le formulaire
+const openProductForm = async (id = null) => {
+	editingProductId.value = id;
+
+	if (id) {
+		// Charger le produit existant
+		try {
+			const response = await $fetch(`${apiBase}/products/${id}`);
+			currentProduct.value = { ...response.data };
+		} catch (error) {
+			console.error("Erreur lors du chargement du produit:", error);
+			toast.error("Erreur lors du chargement du produit");
+			return;
+		}
+	} else {
+		// Réinitialiser pour un nouveau produit
+		currentProduct.value = {
+			name: "",
+			reference: "",
+			description: "",
+			category_id: "",
+			unit_price_purchase: 0,
+			unit_price_sale: 0,
+			quantity: 0,
+			unit: "unité",
+			status: "active",
+		};
+	}
+
+	showProductFormModal.value = true;
+};
+
+// Soumettre le formulaire
 const submitProductForm = async () => {
-  // ✅ Vérifications avant soumission
-  if (
-    currentProduct.value.min_sale_price_company &&
-    currentProduct.value.max_sale_price_company &&
-    currentProduct.value.min_sale_price_company > currentProduct.value.max_sale_price_company
-  ) {
-    alert("❌ Le prix minimum ne doit pas dépasser le prix maximum.");
-    return;
-  }
+	// Validation
+	if (!currentProduct.value.name) {
+		toast.error("Le nom du produit est requis");
+		return;
+	}
 
-  if (
-    currentProduct.value.unit_price_sale &&
-    currentProduct.value.unit_price_purchase &&
-    currentProduct.value.unit_price_sale < currentProduct.value.unit_price_purchase
-  ) {
-    alert("❌ Le prix de vente doit être supérieur ou égal au prix d'achat.");
-    return;
-  }
+	if (
+		currentProduct.value.unit_price_sale <
+		currentProduct.value.unit_price_purchase
+	) {
+		toast.error("Le prix de vente ne peut pas être inférieur au prix d'achat");
+		return;
+	}
 
-  formLoading.value = true;
-  try {
-    const url = editingProductId.value
-      ? `${apiBase}/products/${editingProductId.value}`
-      : `${apiBase}/products`;
-    const method = editingProductId.value ? 'PUT' : 'POST';
+	formLoading.value = true;
 
-    await $fetch(url, {
-      method,
-      body: currentProduct.value
-    });
+	try {
+		if (editingProductId.value) {
+			// Mise à jour
+			await $fetch(`${apiBase}/products/${editingProductId.value}`, {
+				method: "PUT",
+				body: currentProduct.value,
+			});
+			toast.success("Produit mis à jour avec succès");
+		} else {
+			// Création
+			await $fetch(`${apiBase}/products`, {
+				method: "POST",
+				body: currentProduct.value,
+			});
+			toast.success("Produit créé avec succès");
+		}
 
-    await fetchProducts();
-    showProductFormModal.value = false;
-  } catch (error) {
-    console.error("Erreur soumission formulaire:", error);
-    alert("Erreur lors de l'enregistrement du produit.");
-  } finally {
-    formLoading.value = false;
-  }
+		// Recharger les données
+		await fetchProducts();
+		showProductFormModal.value = false;
+	} catch (error) {
+		console.error("Erreur lors de l'enregistrement du produit:", error);
+		toast.error(
+			error.response?._data?.message ||
+				"Erreur lors de l'enregistrement du produit"
+		);
+	} finally {
+		formLoading.value = false;
+	}
 };
 
-const confirmDelete = async (id) => {
-  const confirmation = window.confirm("⚠️ Voulez-vous vraiment supprimer ce produit ? Cette action est irréversible.");
-  if (!confirmation) return;
-
-  try {
-    await $fetch(`${apiBase}/products/${id}`, { method: 'DELETE' });
-    alert("✅ Produit supprimé avec succès.");
-    await fetchProducts();
-  } catch (error) {
-    console.error("Erreur suppression:", error);
-    alert("❌ Impossible de supprimer ce produit. Il pourrait être lié à d'autres données.");
-  }
+// Confirmer la suppression
+const confirmDelete = (product) => {
+	productToDelete.value = product;
+	showDeleteModal.value = true;
 };
 
-onMounted(fetchProducts);
+// Supprimer un produit
+const deleteProduct = async () => {
+	if (!productToDelete.value) return;
+
+	deleteLoading.value = true;
+
+	try {
+		await $fetch(`${apiBase}/products/${productToDelete.value.id}`, {
+			method: "DELETE",
+		});
+
+		toast.success("Produit supprimé avec succès");
+		await fetchProducts();
+		showDeleteModal.value = false;
+	} catch (error) {
+		console.error("Erreur lors de la suppression du produit:", error);
+		toast.error("Erreur lors de la suppression du produit");
+	} finally {
+		deleteLoading.value = false;
+		productToDelete.value = null;
+	}
+};
+
+// Changer le statut d'un produit
+const toggleProductStatus = async (product) => {
+	try {
+		const newStatus = product.status === "active" ? "inactive" : "active";
+		await $fetch(`${apiBase}/products/${product.id}`, {
+			method: "PATCH",
+			body: { status: newStatus },
+		});
+
+		// Mettre à jour localement
+		const index = products.value.findIndex((p) => p.id === product.id);
+		if (index !== -1) {
+			products.value[index].status = newStatus;
+		}
+
+		toast.success(
+			`Statut du produit mis à jour: ${
+				newStatus === "active" ? "Actif" : "Inactif"
+			}`
+		);
+	} catch (error) {
+		console.error("Erreur lors du changement de statut:", error);
+		toast.error("Erreur lors du changement de statut du produit");
+	}
+};
+
+// Gestion des événements clavier
+const handleKeyDown = (e) => {
+	if (e.key === "Escape") {
+		if (showProductFormModal.value) showProductFormModal.value = false;
+		if (showDeleteModal.value) showDeleteModal.value = false;
+	}
+};
+
+// Initialisation
+onMounted(async () => {
+	await Promise.all([fetchProducts(), fetchCategories()]);
+	window.addEventListener("keydown", handleKeyDown);
+});
+
+// Nettoyage
+onUnmounted(() => {
+	window.removeEventListener("keydown", handleKeyDown);
+});
 </script>
 
 <style scoped>
-.action-btn {
-  position: relative;
-  z-index: 10;
+/* Styles pour les animations */
+.animate-spin {
+	animation: spin 1s linear infinite;
 }
 
-table {
-  border-collapse: separate;
-  border-spacing: 0;
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
 }
 
-.overflow-x-auto {
-  max-width: 100vw;
+/* Styles pour les transitions de modales */
+.modal-enter-active,
+.modal-leave-active {
+	transition: opacity 0.3s ease;
 }
 
-th, td {
-  border-right: 1px solid #0ea5e9; /* sky-400 */
+.modal-enter-from,
+.modal-leave-to {
+	opacity: 0;
 }
-th:last-child, td:last-child {
-  border-right: none;
+
+/* Amélioration de l'accessibilité */
+[role="button"] {
+	cursor: pointer;
+}
+
+/* Style pour les lignes du tableau */
+tr {
+	transition: background-color 0.2s ease;
+}
+
+/* Style pour les boutons d'action */
+.action-button {
+	@apply p-1.5 rounded-md hover:bg-gray-100 transition-colors;
+}
+
+/* Style pour les champs de formulaire */
+.form-input {
+	@apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm;
+}
+
+/* Style pour les messages d'erreur */
+.error-message {
+	@apply mt-1 text-sm text-red-600;
 }
 </style>
