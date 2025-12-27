@@ -23,6 +23,17 @@ export const useProductStore = defineStore("ProductStore", {
 			}
 		},
 
+		async delete(id: string) {
+			try {
+				await useApi().del(ApiUrl.parameterized(ApiUrl.PRODUCT_BY_ID, id));
+				this.products = this.products.filter(_ => _.id !== id);
+				await this.fetchAll();
+			} catch (error) {
+				console.error("Erreur lors de la suppression du produit:", error);
+				throw error;
+			}
+		},
+
 		cleanStorage() {
 			this.products = [];
 			this.validationErrors = {};

@@ -11,6 +11,7 @@
 				<slot name="text">
 					<h3 class="empty-state-title">{{ title }}</h3>
 					<p v-if="description" class="empty-state-description">{{ description }}</p>
+					<p v-if="showTip" class="empty-state-tip">{{ tip }}</p>
 					<p v-if="searchQuery" class="empty-state-description text-sm">
 						Aucun résultat trouve pour <strong>"{{ searchQuery }}"</strong>
 					</p>
@@ -46,6 +47,14 @@ const props = defineProps({
 	description: {
 		type: String,
 		default: ''
+	},
+	showTip: {
+		type: Boolean,
+		default: true
+	},
+	tip: {
+		type: String,
+		default: 'Essayez de modifier vos filtres de recherche ou ajoutez un nouveau produit.'
 	},
 	icon: {
 		type: String,
@@ -104,6 +113,10 @@ const handleReload = () => {
 
 .empty-state-description {
 	@apply text-sm text-gray-500;
+}
+
+.empty-state-tip {
+	@apply text-sm text-gray-500 italic mt-2;
 }
 
 .empty-state-actions {
