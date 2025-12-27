@@ -4,7 +4,8 @@
 		<!-- Statistiques -->
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 			<!-- Carte Total Clients -->
-			<div class="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-6 border border-sky-200 md:col-span-2 lg:col-span-1">
+			<div
+				class="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-6 border border-sky-200 md:col-span-2 lg:col-span-1">
 				<div class="flex items-center justify-between">
 					<div>
 						<p class="text-sm font-medium text-sky-900">Total Clients</p>
@@ -64,16 +65,9 @@
 			</div>
 		</div>
 
-		<ClientsList
-			:paginatedClients="paginatedClients"
-			:isLoading="isLoading"
-			:searchQuery="searchQuery"
-			:noDataDescription="noDataDescription"
-			@edit="editClient"
-			@view="viewClient"
-			@delete="deleteClient"
-			@reload="fetchClients"
-		/>
+		<ClientsList :paginatedClients="paginatedClients" :isLoading="isLoading" :searchQuery="searchQuery"
+			:noDataDescription="noDataDescription" @edit="editClient" @view="viewClient" @delete="deleteClient"
+			@reload="fetchClients" />
 
 		<Paginator :totalItems="filteredClients.length" @range-changed="onRangeChanged" />
 
@@ -107,14 +101,16 @@
 								<div class="md:flex md:items-center md:justify-between">
 									<div class="md:w-1/2">
 										<div class="flex items-center">
-											<input id="type-physique" type="radio" name="client_type" value="Physique" v-model="newClient.client_type"
+											<input id="type-physique" type="radio" name="client_type" value="Physique"
+												v-model="newClient.client_type"
 												class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500" />
 											<label for="type-physique" class="ml-2 text-sm text-gray-700 cursor-pointer">Particulier</label>
 										</div>
 									</div>
 									<div class="md:w-1/2">
 										<div class="flex items-center">
-											<input id="type-moral" type="radio" name="client_type" value="Moral" v-model="newClient.client_type"
+											<input id="type-moral" type="radio" name="client_type" value="Moral"
+												v-model="newClient.client_type"
 												class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500" />
 											<label for="type-moral" class="ml-2 text-sm text-gray-700 cursor-pointer">Entreprise</label>
 										</div>
@@ -185,9 +181,11 @@
 
 							<!-- Pied de page du modal -->
 							<div class="mt-4 sm:flex sm:flex-row-reverse">
-								<button type="submit"
+								<button type="submit" :disabled="isSavingData"
 									class="inline-flex w-full justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto">
-									{{ isEditing ? 'Mettre à jour' : 'Enregistrer' }}
+
+									<Spinner :is-loading="isSavingData" />
+									<span class="ml-3">{{ isSavingData ? (isEditing ? 'Mise à jour en cours...' : 'Enregistrement en cours...') : (isEditing ? 'Mettre à jour' : 'Enregistrer') }}</span>
 								</button>
 								<button type="button" @click="showModal = false"
 									class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">
@@ -216,6 +214,7 @@ import Paginator from '~/app/components/Paginator.vue';
 import EmptyState from '~/app/components/EmptyState.vue';
 import DetailModal from '~/app/components/clients/detailModal.vue';
 import ClientsList from '~/app/components/clients/list.vue';
+import Spinner from '~/app/components/partials/Spinner.vue';
 // TODO: Ajouter un spinner aux bouton d'enregistrement
 const clientStore = useClientStore();
 const { clients, errors, isLoading, stat } = storeToRefs(clientStore);
@@ -224,6 +223,7 @@ const showModal = ref(false)
 const isEditing = ref(false)
 const clientId = ref<string | null>(null);
 const error = ref<Error | null>(null);
+const isSavingData = ref<boolean>(false);
 
 const searchQuery = ref<string>('');
 const noDataDescription = ref("Il n'y a actuellement aucune entreprise à afficher.");
@@ -354,6 +354,7 @@ const saveClient = async () => {
 	}).then(async result => {
 		if (result.isConfirmed) {
 			try {
+				isSavingData.value = true;
 				await clientStore.createClient(newClient.value);
 				Swal.fire({ icon: 'success', title: 'Succès', text: 'Client enregistré avec succès', timer: 2000, showConfirmButton: false });
 				await clientStore.fetchClients();
@@ -363,9 +364,12 @@ const saveClient = async () => {
 			} catch (error) {
 				console.error(error)
 				Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible d\'enregistrer le client' })
+			} finally {
+				isSavingData.value = false;
 			}
 		} else {
 			resetForm();
+			isSavingData.value = false;
 		}
 	});
 }
@@ -404,14 +408,16 @@ const updateClient = async () => {
 	}).then(async (result) => {
 		if (result.isConfirmed) {
 			try {
+				isSavingData.value = true;
 				await clientStore.updateClient(clientId.value!, newClient.value)
 				Swal.fire({ icon: 'success', title: 'Succès', text: 'Client modifié avec succès', timer: 2000, showConfirmButton: false })
 				await clientStore.fetchClients()
-				// await clientStore.fetchStats()
 				resetForm()
 				showModal.value = false
 			} catch (error) {
 				Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de modifier le client' })
+			} finally {
+				isSavingData.value = false;
 			}
 		}
 	});

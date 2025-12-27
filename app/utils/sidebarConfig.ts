@@ -100,11 +100,11 @@ export const sidebarMenu = [
 	{
 		id: 'clients',
 		name: 'Clients',
-		icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z',
+		icon: 'heroicons:user-group',
 		submenus: [
 			{
 				name: 'Gestion client',
-				icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
+				icon: 'heroicons:user-group',
 				url: AppUrl.CLIENTS
 			},
 			{
@@ -165,7 +165,7 @@ export const sidebarMenu = [
 	{
 		id: 'fournisseurs',
 		name: 'Fournisseurs',
-		icon: 'M19 21v-8a2 2 0 00-2-2h-1V8a6 6 0 00-6-6H8a6 6 0 00-6 6v3h14a2 2 0 012 2v8m-6-12v12m-3-3h6',
+		icon: 'heroicons:building-library',
 		submenus: [
 			{
 				name: 'Fiches Fournisseurs',
@@ -224,7 +224,7 @@ export const sidebarMenu = [
 			},
 			{
 				name: 'Gestion des Pannes',
-				icon: 'heroicons-solid:exclamation-triangle',
+				icon: 'heroicons-solid:wrench-screwdriver',
 				url: AppUrl.MAINTENANCE_REPORTING_BREAK,
 				description: ''
 			},

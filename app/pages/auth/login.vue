@@ -24,7 +24,7 @@
                 <Icon name="heroicons:envelope-20-solid" class="w-5 h-5" aria-hidden="true" />
               </span>
               <input id="email" v-model="credentials.email" type="email" placeholder="Email"
-                class="w-full box-border input-with-icon-left pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
+                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent transition"
                 autocomplete="email"
                 required />
             </div>
@@ -41,7 +41,7 @@
                 <Icon name="heroicons:lock-closed-20-solid" class="w-5 h-5" aria-hidden="true" />
               </span>
               <input id="password" v-model="credentials.password" type="password" placeholder="Mot de passe" :class="[
-                'w-full input-with-icon-left pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent transition',
+                'w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent transition',
                 validationErrors.password ? 'border-red-500' : '',
               ]" autocomplete="current-password" required />
             </div>

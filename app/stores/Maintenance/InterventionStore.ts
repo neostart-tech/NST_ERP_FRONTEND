@@ -19,9 +19,9 @@ export const useInterventionStore = defineStore('Intervention', {
 				if (this.interventions.length === 0)
 					this.loading = true;
 
-				const { data } = await useApi().get<Intervention[]>(ApiUrl.INTERVENTION);
-				this.interventions = data.map(_ => ({ 
-					..._, 
+				const { data } = await useApi().get<Intervention[]>(ApiUrl.INTERVENTIONS);
+				this.interventions = data.map(_ => ({
+					..._,
 					technician_id: _.technician?.id,
 					client_id: _.client?.id,
 					equipement_id: _.equipment?.id
@@ -48,7 +48,7 @@ export const useInterventionStore = defineStore('Intervention', {
 
 		async createIntervention(form: Intervention) {
 			try {
-				const { data } = await useApi().post<Intervention>(ApiUrl.INTERVENTION, form);
+				const { data } = await useApi().post<Intervention>(ApiUrl.INTERVENTIONS, form);
 				this.interventions.push(data);
 				useAlert().showAlert("Intervention ajoutée avec succès", "success");
 			} catch (error) {
@@ -79,7 +79,7 @@ export const useInterventionStore = defineStore('Intervention', {
 			}
 		},
 
-		
+
 		cleanStorage() {
 			this.interventions = [];
 			this.validationErrors = {};

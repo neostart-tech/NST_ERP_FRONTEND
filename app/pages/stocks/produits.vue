@@ -3,9 +3,7 @@
 		<!-- Cartes de statistiques -->
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 			<!-- Carte Total Produits -->
-			<div
-				class="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-6 border border-sky-200"
-			>
+			<div class="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-6 border border-sky-200">
 				<div class="flex items-center justify-between">
 					<div>
 						<p class="text-sm font-medium text-sky-900">Total Produits</p>
@@ -20,9 +18,7 @@
 			</div>
 
 			<!-- Carte Produits en Stock -->
-			<div
-				class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg p-6 border border-emerald-200"
-			>
+			<div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg p-6 border border-emerald-200">
 				<div class="flex items-center justify-between">
 					<div>
 						<p class="text-sm font-medium text-emerald-900">En Stock</p>
@@ -37,9 +33,7 @@
 			</div>
 
 			<!-- Carte Stock Faible -->
-			<div
-				class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg p-6 border border-amber-200"
-			>
+			<div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg p-6 border border-amber-200">
 				<div class="flex items-center justify-between">
 					<div>
 						<p class="text-sm font-medium text-amber-900">Stock Faible</p>
@@ -48,18 +42,13 @@
 						</p>
 					</div>
 					<div class="p-3 rounded-lg bg-amber-500">
-						<Icon
-							name="heroicons:exclamation-triangle"
-							class="h-6 w-6 text-white"
-						/>
+						<Icon name="heroicons:exclamation-triangle" class="h-6 w-6 text-white" />
 					</div>
 				</div>
 			</div>
 
 			<!-- Carte Produits Inactifs -->
-			<div
-				class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-6 border border-red-200"
-			>
+			<div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg p-6 border border-red-200">
 				<div class="flex items-center justify-between">
 					<div>
 						<p class="text-sm font-medium text-red-900">Produits Inactifs</p>
@@ -68,10 +57,7 @@
 						</p>
 					</div>
 					<div class="p-3 rounded-lg bg-red-500">
-						<Icon
-							name="heroicons:archive-box-x-mark"
-							class="h-6 w-6 text-white"
-						/>
+						<Icon name="heroicons:archive-box-x-mark" class="h-6 w-6 text-white" />
 					</div>
 				</div>
 			</div>
@@ -82,26 +68,15 @@
 			<div class="mt-4 sm:mt-0 sm:ml-4 flex flex-col sm:flex-row gap-3">
 				<!-- Champ de recherche -->
 				<div class="relative flex-1 max-w-xs">
-					<div
-						class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-					>
-						<Icon
-							name="heroicons:magnifying-glass"
-							class="h-5 w-5 text-gray-400"
-						/>
+					<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+						<Icon name="heroicons:magnifying-glass" class="h-5 w-5 text-gray-400" />
 					</div>
-					<input
-						v-model="searchQuery"
-						type="text"
-						placeholder="Rechercher..."
-						class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400"
-					/>
+					<input v-model="searchQuery" type="text" placeholder="Rechercher..."
+						class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400" />
 				</div>
 				<div class="relative flex-1 max-w-xs w-full md:w-auto">
-					<select
-						v-model="filterStatus"
-						class="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm"
-					>
+					<select v-model="filterStatus"
+						class="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm">
 						<option value="">Tous les statuts</option>
 						<option value="active">Actifs</option>
 						<option value="inactive">Inactifs</option>
@@ -109,10 +84,8 @@
 				</div>
 
 				<!-- Boutons d'action -->
-				<button
-					@click="openProductForm()"
-					class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all"
-				>
+				<button @click="openProductForm()"
+					class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all">
 					<Icon name="heroicons:plus" class="h-5 w-5 mr-2" />
 					Nouvel Article
 				</button>
@@ -124,58 +97,35 @@
 			<table class="min-w-full divide-y divide-gray-200">
 				<thead class="bg-gray-50">
 					<tr>
-						<th
-							scope="col"
-							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-						>
+						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Produit
 						</th>
-						<th
-							scope="col"
-							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-						>
+						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Référence
 						</th>
-						<th
-							scope="col"
-							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-						>
+						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Prix Achat
 						</th>
-						<th
-							scope="col"
-							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-						>
+						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Prix Vente
 						</th>
-						<th
-							scope="col"
-							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-						>
+						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Stock
 						</th>
-						<th
-							scope="col"
-							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-						>
+						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Statut
 						</th>
-						<th
-							scope="col"
-							class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-						>
+						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Actions
 						</th>
 					</tr>
 				</thead>
 				<tbody class="bg-white divide-y divide-gray-200">
 					<!-- État de chargement -->
-					<tr v-if="productsLoading">
+					<tr v-if="isLoading">
 						<td colspan="7" class="px-6 py-8 text-center">
 							<div class="flex justify-center items-center space-x-2">
-								<div
-									class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"
-								></div>
+								<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
 								<span class="text-gray-600">Chargement des produits...</span>
 							</div>
 						</td>
@@ -185,10 +135,7 @@
 					<tr v-else-if="!filteredProducts.length">
 						<td colspan="7" class="px-6 py-8 text-center text-gray-500">
 							<div class="flex flex-col items-center justify-center">
-								<Icon
-									name="heroicons:inbox"
-									class="h-12 w-12 text-gray-300 mb-2"
-								/>
+								<Icon name="heroicons:inbox" class="h-12 w-12 text-gray-300 mb-2" />
 								<p class="text-sm">Aucun produit trouvé</p>
 								<p class="text-xs text-gray-400 mt-1">
 									Essayez de modifier vos filtres de recherche
@@ -198,16 +145,10 @@
 					</tr>
 
 					<!-- Liste des produits -->
-					<tr
-						v-for="product in filteredProducts"
-						:key="product.id"
-						class="hover:bg-gray-50 transition-colors"
-					>
+					<tr v-for="product in filteredProducts" :key="product.id" class="hover:bg-gray-50 transition-colors">
 						<td class="px-6 py-4 whitespace-nowrap">
 							<div class="flex items-center">
-								<div
-									class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center"
-								>
+								<div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-md flex items-center justify-center">
 									<Icon name="heroicons:cube" class="h-5 w-5 text-blue-600" />
 								</div>
 								<div class="ml-4">
@@ -227,35 +168,29 @@
 							{{ formatPrice(product.unit_price_purchase) }}
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-							<span
-								:class="{
-									'text-green-600':
-										product.unit_price_sale > product.unit_price_purchase,
-									'text-red-600':
-										product.unit_price_sale <= product.unit_price_purchase,
-								}"
-							>
+							<span :class="{
+								'text-green-600':
+									product.unit_price_sale > product.unit_price_purchase,
+								'text-red-600':
+									product.unit_price_sale <= product.unit_price_purchase,
+							}">
 								{{ formatPrice(product.unit_price_sale) }}
 							</span>
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap">
 							<div class="flex items-center">
 								<div class="w-24 h-2 bg-gray-200 rounded-full overflow-hidden">
-									<div
-										class="h-full"
-										:class="{
-											'bg-green-500': product.quantity > 10,
-											'bg-yellow-500':
-												product.quantity > 0 && product.quantity <= 10,
-											'bg-red-500': product.quantity === 0,
-										}"
-										:style="{
+									<div class="h-full" :class="{
+										'bg-green-500': product.quantity > 10,
+										'bg-yellow-500':
+											product.quantity > 0 && product.quantity <= 10,
+										'bg-red-500': product.quantity === 0,
+									}" :style="{
 											width: `${Math.min(
 												100,
 												(product.quantity / (product.quantity + 10)) * 100
 											)}%`,
-										}"
-									></div>
+										}"></div>
 								</div>
 								<span class="ml-2 text-sm font-medium text-gray-700">
 									{{ product.quantity }} {{ product.unit || "unité"
@@ -264,34 +199,20 @@
 							</div>
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap">
-							<span
-								@click="toggleProductStatus(product)"
-								class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium cursor-pointer"
-								:class="
-									product.status === 'active'
+							<span @click="toggleProductStatus(product)"
+								class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium cursor-pointer" :class="product.status === 'active'
 										? 'bg-green-100 text-green-800 hover:bg-green-200'
 										: 'bg-red-100 text-red-800 hover:bg-red-200'
-								"
-							>
+									">
 								{{ product.status === "active" ? "Actif" : "Inactif" }}
 							</span>
 						</td>
-						<td
-							class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-						>
+						<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 							<div class="flex justify-end space-x-2">
-								<button
-									@click="openProductForm(product.id)"
-									class="text-blue-600 hover:text-blue-900"
-									title="Modifier"
-								>
+								<button @click="openProductForm(product.id)" class="text-blue-600 hover:text-blue-900" title="Modifier">
 									<Icon name="heroicons:pencil-square" class="h-5 w-5" />
 								</button>
-								<button
-									@click="confirmDelete(product)"
-									class="text-red-600 hover:text-red-900"
-									title="Supprimer"
-								>
+								<button @click="confirmDelete(product)" class="text-red-600 hover:text-red-900" title="Supprimer">
 									<Icon name="heroicons:trash" class="h-5 w-5" />
 								</button>
 							</div>
@@ -313,18 +234,12 @@
 				<span class="font-medium">{{ filteredProducts.length }}</span> résultats
 			</div>
 			<div class="flex space-x-2">
-				<button
-					@click="currentPage--"
-					:disabled="currentPage === 1"
-					class="px-3 py-1 border rounded-md text-sm font-medium disabled:opacity-50"
-				>
+				<button @click="currentPage--" :disabled="currentPage === 1"
+					class="px-3 py-1 border rounded-md text-sm font-medium disabled:opacity-50">
 					Précédent
 				</button>
-				<button
-					@click="currentPage++"
-					:disabled="currentPage * perPage >= filteredProducts.length"
-					class="px-3 py-1 border rounded-md text-sm font-medium disabled:opacity-50"
-				>
+				<button @click="currentPage++" :disabled="currentPage * perPage >= filteredProducts.length"
+					class="px-3 py-1 border rounded-md text-sm font-medium disabled:opacity-50">
 					Suivant
 				</button>
 			</div>
@@ -334,23 +249,15 @@
 	<!-- Modale de confirmation de suppression -->
 	<div v-if="showDeleteModal" class="fixed inset-0 z-50 overflow-y-auto">
 		<div class="flex min-h-full items-center justify-center p-4 text-center">
-			<div
-				class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-				@click="showDeleteModal = false"
-			></div>
+			<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="showDeleteModal = false"></div>
 
 			<div
-				class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
-			>
+				class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
 				<div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
 					<div class="sm:flex sm:items-start">
 						<div
-							class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
-						>
-							<Icon
-								name="heroicons:exclamation-triangle"
-								class="h-6 w-6 text-red-600"
-							/>
+							class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+							<Icon name="heroicons:exclamation-triangle" class="h-6 w-6 text-red-600" />
 						</div>
 						<div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
 							<h3 class="text-base font-semibold leading-6 text-gray-900">
@@ -367,27 +274,18 @@
 					</div>
 				</div>
 				<div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-					<button
-						type="button"
+					<button type="button"
 						class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
-						:disabled="deleteLoading"
-						@click="deleteProduct"
-					>
+						:disabled="deleteLoading" @click="deleteProduct">
 						<span v-if="deleteLoading" class="flex items-center">
-							<Icon
-								name="heroicons:arrow-path"
-								class="animate-spin h-4 w-4 mr-2"
-							/>
+							<Icon name="heroicons:arrow-path" class="animate-spin h-4 w-4 mr-2" />
 							Suppression...
 						</span>
 						<span v-else>Supprimer</span>
 					</button>
-					<button
-						type="button"
+					<button type="button"
 						class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-						:disabled="deleteLoading"
-						@click="showDeleteModal = false"
-					>
+						:disabled="deleteLoading" @click="showDeleteModal = false">
 						Annuler
 					</button>
 				</div>
@@ -396,30 +294,17 @@
 	</div>
 
 	<!-- Modale de formulaire produit -->
-	<div
-		v-if="showProductFormModal"
-		class="fixed inset-0 z-50 overflow-y-auto"
-		aria-labelledby="modal-title"
-		role="dialog"
-		aria-modal="true"
-	>
-		<div
-			class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
-		>
-			<div
-				class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-				@click="showProductFormModal = false"
-			></div>
+	<div v-if="showProductFormModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title"
+		role="dialog" aria-modal="true">
+		<div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+			<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="showProductFormModal = false">
+			</div>
 
 			<div
-				class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6"
-			>
+				class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6">
 				<div class="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
-					<button
-						type="button"
-						class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
-						@click="showProductFormModal = false"
-					>
+					<button type="button" class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none"
+						@click="showProductFormModal = false">
 						<span class="sr-only">Fermer</span>
 						<Icon name="heroicons:x-mark" class="h-6 w-6" />
 					</button>
@@ -427,10 +312,7 @@
 
 				<div class="sm:flex sm:items-start">
 					<div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
-						<h3
-							class="text-base font-semibold leading-6 text-gray-900"
-							id="modal-title"
-						>
+						<h3 class="text-base font-semibold leading-6 text-gray-900" id="modal-title">
 							{{
 								editingProductId
 									? "Modifier le produit"
@@ -446,53 +328,25 @@
 									<div class="space-y-4">
 										<!-- Nom du produit -->
 										<div>
-											<label
-												for="name"
-												class="block text-sm font-medium text-gray-700"
-												>Nom du produit</label
-											>
-											<input
-												type="text"
-												id="name"
-												v-model="currentProduct.name"
-												required
-												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-											/>
+											<label for="name" class="block text-sm font-medium text-gray-700">Nom du produit</label>
+											<input type="text" id="name" v-model="currentProduct.name" required
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" />
 										</div>
 
 										<!-- Référence -->
 										<div>
-											<label
-												for="reference"
-												class="block text-sm font-medium text-gray-700"
-												>Référence</label
-											>
-											<input
-												type="text"
-												id="reference"
-												v-model="currentProduct.reference"
-												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-											/>
+											<label for="reference" class="block text-sm font-medium text-gray-700">Référence</label>
+											<input type="text" id="reference" v-model="currentProduct.reference"
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" />
 										</div>
 
 										<!-- Catégorie -->
 										<div>
-											<label
-												for="category"
-												class="block text-sm font-medium text-gray-700"
-												>Catégorie</label
-											>
-											<select
-												id="category"
-												v-model="currentProduct.category_id"
-												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-											>
+											<label for="category" class="block text-sm font-medium text-gray-700">Catégorie</label>
+											<select id="category" v-model="currentProduct.category_id"
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
 												<option value="">Sélectionner une catégorie</option>
-												<option
-													v-for="category in categories"
-													:key="category.id"
-													:value="category.id"
-												>
+												<option v-for="category in categories" :key="category.id" :value="category.id">
 													{{ category.name }}
 												</option>
 											</select>
@@ -500,17 +354,9 @@
 
 										<!-- Description -->
 										<div>
-											<label
-												for="description"
-												class="block text-sm font-medium text-gray-700"
-												>Description</label
-											>
-											<textarea
-												id="description"
-												v-model="currentProduct.description"
-												rows="3"
-												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-											></textarea>
+											<label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+											<textarea id="description" v-model="currentProduct.description" rows="3"
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"></textarea>
 										</div>
 									</div>
 
@@ -518,98 +364,49 @@
 									<div class="space-y-4">
 										<!-- Prix d'achat -->
 										<div>
-											<label
-												for="purchase_price"
-												class="block text-sm font-medium text-gray-700"
-												>Prix d'achat (FCFA)</label
-											>
-											<input
-												type="number"
-												id="purchase_price"
-												v-model.number="currentProduct.unit_price_purchase"
-												min="0"
-												step="0.01"
-												required
-												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-											/>
+											<label for="purchase_price" class="block text-sm font-medium text-gray-700">Prix d'achat
+												(FCFA)</label>
+											<input type="number" id="purchase_price" v-model.number="currentProduct.unit_price_purchase"
+												min="0" step="0.01" required
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" />
 										</div>
 
 										<!-- Prix de vente -->
 										<div>
-											<label
-												for="sale_price"
-												class="block text-sm font-medium text-gray-700"
-												>Prix de vente (FCFA)</label
-											>
-											<input
-												type="number"
-												id="sale_price"
-												v-model.number="currentProduct.unit_price_sale"
-												min="0"
-												step="0.01"
-												required
-												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-											/>
+											<label for="sale_price" class="block text-sm font-medium text-gray-700">Prix de vente
+												(FCFA)</label>
+											<input type="number" id="sale_price" v-model.number="currentProduct.unit_price_sale" min="0"
+												step="0.01" required
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" />
 										</div>
 
 										<!-- Quantité en stock -->
 										<div>
-											<label
-												for="quantity"
-												class="block text-sm font-medium text-gray-700"
-												>Quantité en stock</label
-											>
-											<input
-												type="number"
-												id="quantity"
-												v-model.number="currentProduct.quantity"
-												min="0"
-												required
-												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-											/>
+											<label for="quantity" class="block text-sm font-medium text-gray-700">Quantité en stock</label>
+											<input type="number" id="quantity" v-model.number="currentProduct.quantity" min="0" required
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" />
 										</div>
 
 										<!-- Unité de mesure -->
 										<div>
-											<label
-												for="unit"
-												class="block text-sm font-medium text-gray-700"
-												>Unité de mesure</label
-											>
-											<input
-												type="text"
-												id="unit"
-												v-model="currentProduct.unit"
-												placeholder="Ex: pièce, kg, L, etc."
-												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-											/>
+											<label for="unit" class="block text-sm font-medium text-gray-700">Unité de mesure</label>
+											<input type="text" id="unit" v-model="currentProduct.unit" placeholder="Ex: pièce, kg, L, etc."
+												class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" />
 										</div>
 
 										<!-- Statut -->
 										<div>
-											<label class="block text-sm font-medium text-gray-700"
-												>Statut</label
-											>
+											<label class="block text-sm font-medium text-gray-700">Statut</label>
 											<div class="mt-2 space-x-4">
 												<label class="inline-flex items-center">
-													<input
-														type="radio"
-														v-model="currentProduct.status"
-														value="active"
-														class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-													/>
+													<input type="radio" v-model="currentProduct.status" value="active"
+														class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" />
 													<span class="ml-2 text-sm text-gray-700">Actif</span>
 												</label>
 												<label class="inline-flex items-center">
-													<input
-														type="radio"
-														v-model="currentProduct.status"
-														value="inactive"
-														class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-													/>
-													<span class="ml-2 text-sm text-gray-700"
-														>Inactif</span
-													>
+													<input type="radio" v-model="currentProduct.status" value="inactive"
+														class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" />
+													<span class="ml-2 text-sm text-gray-700">Inactif</span>
 												</label>
 											</div>
 										</div>
@@ -617,23 +414,14 @@
 								</div>
 
 								<div class="mt-6 flex justify-end space-x-3">
-									<button
-										type="button"
-										@click="showProductFormModal = false"
-										class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-									>
+									<button type="button" @click="showProductFormModal = false"
+										class="inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
 										Annuler
 									</button>
-									<button
-										type="submit"
-										:disabled="formLoading"
-										class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
-									>
+									<button type="submit" :disabled="formLoading"
+										class="inline-flex justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50">
 										<span v-if="formLoading" class="flex items-center">
-											<Icon
-												name="heroicons:arrow-path"
-												class="animate-spin h-4 w-4 mr-2"
-											/>
+											<Icon name="heroicons:arrow-path" class="animate-spin h-4 w-4 mr-2" />
 											Enregistrement...
 										</span>
 										<span v-else>Enregistrer</span>
@@ -651,15 +439,16 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 import { useToast } from "vue-toastification";
+import { productFormData } from "~/models/Product";
+import { useProductStore } from "@/stores/Stock/ProductStore";
+import Swal from "sweetalert2";
 
 const toast = useToast();
 const config = useRuntimeConfig();
 const apiBase = config.public.apiBase || "/api";
 
 // États
-const products = ref([]);
 const categories = ref([]);
-const productsLoading = ref(false);
 const formLoading = ref(false);
 const deleteLoading = ref(false);
 const showProductFormModal = ref(false);
@@ -672,17 +461,10 @@ const currentPage = ref(1);
 const perPage = 10;
 
 // Données du produit courant
-const currentProduct = ref({
-	name: "",
-	reference: "",
-	description: "",
-	category_id: "",
-	unit_price_purchase: 0,
-	unit_price_sale: 0,
-	quantity: 0,
-	unit: "unité",
-	status: "active",
-});
+const currentProduct = ref(productFormData());
+const productStore = useProductStore();
+
+const { products, isLoading } = storeToRefs(productStore);
 
 // Statistiques
 const stats = computed(() => {
@@ -740,14 +522,15 @@ const formatPrice = (price) => {
 // Charger les produits
 const fetchProducts = async () => {
 	try {
-		productsLoading.value = true;
-		const response = await $fetch(`${apiBase}/products`);
-		products.value = response.data || [];
+		await productStore.fetchAll();
 	} catch (error) {
-		console.error("Erreur lors du chargement des produits:", error);
-		toast.error("Erreur lors du chargement des produits");
+		Swal.fire({
+			icon: "error",
+			title: "Erreur lors du chargement",
+			text : "Une erreur est survenue lors du chargement des produits",
+		});
 	} finally {
-		productsLoading.value = false;
+		isLoading.value = false;
 	}
 };
 
@@ -777,17 +560,7 @@ const openProductForm = async (id = null) => {
 		}
 	} else {
 		// Réinitialiser pour un nouveau produit
-		currentProduct.value = {
-			name: "",
-			reference: "",
-			description: "",
-			category_id: "",
-			unit_price_purchase: 0,
-			unit_price_sale: 0,
-			quantity: 0,
-			unit: "unité",
-			status: "active",
-		};
+		currentProduct.value = productFormData();
 	}
 
 	showProductFormModal.value = true;
@@ -835,7 +608,7 @@ const submitProductForm = async () => {
 		console.error("Erreur lors de l'enregistrement du produit:", error);
 		toast.error(
 			error.response?._data?.message ||
-				"Erreur lors de l'enregistrement du produit"
+			"Erreur lors de l'enregistrement du produit"
 		);
 	} finally {
 		formLoading.value = false;
@@ -887,8 +660,7 @@ const toggleProductStatus = async (product) => {
 		}
 
 		toast.success(
-			`Statut du produit mis à jour: ${
-				newStatus === "active" ? "Actif" : "Inactif"
+			`Statut du produit mis à jour: ${newStatus === "active" ? "Actif" : "Inactif"
 			}`
 		);
 	} catch (error) {
@@ -927,6 +699,7 @@ onUnmounted(() => {
 	from {
 		transform: rotate(0deg);
 	}
+
 	to {
 		transform: rotate(360deg);
 	}

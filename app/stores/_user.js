@@ -2,7 +2,7 @@
 
 import { defineStore } from 'pinia'
 
-export const useUserStore = defineStore('user', {
+export const _useUserStore = defineStore('user', {
   state: () => ({
     users: [],
     loading: false,

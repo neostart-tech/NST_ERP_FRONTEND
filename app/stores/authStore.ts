@@ -7,7 +7,6 @@ import { ApiUrl } from '@/composables/apiUrl';
 import { useValidationErrors, type ValidationErrors } from '@/composables/useValidationErrors';
 import { secureLsStorage } from "@/utils/secureStorage";
 import { useEnterpriseStore } from './EnterpriseStore';
-import { formatRelativeDate } from '@/utils/dateParser';
 import { useEquipmentStore } from "./Maintenance/EquipmentStore";
 import { useTechnicianStore } from "./TechnicianStore";
 import { useInterventionStore } from "./Maintenance/InterventionStore";
@@ -39,7 +38,7 @@ export const useAuthStore = defineStore('AuthStore', {
 				const { data } = await api.post<AuthUser>(ApiUrl.LOGIN, credentials);
 
 				// Ces données seront automatiquement persistées
-				this.user = {...data, loggedInAt: formatRelativeDate(new Date())};
+				this.user = {...data, loggedInAt: new Date()};
 				this.token = data.token;
 
 				useAlert().showAlert(`Ravi de vous revoir ${data.lastName} ${data.firstName}`, "success");
@@ -101,6 +100,7 @@ export const useAuthStore = defineStore('AuthStore', {
 			useEquipmentStore().cleanStorage();
 			useTechnicianStore().cleanStorage();
 			useInterventionStore().cleanStorage();
+			useOfferStore().cleanStorage();
 		},
 	},
 

@@ -4,7 +4,7 @@ import { ApiUrl } from "@/composables/apiUrl";
 import { useValidationErrors, type ValidationErrors } from "@/composables/useValidationErrors";
 import { useApi } from "#imports";
 
-export const PERSISTANCE_KEY = "entreprises-store";
+const PERSISTANCE_KEY = "entreprises-store";
 
 export const useEnterpriseStore = defineStore("EnterpriseStore", {
   state: () => ({

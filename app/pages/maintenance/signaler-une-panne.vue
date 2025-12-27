@@ -6,35 +6,22 @@
 		<!-- Search and Filters -->
 		<div class="mb-6">
 			<!-- Conteneur général -->
-			<div
-				class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 items-center"
-			>
+			<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4 items-center">
 				<!-- Titre -->
 				<h2 class="text-xl font-bold text-gray-900">Liste des signalements</h2>
 
 				<!-- Recherche -->
 				<div class="relative">
-					<div
-						class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-					>
-						<Icon
-							name="heroicons:magnifying-glass"
-							class="h-5 w-5 text-gray-400"
-						/>
+					<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+						<Icon name="heroicons:magnifying-glass" class="h-5 w-5 text-gray-400" />
 					</div>
-					<input
-						v-model="searchQuery"
-						type="text"
-						placeholder="Rechercher par équipement, client ou technicien..."
-						class="block w-full  pl-10 pr-3 py-2 h-12 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-					/>
+					<input v-model="searchQuery" type="text" placeholder="Rechercher par équipement, client ou technicien..."
+						class="block w-full  pl-10 pr-3 py-2 h-12 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" />
 				</div>
 
 				<!-- Sélecteur -->
-				<select
-					v-model="statusFilter"
-					class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-				>
+				<select v-model="statusFilter"
+					class="block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
 					<option value="">Tous les statuts</option>
 					<option value="new">Nouveau</option>
 					<option value="diagnostic">En diagnostic</option>
@@ -46,10 +33,8 @@
 				</select>
 
 				<!-- Bouton -->
-				<button
-					@click="showForm = true"
-					class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white px-4 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all"
-				>
+				<button @click="showForm = true"
+					class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white px-4 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all">
 					<Icon name="heroicons:plus" class="h-5 w-5 mr-1" />
 					Nouveau signalement
 				</button>
@@ -59,60 +44,41 @@
 		<!-- Responsive Views -->
 		<template v-if="filteredInterventions.length > 0">
 			<!-- Vue Tableau (lg+) -->
-			<div
-				class="hidden lg:block bg-white border rounded-lg shadow mt-6 overflow-hidden"
-			>
+			<div class="hidden lg:block bg-white border rounded-lg shadow mt-6 overflow-hidden">
 				<div class="overflow-x-auto">
 					<table class="min-w-full divide-y divide-gray-200">
 						<thead class="bg-gradient-to-r from-blue-50 to-green-50">
 							<tr>
-								<th
-									scope="col"
-									class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-								>
+								<th scope="col"
+									class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 									N°
 								</th>
-								<th
-									scope="col"
-									class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-								>
+								<th scope="col"
+									class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 									Équipement
 								</th>
-								<th
-									scope="col"
-									class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-								>
+								<th scope="col"
+									class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 									Date signalement
 								</th>
-								<th
-									scope="col"
-									class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-								>
+								<th scope="col"
+									class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 									Technicien
 								</th>
-								<th
-									scope="col"
-									class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-								>
+								<th scope="col"
+									class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 									Statut
 								</th>
-								<th
-									scope="col"
-									class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-								>
+								<th scope="col"
+									class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 									Actions
 								</th>
 							</tr>
 						</thead>
 						<tbody class="bg-white divide-y divide-gray-100">
-							<tr
-								v-for="(report, id) in paginatedInterventions"
-								:key="report.id"
-								class="hover:bg-gray-50 transition-colors"
-							>
-								<td
-									class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
-								>
+							<tr v-for="(report, id) in paginatedInterventions" :key="report.id"
+								class="hover:bg-gray-50 transition-colors">
+								<td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
 									{{ ++id }}
 								</td>
 								<td class="px-4 py-4 whitespace-nowrap">
@@ -128,16 +94,14 @@
 								</td>
 								<td class="px-4 py-4 whitespace-nowrap">
 									<div class="flex items-center">
-										<div
-											class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center"
-										>
+										<div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
 											<span class="text-blue-600 font-medium text-xs">
 												{{
 													report.technician?.full_name
 														? report.technician?.full_name
-																.split(" ")
-																.map((n) => n[0])
-																.join("")
+															.split(" ")
+															.map((n) => n[0])
+															.join("")
 														: ""
 												}}
 											</span>
@@ -150,35 +114,21 @@
 									</div>
 								</td>
 								<td class="px-4 py-4 whitespace-nowrap">
-									<span
-										:class="`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
-											report.status
-										)}`"
-									>
+									<span :class="`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+										report.status
+									)}`">
 										{{ getInterventionStatus(report) }}
 									</span>
 								</td>
 								<td class="px-4 py-4 whitespace-nowrap text-sm font-medium">
 									<div class="flex space-x-2">
-										<button
-											@click="viewReport(report)"
-											class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full"
-										>
+										<button @click="viewReport(report)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full">
 											<Icon name="heroicons:eye" class="h-5 w-5 mr-1" />
 										</button>
-										<button
-											@click="editReport(report)"
-											class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full"
-										>
-											<Icon
-												name="heroicons:pencil-square"
-												class="h-5 w-5 mr-1"
-											/>
+										<button @click="editReport(report)" class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full">
+											<Icon name="heroicons:pencil-square" class="h-5 w-5 mr-1" />
 										</button>
-										<button
-											@click="deleteReport(report.id)"
-											class="p-1.5 text-red-600 hover:bg-red-50 rounded-full"
-										>
+										<button @click="deleteReport(report.id)" class="p-1.5 text-red-600 hover:bg-red-50 rounded-full">
 											<Icon name="heroicons:trash" class="h-5 w-5 mr-1" />
 										</button>
 									</div>
@@ -191,30 +141,22 @@
 
 			<!-- Vue Cartes (md-) -->
 			<div class="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-				<div
-					v-for="report in paginatedInterventions"
-					:key="report.id"
-					class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-				>
+				<div v-for="report in paginatedInterventions" :key="report.id"
+					class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
 					<div class="flex justify-between items-start mb-3">
 						<div class="text-lg font-semibold text-gray-900">
 							{{ report.equipment!.brand }}
 						</div>
-						<span
-							:class="`px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
-								report.status
-							)}`"
-						>
+						<span :class="`px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(
+							report.status
+						)}`">
 							{{ getInterventionStatus(report) }}
 						</span>
 					</div>
 
 					<div class="space-y-2 mb-4">
 						<div class="flex items-start">
-							<Icon
-								name="heroicons:cube"
-								class="h-5 w-5 text-gray-400 mr-2 mt-0.5"
-							/>
+							<Icon name="heroicons:cube" class="h-5 w-5 text-gray-400 mr-2 mt-0.5" />
 							<div>
 								<div class="text-sm font-medium text-gray-900">
 									{{ report.equipment?.name }}
@@ -226,10 +168,7 @@
 						</div>
 
 						<div class="flex items-center">
-							<Icon
-								name="heroicons:calendar"
-								class="h-5 w-5 text-gray-400 mr-2"
-							/>
+							<Icon name="heroicons:calendar" class="h-5 w-5 text-gray-400 mr-2" />
 							<span class="text-sm text-gray-600">{{
 								formatDate(report.report_date)
 							}}</span>
@@ -244,22 +183,13 @@
 					</div>
 
 					<div class="flex justify-end space-x-2 pt-3 border-t border-gray-200">
-						<button
-							@click="viewReport(report)"
-							class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full"
-						>
+						<button @click="viewReport(report)" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full">
 							<Icon name="heroicons:eye" class="h-5 w-5 mr-1" />
 						</button>
-						<button
-							@click="editReport(report)"
-							class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full"
-						>
+						<button @click="editReport(report)" class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full">
 							<Icon name="heroicons:pencil-square" class="h-5 w-5 mr-1" />
 						</button>
-						<button
-							@click="deleteReport(report.id)"
-							class="p-1.5 text-red-600 hover:bg-red-50 rounded-full"
-						>
+						<button @click="deleteReport(report.id)" class="p-1.5 text-red-600 hover:bg-red-50 rounded-full">
 							<Icon name="heroicons:trash" class="h-5 w-5 mr-1" />
 						</button>
 					</div>
@@ -269,50 +199,28 @@
 
 		<!-- Empty State -->
 		<div v-else>
-			<EmptyState
-				title="Aucun signalement trouvé"
-				description="Il n'y a actuellement aucun signalement de panne à afficher."
-				icon="heroicons:wrench-screwdriver"
-				iconColor="text-blue-400"
-				@reload="loadInterventions()"
-				:isLoading="loading"
-				:searchQuery="searchQuery"
-			/>
+			<EmptyState title="Aucun signalement trouvé"
+				description="Il n'y a actuellement aucun signalement de panne à afficher." icon="heroicons:wrench-screwdriver"
+				iconColor="text-blue-400" @reload="loadInterventions()" :isLoading="loading" :searchQuery="searchQuery" />
 		</div>
 
 		<!-- Pagination -->
 		<div v-if="loading || filteredInterventions.length > 0" class="mt-6">
-			<Paginator
-				:totalItems="filteredInterventions.length"
-				@range-changed="onRangeChanged"
-			/>
+			<Paginator :totalItems="filteredInterventions.length" @range-changed="onRangeChanged" />
 		</div>
 
 		<!-- Form Modal -->
-		<ReportForm
-			v-model="showForm"
-			:formData="form"
-			:editing="editing"
-			@submit="submitForm"
-			@close="
-				showForm = false;
-				editing = false;
-			"
-		/>
+		<ReportForm v-model="showForm" :formData="form" :editing="editing" @submit="submitForm" @close="
+			showForm = false;
+		editing = false;
+		" />
 
 		<!-- Fiche d'Intervention Modal -->
-		<InterventionSheetModal
-			v-model="isViewing"
-			:report="viewingReport"
-			@close="
-				viewingReport = null;
-				isViewing = false;
-			"
-			@print="printReport"
-			@generate-pdf="generatePDF"
-			@download-quotation="downloadQuotation"
-			@download-audio="downloadAudio"
-		/>
+		<InterventionSheetModal v-model="isViewing" :report="viewingReport" @close="
+			viewingReport = null;
+		isViewing = false;
+		" @print="printReport" @generate-pdf="generatePDF" @download-quotation="downloadQuotation"
+			@download-audio="downloadAudio" />
 	</div>
 </template>
 
@@ -443,12 +351,10 @@ const submitForm = async (_form: Intervention) => {
 
 		closeForm();
 		loadInterventions();
-		Swal.fire(
-			editing.value
-				? "Intervention mise à jour avec succès"
-				: "Intervention créée avec succès",
-			"success"
-		);
+		Swal.fire({
+			icon: "success",
+			title: editing.value ? "Intervention mise à jour avec succès" : "Intervention créée avec succès",
+		});
 	} catch (error) {
 		Swal.fire("Erreur lors de l'enregistrement", "error");
 	}
@@ -483,10 +389,17 @@ const deleteReport = async (id: string) => {
 			try {
 				await interventionStore.deleteIntervention(id);
 				interventions.value = interventions.value.filter((_) => _.id !== id);
-				Swal.fire("Intervention supprimée avec succès");
-			} catch (error) {
+				Swal.fire({
+					icon: "success",
+					title: "Intervention supprimée avec succès",
+				});
+			} catch (error) {	
 				console.error("Erreur lors de la suppression:", error);
-				Swal.fire("Erreur lors de la suppression de l'intervention", "error");
+				Swal.fire({
+					icon: "error",
+					title: "Erreur lors de la suppression",
+					text: "Une erreur est survenue lors de la suppression de l'intervention."
+				});
 			}
 		}
 	});
@@ -571,139 +484,3 @@ const formatDate = (dateString) => {
 	}
 };
 </script>
-
-<style lang="scss" scoped>
-@media print {
-	body * {
-		visibility: hidden;
-	}
-
-	.print-modal,
-	.print-modal * {
-		visibility: visible;
-	}
-
-	.print-modal {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: auto;
-		margin: 0;
-		padding: 0;
-		overflow: visible;
-		background: white !important;
-	}
-
-	.no-print {
-		display: none !important;
-	}
-
-	.print-modal {
-		font-size: 12pt;
-		line-height: 1.4;
-		color: black !important;
-	}
-
-	.print-modal h1 {
-		font-size: 18pt;
-		color: black !important;
-	}
-
-	.print-modal h2 {
-		font-size: 14pt;
-		margin-top: 12pt;
-		margin-bottom: 8pt;
-		color: black !important;
-	}
-
-	.print-modal .grid {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 10pt;
-	}
-
-	.print-modal .bg-gradient-to-r {
-		background: #f9fafb !important;
-	}
-
-	.print-modal .text-white {
-		color: #1f2937 !important;
-	}
-
-	.print-modal .border-b-2 {
-		border-bottom: 2pt solid #3b82f6 !important;
-	}
-
-	.print-modal .rounded-xl {
-		border-radius: 0 !important;
-	}
-
-	.print-modal .p-6 {
-		padding: 8pt !important;
-	}
-
-	.print-modal .mb-10 {
-		margin-bottom: 12pt !important;
-	}
-
-	.print-modal .mt-12 {
-		margin-top: 16pt !important;
-	}
-
-	.print-modal .border-2 {
-		border: 1pt solid #d1d5db !important;
-	}
-
-	.print-modal .border-dashed {
-		border-style: dashed !important;
-	}
-
-	.print-modal .h-32 {
-		height: 64pt !important;
-	}
-
-	.print-modal img {
-		max-height: 60pt !important;
-		max-width: 100% !important;
-		filter: none !important;
-	}
-
-	audio {
-		display: none;
-	}
-
-	.no-print-audio::after {
-		content: "[Enregistrement audio non imprimable]";
-		font-style: italic;
-		color: #666;
-	}
-
-	.print-modal .shadow-sm,
-	.print-modal .shadow-lg,
-	.print-modal .shadow-md {
-		box-shadow: none !important;
-	}
-}
-
-audio {
-	max-width: 100%;
-	min-width: 200px;
-}
-
-canvas {
-	touch-action: none;
-	cursor: crosshair;
-	border: 1px solid #e5e7eb;
-	border-radius: 0.5rem;
-}
-
-img {
-	object-fit: contain;
-	background: white;
-}
-
-.border-dashed {
-	background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23d1d5db' stroke-width='2' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
-}
-</style>

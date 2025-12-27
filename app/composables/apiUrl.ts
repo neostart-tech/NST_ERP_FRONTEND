@@ -1,3 +1,5 @@
+import Produits from "../pages/stocks/produits.vue";
+
 /**
  * Centralise les URLs des endpoints API pour :
  * - Éviter la duplication des URLs dans le code
@@ -56,14 +58,20 @@ export const ApiUrl = {
 	TECHNICIANS: "/technicians",
 	TECHNICIAN_BY_ID: "/technicians/:id",
 
-	EQUIPMENT: "/equipments",
+	EQUIPMENTS: "/equipments",
 	EQUIPMENT_BY_ID: "/equipments/:id",
 
-	INTERVENTION: "/interventions",
+	INTERVENTIONS: "/interventions",
 	INTERVENTION_BY_ID: "/interventions/:id",
+
+	CONTRACTS: "/maintenance-contracts",
+	CONTRACT_BY_ID: "/maintenance-contracts/:id",
 
 	INVOICES: "/invoices",
 	INVOICE_BY_ID: "/invoices/:id",
+
+	PRODUCTS: "/products",
+	PRODUCT_BY_ID: "/products/:id",
 
 	/**
  * Fonction pour les url à paramètres sous la forme url/:id

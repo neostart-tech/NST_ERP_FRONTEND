@@ -58,7 +58,7 @@ export const useApi = () => {
 				return request<T>(endpoint, config);
 			}
 
-			if (response.status === 401) {
+			if (response.status === 401 && endpoint !== ApiUrl.LOGOUT) {
 				authStore.logout();
 			}
 

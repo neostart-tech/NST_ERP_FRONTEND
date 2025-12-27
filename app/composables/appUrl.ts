@@ -38,7 +38,7 @@ export const AppUrl = {
 	OFFERS_DOCUMENTS: "/offers/:id/documents-availability",
 	OFFERS_LOTS: "/offers/:id/lots-configuration",
 	OFFERS_PROJECTS: "/offers/projects",
-	OFFERS_QUICK_STAT: "/offers/offer-quick-stat",
+	OFFERS_QUICK_STAT: "/offers/gestion-des-appels-d-offre",
 
 	//SUPPLIERS
 	SUPPLIERS: "/fournisseurs",
@@ -66,7 +66,7 @@ export const AppUrl = {
 	MAINTENANCE_ADD_TECHNICIAN: "/maintenance/gestion-des-techniciens",
 	MAINTENANCE_REPORTING_BREAK: "/maintenance/signaler-une-panne",
 	MAINTENANCE_CUSTOMER_FILE: "/maintenance/fiche-client",
-	MAINTENANCE_MANAGEMENT_CONTRACT_MAINTENANCE: "/maintenance/contrats",
+	MAINTENANCE_MANAGEMENT_CONTRACT_MAINTENANCE: "/maintenance/gestion-des-contrats",
 	MAINTENANCE_QUOTE: "/maintenance/gestion-devis",
 	MAINTENANCE_REPORTING: "/maintenance/reportage",
 	MAINTENANCE_MANAGEMENT_INVOICE: "/maintenance/gestion-factures",

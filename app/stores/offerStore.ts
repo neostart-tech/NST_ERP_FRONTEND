@@ -2,28 +2,32 @@ import { defineStore } from "pinia";
 import type { Entreprise } from "~/models/Enterprise";
 import type { Offer, OfferForm, MetadataForm, Lot } from "~/models/Offer";
 import { extractDateTime } from "../utils/dateParser";
+
+const PERSISTANCE_KEY = "offers-store";
+
 export const useOfferStore = defineStore("OfferStore", {
 	state: () => ({
 		offers: [] as Offer[],
 		pendingOffers: [] as Offer[],
-
-		// offer: {} as Offer,
 		validationErrors: {} as ValidationErrors,
-		isLoading: true
+		isLoading: true,
 	}),
 	actions: {
 		async fetchOffers() {
 			try {
+				if (this.offers.length === 0) this.isLoading = true;
 				const response = await useApi().get<Offer[]>(
-					ApiUrl.queryable(
-						ApiUrl.OFFERS, {
-						limit: 5
+					ApiUrl.queryable(ApiUrl.OFFERS, {
+						limit: 5,
 					})
 				);
 				this.offers = response.data || [];
 			} catch (error) {
 				console.error("Error fetching offers:", error);
-				useAlert().showAlert("Une erreur est survenue lors du chargement des appels d'offres", "error");
+				useAlert().showAlert(
+					"Une erreur est survenue lors du chargement des appels d'offres",
+					"error"
+				);
 				throw error;
 			} finally {
 				this.isLoading = false;
@@ -36,7 +40,10 @@ export const useOfferStore = defineStore("OfferStore", {
 				this.offers = response.data || [];
 			} catch (error) {
 				console.error("Error fetching offers:", error);
-				useAlert().showAlert("Une erreur est survenue lors du chargement des appels d'offres", "error");
+				useAlert().showAlert(
+					"Une erreur est survenue lors du chargement des appels d'offres",
+					"error"
+				);
 				throw error;
 			} finally {
 				this.isLoading = false;
@@ -49,7 +56,7 @@ export const useOfferStore = defineStore("OfferStore", {
 					...offerData,
 					...metadata,
 					offer_type_id: offerData.offer_type_id,
-					requirement: offerData.requirement?.join(",") || ""
+					requirement: offerData.requirement?.join(",") || "",
 				};
 				const { data } = await useApi().post<Offer>(ApiUrl.OFFERS, formData);
 				this.offers = [data, ...this.offers];
@@ -61,15 +68,22 @@ export const useOfferStore = defineStore("OfferStore", {
 			}
 		},
 
-		async updateOffer(offerId: string, offerData: OfferForm, metadata: MetadataForm) {
+		async updateOffer(
+			offerId: string,
+			offerData: OfferForm,
+			metadata: MetadataForm
+		) {
 			try {
 				const formData = {
 					...offerData,
 					...metadata,
 					offer_type_id: offerData.offer_type_id,
-					requirement: offerData.requirement?.join(",") || ""
+					requirement: offerData.requirement?.join(",") || "",
 				};
-				const { data } = await useApi().put<Offer>(ApiUrl.parameterized(ApiUrl.OFFER_BY_ID, offerId), formData);
+				const { data } = await useApi().put<Offer>(
+					ApiUrl.parameterized(ApiUrl.OFFER_BY_ID, offerId),
+					formData
+				);
 
 				this.offers = this.offers.map((offer) =>
 					offer.id === data.id ? { ...offer, ...data } : offer
@@ -84,7 +98,9 @@ export const useOfferStore = defineStore("OfferStore", {
 
 		async getOneOffer(id: string) {
 			try {
-				const { data } = await useApi().get<Offer>(ApiUrl.parameterized(ApiUrl.OFFER_BY_ID, id));
+				const { data } = await useApi().get<Offer>(
+					ApiUrl.parameterized(ApiUrl.OFFER_BY_ID, id)
+				);
 				return data;
 			} catch (error) {
 				console.error("Error fetching offer:", error);
@@ -108,19 +124,25 @@ export const useOfferStore = defineStore("OfferStore", {
 			}
 		},
 
-		async updateOfferDecision(id: string, decisionData: {
-			decision: 'yes' | 'no' | null;
-			submissionMotif?: string;
-			refusalMotif?: string;
-		}) {
+		async updateOfferDecision(
+			id: string,
+			decisionData: {
+				decision: "yes" | "no" | null;
+				submissionMotif?: string;
+				refusalMotif?: string;
+			}
+		) {
 			try {
-				const response = await useApi().put<Offer>(ApiUrl.parameterized(ApiUrl.OFFER_DECISION, id), decisionData);
-				this.offers = this.offers.map(offer =>
+				const response = await useApi().put<Offer>(
+					ApiUrl.parameterized(ApiUrl.OFFER_DECISION, id),
+					decisionData
+				);
+				this.offers = this.offers.map((offer) =>
 					offer.id === id ? { ...offer, ...response.data } : offer
 				);
 				return response.data;
 			} catch (error) {
-				console.error('Error updating offer decision:', error);
+				console.error("Error updating offer decision:", error);
 				throw error;
 			}
 		},
@@ -128,29 +150,51 @@ export const useOfferStore = defineStore("OfferStore", {
 		async deleteOffer(id: string) {
 			try {
 				await useApi().del(ApiUrl.parameterized(ApiUrl.OFFER_BY_ID, id));
-				this.offers = this.offers.filter(offer => offer.id !== id);
+				this.offers = this.offers.filter((offer) => offer.id !== id);
 				return true;
 			} catch (error) {
-				console.error('Error deleting offer:', error);
+				console.error("Error deleting offer:", error);
 				throw error;
 			}
 		},
 
-		async saveDecision(id: string, decisionData: {
-			decision: 'yes' | 'no' | null;
-			submissionMotif?: string;
-			refusalMotif?: string;
-		}) {
+		async saveDecision(
+			id: string,
+			decisionData: {
+				decision: "yes" | "no" | null;
+				submissionMotif?: string;
+				refusalMotif?: string;
+			}
+		) {
 			try {
-				const response = await useApi().put<Offer>(ApiUrl.parameterized(ApiUrl.OFFER_DECISION, id), decisionData);
-				this.offers = this.offers.map(offer =>
+				const response = await useApi().put<Offer>(
+					ApiUrl.parameterized(ApiUrl.OFFER_DECISION, id),
+					decisionData
+				);
+				this.offers = this.offers.map((offer) =>
 					offer.id === id ? { ...offer, ...response.data } : offer
 				);
 				return response.data;
 			} catch (error) {
-				console.error('Error saving decision:', error);
+				console.error("Error saving decision:", error);
 				throw error;
 			}
 		},
-	}
+
+		cleanStorage() {
+			this.offers = [];
+			this.validationErrors = {};
+			this.isLoading = false;
+			this.pendingOffers = [];
+		},
+	},
+
+	// Configuration de la persistance
+	persist: {
+		storage: persistedState.cookies,
+		// Optionnel : personnaliser la clé de stockage
+		key: PERSISTANCE_KEY,
+		// Optionnel : choisir quelles propriétés persister
+		pick: ["offers"],
+	},
 });

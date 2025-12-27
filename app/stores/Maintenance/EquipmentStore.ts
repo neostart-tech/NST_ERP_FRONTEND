@@ -17,7 +17,7 @@ export const useEquipmentStore = defineStore('Equipment', {
 				if (this.equipments.length === 0)
 					this.loading = true;
 
-				const { data } = await useApi().get<Equipment[]>(ApiUrl.EQUIPMENT);
+				const { data } = await useApi().get<Equipment[]>(ApiUrl.EQUIPMENTS);
 				this.equipments = data;
 			} catch (error) {
 				console.error("Error fetching equipments: - equipmentStore.js:14", error);
@@ -28,7 +28,7 @@ export const useEquipmentStore = defineStore('Equipment', {
 
 		async addEquipment(payload: FormData) {
 			try {
-				const { data } = await useApi().post<Equipment>(ApiUrl.EQUIPMENT, payload);
+				const { data } = await useApi().post<Equipment>(ApiUrl.EQUIPMENTS, payload);
 				this.equipments.push(data);
 				useAlert().showAlert("Équipement ajouté avec succès", "success");
 			} catch (error) {
