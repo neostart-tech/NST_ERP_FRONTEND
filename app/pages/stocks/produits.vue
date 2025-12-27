@@ -92,8 +92,107 @@
 			</div>
 		</div>
 
-		<!-- Tableau des produits -->
-		<div class="overflow-x-auto rounded-lg border border-gray-200">
+		<!-- Affichage en mode cards (visible jusqu'à lg) -->
+		<div class="xl:hidden">
+			<!-- État de chargement -->
+			<div v-if="isLoading" class="flex justify-center items-center space-x-2 py-12">
+				<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+				<span class="text-gray-600">Chargement des produits...</span>
+			</div>
+
+			<!-- Aucun résultat -->
+			<div v-else-if="!filteredProducts.length" class="text-center py-12">
+				<div class="flex flex-col items-center justify-center">
+					<Icon name="heroicons:inbox" class="h-12 w-12 text-gray-300 mb-2" />
+					<p class="text-sm text-gray-500">Aucun produit trouvé</p>
+					<p class="text-xs text-gray-400 mt-1">
+						Essayez de modifier vos filtres de recherche
+					</p>
+				</div>
+			</div>
+
+			<!-- Liste des cards -->
+			<div v-else class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<div v-for="product in filteredProducts" :key="product.id"
+					class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow p-4">
+					<!-- En-tête de la card -->
+					<div class="flex items-start justify-between mb-3">
+						<div class="flex items-center flex-1">
+							<div class="flex-shrink-0 h-12 w-12 bg-blue-100 rounded-md flex items-center justify-center">
+								<Icon name="heroicons:cube" class="h-6 w-6 text-blue-600" />
+							</div>
+							<div class="ml-3 flex-1">
+								<h3 class="text-sm font-semibold text-gray-900">{{ product.name }}</h3>
+								<p class="text-xs text-gray-500">{{ product.category?.name || "Sans catégorie" }}</p>
+							</div>
+						</div>
+						<span @click="toggleProductStatus(product)"
+							class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium cursor-pointer" :class="product.status === 'active'
+									? 'bg-green-100 text-green-800 hover:bg-green-200'
+									: 'bg-red-100 text-red-800 hover:bg-red-200'">
+							{{ product.status === "active" ? "Actif" : "Inactif" }}
+						</span>
+					</div>
+
+					<!-- Informations du produit -->
+					<div class="space-y-2 mb-4">
+						<div class="flex justify-between items-center text-sm">
+							<span class="text-gray-500">Référence:</span>
+							<span class="font-medium text-gray-900">{{ product.reference || "N/A" }}</span>
+						</div>
+						<div class="flex justify-between items-center text-sm">
+							<span class="text-gray-500">Prix d'achat:</span>
+							<span class="font-medium text-gray-900">{{ formatPrice(product.unit_price_purchase) }}</span>
+						</div>
+						<div class="flex justify-between items-center text-sm">
+							<span class="text-gray-500">Prix de vente:</span>
+							<span class="font-medium" :class="{
+								'text-green-600': product.unit_price_sale > product.unit_price_purchase,
+								'text-red-600': product.unit_price_sale <= product.unit_price_purchase,
+							}">
+								{{ formatPrice(product.unit_price_sale) }}
+							</span>
+						</div>
+						<div class="pt-2">
+							<div class="flex justify-between items-center text-sm mb-1">
+								<span class="text-gray-500">Stock:</span>
+								<span class="font-medium text-gray-700">
+									{{ product.quantity }} {{ product.unit || "unité" }}{{ product.quantity !== 1 ? "s" : "" }}
+								</span>
+							</div>
+							<div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+								<div class="h-full" :class="{
+									'bg-green-500': product.quantity > 10,
+									'bg-yellow-500': product.quantity > 0 && product.quantity <= 10,
+									'bg-red-500': product.quantity === 0,
+								}" :style="{
+									width: `${Math.min(100, (product.quantity / (product.quantity + 10)) * 100)}%`,
+								}"></div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Actions -->
+					<div class="flex justify-end space-x-2 pt-3 border-t border-gray-100">
+						<button @click="openProductForm(product.id)"
+							class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors"
+							title="Modifier">
+							<Icon name="heroicons:pencil-square" class="h-4 w-4 mr-1" />
+							Modifier
+						</button>
+						<button @click="confirmDelete(product)"
+							class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition-colors"
+							title="Supprimer">
+							<Icon name="heroicons:trash" class="h-4 w-4 mr-1" />
+							Supprimer
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Affichage en mode tableau (visible à partir de xl) -->
+		<div class="hidden xl:block overflow-x-auto rounded-lg border border-gray-200">
 			<table class="min-w-full divide-y divide-gray-200">
 				<thead class="bg-gray-50">
 					<tr>
@@ -104,10 +203,7 @@
 							Référence
 						</th>
 						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
-							Prix Achat
-						</th>
-						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
-							Prix Vente
+							Prix
 						</th>
 						<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 							Stock
@@ -152,7 +248,7 @@
 									<Icon name="heroicons:cube" class="h-5 w-5 text-blue-600" />
 								</div>
 								<div class="ml-4">
-									<div class="text-sm font-medium text-gray-900">
+									<div class="text-sm font-medium text-gray-900 break-words whitespace-normal">
 										{{ product.name }}
 									</div>
 									<div class="text-xs text-gray-500">
@@ -165,17 +261,8 @@
 							{{ product.reference || "N/A" }}
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-							{{ formatPrice(product.unit_price_purchase) }}
-						</td>
-						<td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-							<span :class="{
-								'text-green-600':
-									product.unit_price_sale > product.unit_price_purchase,
-								'text-red-600':
-									product.unit_price_sale <= product.unit_price_purchase,
-							}">
-								{{ formatPrice(product.unit_price_sale) }}
-							</span>
+							P.A: {{ formatPrice(product.unit_price_purchase) }} <br>
+							P.V: {{ formatPrice(product.unit_price_sale) }}
 						</td>
 						<td class="px-6 py-4 whitespace-nowrap">
 							<div class="flex items-center">
