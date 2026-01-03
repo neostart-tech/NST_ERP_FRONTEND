@@ -15,7 +15,7 @@
 						class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-indigo-500">
 						<option value="">Sélectionner un client</option>
 						<option v-for="client in clientStore.clients" :key="client.id" :value="client.id">
-							{{ getClientDisplayName(client) }}
+							{{ getClientName(client) }}
 						</option>
 					</select>
 				</div>
@@ -51,7 +51,7 @@
 						<!-- Produit/Service -->
 						<div class="md:col-span-2">
 							<label class="block text-sm font-medium mb-1">Désignation</label>
-							<select v-model="item.productId" @change="onProductChange(idx)" required
+							<select v-model="item.articleId" @change="onProductChange(idx)" required
 								class="w-full border border-gray-300 rounded p-2 focus:ring-1 focus:ring-indigo-500">
 								<option value="">Sélectionner un produit</option>
 								<option v-for="product in products" :key="product.id" :value="product.id">
@@ -121,10 +121,10 @@
 import { ref, computed } from 'vue'
 import { onMounted } from 'vue'
 import Swal from 'sweetalert2'
-import { useProformaStore } from '@/stores/Stock/proforma'
+import { useProformaStore } from '~/app/stores/Stock/ProformaStore'
 import { useProductStore } from '@/stores/Stock/ProductStore'
-import { useClientStore } from '@/stores/clientStore'
-import { getClientDisplayName } from '~/models/Client'
+import { useClientStore } from '@/stores/ClientStore'
+import { getClientName } from '~/models/Client'
 
 
 const form = ref({
@@ -137,7 +137,7 @@ const form = ref({
 // Ajouter un article
 const addItem = () => {
 	form.value.items.push({
-		productId: '',
+		articleId: '',
 		productName: '',
 		quantity: 1,
 		unitPrice: 0
@@ -161,7 +161,7 @@ onMounted(() => {
 // Gestion du changement de produit
 const onProductChange = (idx) => {
 	const selectedProduct = products.value.find(
-		(product) => product.id === form.value.items[idx].productId
+		(product) => product.id === form.value.items[idx].articleId
 	)
 	if (selectedProduct) {
 		form.value.items[idx].productName = selectedProduct.name
@@ -188,7 +188,7 @@ const goBack = () => {
 }
 
 const handleSubmit = async () => {
-	await proformaStore.addProforma(form.value);
+	await proformaStore.store(form.value);
 	Swal.fire({
 		icon: 'success',
 		title: 'Succès',

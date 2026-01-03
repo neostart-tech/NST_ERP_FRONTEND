@@ -23,3 +23,9 @@ export const defaultClient = () : Client => ({
 	country: '',
 	city: ''
 });
+
+export function getClientName(client: Client): string {
+	return client.client_type.toLowerCase() === 'physique'
+		? `${client.first_name} ${client.last_name}`
+		: client.company_name;
+}

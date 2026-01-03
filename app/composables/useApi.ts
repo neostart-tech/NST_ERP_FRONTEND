@@ -13,19 +13,20 @@ export const useApi = () => {
 	const authStore = useAuthStore();
 	const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
-	let XSRFToken = useCookie('XSRF-TOKEN').value;
-	if (!XSRFToken) {
-		refreshToken().then();
-		XSRFToken = useCookie('XSRF-TOKEN').value;
-	}
-
 	const getHeaders = (headers: HeadersInit = {}, isFormData: boolean = false) => {
+		// Récupérer le token XSRF à chaque requête
+		const XSRFToken = useCookie('XSRF-TOKEN').value;
+
 		const defaultHeaders: any = {
-			'X-XSRF-TOKEN': XSRFToken,
 			'Accept': 'application/json',
 			...(authStore.token && { Authorization: `Bearer ${authStore.token}` }),
 			'ngrok-skip-browser-warning': 'true'
 		};
+
+		// Ajouter le token XSRF s'il existe
+		if (XSRFToken) {
+			defaultHeaders['X-XSRF-TOKEN'] = XSRFToken;
+		}
 
 		// N'ajouter Content-Type que si ce n'est pas FormData
 		if (!isFormData) {
@@ -109,8 +110,20 @@ export const useApi = () => {
 };
 
 const refreshToken = async () => {
-	console.log("Refreshing token...");
-	await $fetch(`${import.meta.env.VITE_API_URL_BASE || 'http://localhost:8000'}/sanctum/csrf-cookie`, {
-		credentials: 'include',
-	})
+	console.log("Refreshing CSRF token...");
+	try {
+		await $fetch(`${import.meta.env.VITE_API_URL_BASE || 'http://localhost:8000'}/sanctum/csrf-cookie`, {
+			method: 'GET',
+			credentials: 'include',
+			mode: 'cors',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+			}
+		});
+		console.log("CSRF token refreshed successfully");
+	} catch (error) {
+		console.error("Error refreshing CSRF token:", error);
+		throw error;
+	}
 }

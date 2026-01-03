@@ -7,7 +7,7 @@ export const useAlert = () => {
   const showAlert = (message: string, type: 'success' | 'error' | 'info' = 'info', duration = 3000) => {
     alert.value = message
     alertType.value = type
-    
+
     // Animation de fade-out après 3 secondes
     setTimeout(() => {
       alert.value = null
@@ -15,7 +15,7 @@ export const useAlert = () => {
   }
 
   const getAlertClasses = () => {
-    const baseClasses = 'fixed top-4 right-4 left-4 lg:left-auto px-4 py-3 rounded-lg shadow-lg z-50'
+    const baseClasses = 'fixed top-4 right-4 left-4 lg:left-auto px-4 py-3 rounded-lg shadow-lg z-70'
     const animationClasses = 'animate-fade-in-down'
     const typeClasses = {
       success: 'bg-green-100 border border-green-400 text-green-700',

@@ -275,7 +275,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useProformaStore } from '~/app/stores/Stock/proformaStore'
+import { useProformaStore } from '~/app/stores/Stock/ProformaStore'
 import { Chart, registerables } from 'chart.js'
 import { PieChart, BarChart } from 'vue-chart-3'
 import { format } from 'date-fns'

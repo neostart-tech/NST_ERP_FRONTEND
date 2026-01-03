@@ -1,8 +1,8 @@
-import type { Product } from "~/models/Product";
+import type { Movement } from "~/models/Movement";
 
-export const useProductStore = defineStore("ProductStore", {
+export const useMovementStore = defineStore("MovementStore", {
 	state: () => ({
-		products: [] as Product[],
+		movements: [] as Movement[],
 		isLoading: false,
 		isFormLoading: false,
 		validationErrors: {} as ValidationErrors,
@@ -11,28 +11,28 @@ export const useProductStore = defineStore("ProductStore", {
 	actions: {
 		async fetchAll() {
 			try {
-				if (this.products.length == 0) {
+				if (this.movements.length == 0) {
 					this.isLoading = true;
 				}
-				const { data } = await useApi().get<Product[]>(ApiUrl.PRODUCTS);
-				this.products = data;
+				const { data } = await useApi().get<Movement[]>(ApiUrl.MOVEMENTS);
+				this.movements = data;
 			} catch (error) {
-				console.error("Erreur lors du chargement des produits:", error);
+				console.error("Erreur lors du chargement des mouvements:", error);
 				throw error;
 			} finally {
 				this.isLoading = false;
 			}
 		},
 
-		async store(product: Product) {
+		async store(movement: Movement) {
 			this.validationErrors = {};
 			this.isFormLoading = true;
 			try {
-				const { data } = await useApi().post<Product>(
-					ApiUrl.PRODUCTS,
-					product
+				const { data } = await useApi().post<Movement>(
+					ApiUrl.MOVEMENTS,
+					movement
 				);
-				this.products.push(data);
+				this.movements.push(data);
 				this.fetchAll();
 			} catch (error) {
 				console.error("Erreur lors de la création du produit:", error);
@@ -43,20 +43,18 @@ export const useProductStore = defineStore("ProductStore", {
 			}
 		},
 
-		async update(product: Product) {
+		async update(movement: Movement) {
 			this.validationErrors = {};
 			this.isFormLoading = true;
 			try {
-				const { data } = await useApi().put<Product>(
-					ApiUrl.parameterized(ApiUrl.PRODUCT_BY_ID, product.id),
-					product
+				const { data } = await useApi().put<Movement>(
+					ApiUrl.parameterized(ApiUrl.MOVEMENT_BY_ID, movement.id),
+					movement
 				);
-				this.products = this.products.map((p) =>
-					p.id === product.id ? data : p
-				);
+				this.movements = this.movements.map(_ =>_.id === movement.id ? data : _);
 				this.fetchAll();
 			} catch (error) {
-				console.error("Erreur lors de la mise à jour du produit:", error);
+				console.error("Erreur lors de la mise à jour du mouvement:", error);
 				this.validationErrors = useValidationErrors(error);
 				throw error;
 			} finally {
@@ -64,22 +62,10 @@ export const useProductStore = defineStore("ProductStore", {
 			}
 		},
 
-		async toggleStatus(product: Product) {
-			try {
-				const newStatus = product.is_active ? "inactive" : "active";
-				await this.update({
-					...product,
-					is_active: newStatus === "active" ? true : false,
-				});
-			} catch (error) {
-				throw error;
-			}
-		},
-
 		async delete(id: string) {
 			try {
 				await useApi().del(ApiUrl.parameterized(ApiUrl.PRODUCT_BY_ID, id));
-				this.products = this.products.filter((_) => _.id !== id);
+				this.movements = this.movements.filter((_) => _.id !== id);
 				await this.fetchAll();
 			} catch (error) {
 				console.error("Erreur lors de la suppression du produit:", error);
@@ -88,7 +74,7 @@ export const useProductStore = defineStore("ProductStore", {
 		},
 
 		cleanStorage() {
-			this.products = [];
+			this.movements = [];
 			this.validationErrors = {};
 			this.isLoading = false;
 		},
@@ -98,8 +84,8 @@ export const useProductStore = defineStore("ProductStore", {
 	persist: {
 		storage: secureLsStorage,
 		// Optionnel : personnaliser la clé de stockage
-		key: "product-store",
+		key: "movement-store",
 		// Optionnel : choisir quelles propriétés persister
-		pick: ["products"],
+		pick: ["movements"],
 	},
 });

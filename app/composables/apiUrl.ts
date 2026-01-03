@@ -73,6 +73,13 @@ export const ApiUrl = {
 	PRODUCTS: "/products",
 	PRODUCT_BY_ID: "/products/:id",
 
+	MOVEMENTS: "/stock-movements",
+	MOVEMENT_BY_ID: "/stock-movements/:id",
+
+	PROFORMA: "/proforma",
+	PROFORMA_BY_ID: "/proforma/:id",
+	PROFORMA_BY_ID_STATUS: "/proforma/:id/status",
+
 	/**
  * Fonction pour les url à paramètres sous la forme url/:id
  */
