@@ -15,7 +15,7 @@
 						class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-indigo-500">
 						<option value="">Sélectionner un client</option>
 						<option v-for="client in clientStore.clients" :key="client.id" :value="client.id">
-							{{ getClientDisplayName(client) }}
+							{{ getClientName(client) }}
 						</option>
 					</select>
 				</div>
@@ -124,7 +124,7 @@ import Swal from 'sweetalert2'
 import { useProformaStore } from '@/stores/Stock/proforma'
 import { useProductStore } from '@/stores/Stock/ProductStore'
 import { useClientStore } from '@/stores/clientStore'
-import { getClientDisplayName } from '~/models/Client'
+import { getClientName } from '~/models/Client'
 
 
 const form = ref({

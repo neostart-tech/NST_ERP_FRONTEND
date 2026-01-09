@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { getClientDisplayName, type Client } from "~/models/Client";
+import { getClientName, type Client } from "~/models/Client";
 import type { Letter } from "~/models/Contract";
 import { formatDate } from "@/utils/dateParser";
 
@@ -267,7 +267,7 @@ export const generateLetterPDF = (letterData: Letter, client: Client) => {
 
                 <div class="address-section">
                     <strong>À l'attention de:</strong><br>
-                    ${getClientDisplayName(client)}<br>
+                    ${getClientName(client)}<br>
                     ${letterData.clientContact || client.email || ""}<br>
                     ${client.address || ""}
                 </div>

@@ -103,7 +103,7 @@
 							class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md border">
 							<option value="">Tous</option>
 							<option v-for="client in clients" :key="client.id" :value="client.id">
-								{{ getClientDisplayName(client) }}
+								{{ getClientName(client) }}
 							</option>
 						</select>
 					</div>
@@ -162,7 +162,7 @@
 								}}</td>
 
 								<!-- Nom du client -->
-								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ getClientDisplayName(contract.client!) }}
+								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ getClientName(contract.client!) }}
 								</td>
 
 								<!-- Formule -->
@@ -315,7 +315,7 @@
 											class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md border">
 											<option value="">Sélectionnez un client</option>
 											<option v-for="client in clients" :key="client.id" :value="client.id">
-												{{ getClientDisplayName(client) }}
+												{{ getClientName(client) }}
 											</option>
 										</select>
 									</div>
@@ -538,9 +538,11 @@ import contractShowModal from './contractShowModal.vue'
 useHead({ title: "Gestion des contrats" });
 // Je importe les fonctions de Vue pour la réactivité
 import Swal from 'sweetalert2';
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, reactive } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useContractStore } from '~/app/stores/Maintenance/ContractStore';
-import { getClientDisplayName, type Client } from '~/models/Client';
+import { useClientStore } from '~/app/stores/clientStore';
+import { getClientName, type Client } from '~/models/Client';
 import { type Contract, contractStatusToString, defaultContractData, defaultLetterData, type Letter } from '~/models/Contract';
 import ContractForm from '../../components/contracts/ContractForm.vue';
 import EmptyState from '~/app/components/EmptyState.vue';
@@ -749,9 +751,9 @@ const generateCalendar = async (contract: Contract) => {
 
 
 // Je récupère le nom d'un client par son ID
-const getClientName = (clientId: string) => {
+const getClientNameById = (clientId: string) => {
 	const client = clients.value.find(c => c.id === clientId)
-	return client ? getClientDisplayName(client) : "Client inconnu"
+	return client ? getClientName(client) : "Client inconnu"
 }
 
 // Je formate une date au format français
@@ -940,7 +942,7 @@ const upcomingInterventions = computed(() => {
 				if (interventionDate >= today && interventionDate <= nextWeek && intervention.status === 'planned') {
 					interventions.push({
 						contract: contract.reference_number,
-						client: getClientName(contract.client_id),
+						client: getClientNameById(contract.client_id),
 						date: intervention.date,
 						type: intervention.type,
 						description: intervention.description
@@ -974,7 +976,7 @@ const filteredContracts = computed(() => {
 		// Recherche texte
 		if (filters.value.search) {
 			const searchTerm = filters.value.search.toLowerCase()
-			const clientName = getClientName(contract.client_id).toLowerCase()
+			const clientName = getClientNameById(contract.client_id).toLowerCase()
 			const reference = contract.reference_number.toLowerCase()
 
 			if (!clientName.includes(searchTerm) && !reference.includes(searchTerm)) {

@@ -1,4 +1,4 @@
-import { getClientDisplayName, type Client } from "~/models/Client";
+import { getClientName, type Client } from "~/models/Client";
 import type { Contract } from "~/models/Contract";
 import { formatDate } from "@/utils/dateParser";
 
@@ -264,7 +264,7 @@ export const generateContractPDF = (contract: Contract, client: Client) => {
 
                     <div class="party">
                         <h3>LE CLIENT</h3>
-                        <p><strong>${getClientDisplayName(client)}</strong></p>
+                        <p><strong>${getClientName(client)}</strong></p>
                         <p>Contact: ${contract.contact}</p>
                         ${
 													client.address

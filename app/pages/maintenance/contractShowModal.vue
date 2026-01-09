@@ -15,7 +15,7 @@
 					<div class="flex justify-between items-center">
 						<div>
 							<h3 class="text-xl font-bold">Contrat #{{ selectedContract.reference_number }}</h3>
-							<p class="text-blue-100 text-sm mt-1">{{ getClientDisplayName(selectedContract.client!) }}</p>
+							<p class="text-blue-100 text-sm mt-1">{{ getClientName(selectedContract.client!) }}</p>
 						</div>
 						<div class="text-right">
 							<!-- Badge de statut -->
@@ -247,7 +247,7 @@
 </template>
 
 <script setup lang="ts">
-import { getClientDisplayName } from '~/models/Client';
+import { getClientName } from '~/models/Client';
 import { type Contract } from '~/models/Contract';
 
 defineProps<{

@@ -29,7 +29,7 @@
 								class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
 								<option value="">Sélectionnez un client</option>
 								<option v-for="client in clients" :key="client.id" :value="client.id">
-									{{ getClientDisplayName(client) }}
+									{{ getClientName(client) }}
 								</option>
 							</select>
 							<InvalidInput :error="validationErrors.client_id" />
@@ -191,7 +191,7 @@
 </template>
 
 <script setup lang="ts">
-import { getClientDisplayName, type Client } from '~/models/Client';
+import {  getClientName, type Client } from '~/models/Client';
 import type { Contract } from '~/models/Contract';
 import Spinner from '../partials/Spinner.vue';
 import { useContractStore } from '~/app/stores/Maintenance/ContractStore';
