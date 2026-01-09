@@ -14,17 +14,16 @@ export const AppUrl = {
 	INVOICES: "/invoices",
 	SALES: "/ventes",
 	PROFORMA_INFORMATIONS: "/ventes/gestion-des-proforma",
-	PROPO: '/ventes/proposition',
-	ORDER: '/ventes/order',
-	ORDERINFO: '/ventes/infoCommande',
-	INVOICE: '/ventes/invoice',
-	INVOICEINFO: '/ventes/recapFacture',
-	DELIVERY: '/ventes/livraison',
-	DELIVERYINFO: '/ventes/listeLivraison',
-	SCHEDULE: '/ventes/echeanceCreate',
-	SCHEDULEINFO: '/ventes/echeanceListe',
+	PROPO: "/ventes/proposition",
+	ORDER: "/ventes/order",
+	INVOICE: "/ventes/invoice",
+	INVOICEINFO: "/ventes/recapFacture",
+	DELIVERY: "/ventes/livraison",
+	DELIVERYINFO: "/ventes/listeLivraison",
+	SCHEDULE: "/ventes/echeanceCreate",
+	SCHEDULEINFO: "/ventes/echeanceListe",
 	BALANCE: "/ventes/bilan",
-	STATS: '/ventes/statistique',
+	STATS: "/ventes/statistique",
 	FOLLOWUP: "/followup",
 	USERS: "/utilisateurs",
 
@@ -54,6 +53,9 @@ export const AppUrl = {
 	SALES_REPRESENTATIVES_EDIT: "/users/:id/edit",
 	SALES_REPRESENTATIVES_COMISSIONS: "/ventes/commissions",
 	SALES_REPRESENTATIVES_BONUSES: "/ventes/bonuses",
+	ORDER_INDEX: "/ventes/gestion-des-commandes",
+	ADD_NEW_ORDER: "/ventes/ajouter-une-nouvelle-commande",
+	ORDER_SHOW: "/ventes/gestion-des-commandes/:id",
 
 	//MAINTENANCE
 	MAINTENANCE_TICKETS: "/maintenance/tickets",
@@ -66,7 +68,8 @@ export const AppUrl = {
 	MAINTENANCE_ADD_TECHNICIAN: "/maintenance/gestion-des-techniciens",
 	MAINTENANCE_REPORTING_BREAK: "/maintenance/signaler-une-panne",
 	MAINTENANCE_CUSTOMER_FILE: "/maintenance/fiche-client",
-	MAINTENANCE_MANAGEMENT_CONTRACT_MAINTENANCE: "/maintenance/gestion-des-contrats",
+	MAINTENANCE_MANAGEMENT_CONTRACT_MAINTENANCE:
+		"/maintenance/gestion-des-contrats",
 	MAINTENANCE_QUOTE: "/maintenance/gestion-devis",
 	MAINTENANCE_REPORTING: "/maintenance/reportage",
 	MAINTENANCE_MANAGEMENT_INVOICE: "/maintenance/gestion-factures",
@@ -80,5 +83,5 @@ export const AppUrl = {
 	USERS_ADD: "/utilisateurs/ajouter",
 	ROLES_INDEX: "/roles",
 
-	parameterize: (item: string, id: string) => item.replace(":id", id)
+	parameterize: (item: string, id: string) => item.replace(":id", id),
 } as const;

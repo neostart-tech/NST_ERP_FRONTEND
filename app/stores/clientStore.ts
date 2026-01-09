@@ -32,7 +32,7 @@ export const useClientStore = defineStore('client', {
 		},
 
 		// Charger les clients
-		async fetchClients() {
+		async fetchAll() {
 			try {
 				this.isLoading = true;
 				this.errors = {};

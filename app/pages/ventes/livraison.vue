@@ -13,7 +13,7 @@
         <select v-model="selectedCommande" @change="loadCommande" class="border border-black w-full p-2 rounded-lg">
           <option value="">-- Sélectionner une commande --</option>
           <option v-for="(cmd, index) in orderStore.commande" :key="cmd.id" :value="cmd.id">
-            {{ cmd.date }} 
+            {{ cmd.date }}
           </option>
         </select>
       </div>
@@ -89,7 +89,7 @@
         Annuler
       </button>
       <button class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700" type="button" @click="generateBordereau">
-        Enregistrer 
+        Enregistrer
       </button>
     </div>
   </div>
@@ -97,9 +97,9 @@
 
 <script setup>
 import { ref, watch, onMounted } from 'vue'
-import { useOrderStore, useDeliveryStore } from '#imports'
 import Swal from 'sweetalert2'
 import { useRouter } from 'vue-router'
+import { useOrderStore } from '~/app/stores/Sale/OrderStore'
 
 const router = useRouter()
 const livraisonType = ref('')

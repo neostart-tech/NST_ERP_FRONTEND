@@ -352,7 +352,7 @@ const moralClientsCount = computed(() => {
 
 onMounted(async () => {
   try {
-    await clientStore.fetchClients();
+    await clientStore.fetchAll();
 
     const clients = clientStore.clients ?? [];
 

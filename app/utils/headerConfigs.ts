@@ -105,6 +105,14 @@ const titleMap: Record<string, PageContentTitle> = {
 		description: "Récapitulatif des factures",
 		icon: "heroicons:document-text",
 	},
+	"ventes-gestion-des-commandes-id": {
+		title: "Détails d'une commande",
+		icon: "heroicons:document-text",
+	},
+	"ventes-gestion-des-commandes": {
+		title: "Gestion des commandes",
+		icon: "heroicons:document-text",
+	},
 };
 
 const defaultPageContentTitle = {
@@ -113,4 +121,5 @@ const defaultPageContentTitle = {
 	description: "Système de gestion intégré",
 } as PageContentTitle;
 
-export const getPageContentTitle = (routeName: string) => titleMap[routeName] || defaultPageContentTitle;
+export const getPageContentTitle = (routeName: string) =>
+	titleMap[routeName] || defaultPageContentTitle;

@@ -39,10 +39,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { useOrderStore } from '#imports'
+import { ref, onMounted } from 'vue'
 import { Chart, registerables } from 'chart.js'
 import { PieChart, BarChart } from 'vue-chart-3'
+import { useOrderStore } from '~/app/stores/Sale/OrderStore'
 
 Chart.register(...registerables)
 

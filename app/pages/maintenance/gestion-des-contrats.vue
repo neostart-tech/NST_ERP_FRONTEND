@@ -597,7 +597,7 @@ const API_BASE = 'http://localhost:8000/api'
 // Je récupère la liste des clients depuis l'API
 const fetchClients = async () => {
 	try {
-		clientStore.fetchClients();
+		clientStore.fetchAll();
 	} catch (error) {
 		Swal.fire({
 			title: "Erreur de chargement",

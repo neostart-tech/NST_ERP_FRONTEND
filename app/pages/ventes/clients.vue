@@ -261,7 +261,7 @@ const newClient = ref(defaultClient());
 
 const fetchClients = async () => {
 	try {
-		await clientStore.fetchClients()
+		await clientStore.fetchAll()
 	} catch (e) {
 		error.value = e as Error
 		console.error("Erreur lors de la récupération des entreprises:", e)
@@ -357,7 +357,7 @@ const saveClient = async () => {
 				isSavingData.value = true;
 				await clientStore.createClient(newClient.value);
 				Swal.fire({ icon: 'success', title: 'Succès', text: 'Client enregistré avec succès', timer: 2000, showConfirmButton: false });
-				await clientStore.fetchClients();
+				await clientStore.fetchAll();
 				// await clientStore.fetchStat();
 				resetForm();
 				showModal.value = false;
@@ -411,7 +411,7 @@ const updateClient = async () => {
 				isSavingData.value = true;
 				await clientStore.updateClient(clientId.value!, newClient.value)
 				Swal.fire({ icon: 'success', title: 'Succès', text: 'Client modifié avec succès', timer: 2000, showConfirmButton: false })
-				await clientStore.fetchClients()
+				await clientStore.fetchAll()
 				resetForm()
 				showModal.value = false
 			} catch (error) {
@@ -439,7 +439,7 @@ const deleteClient = async (client: Client) => {
 			try {
 				await clientStore.deleteClient(client.id)
 				Swal.fire({ icon: 'success', title: 'Succès', text: 'Client supprimé avec succès', showConfirmButton: false })
-				await clientStore.fetchClients()
+				await clientStore.fetchAll()
 			} catch (error) {
 				Swal.fire({ icon: 'error', title: 'Erreur', text: 'Impossible de supprimer le client' })
 			}

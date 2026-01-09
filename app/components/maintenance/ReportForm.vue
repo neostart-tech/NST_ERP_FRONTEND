@@ -344,7 +344,7 @@ const loadEquipments = async () => {
 
 const loadClients = async () => {
 	try {
-		await clientStore.fetchClients();
+		await clientStore.fetchAll();
 	} catch (error) {
 		useAlert().showAlert('Impossible de charger la liste des clients', 'error', 5000);
 	}

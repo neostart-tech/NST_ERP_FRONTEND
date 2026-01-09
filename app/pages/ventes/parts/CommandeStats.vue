@@ -274,11 +274,11 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useOrderStore } from '#imports'
 import { Chart, registerables } from 'chart.js'
 import { PieChart, BarChart } from 'vue-chart-3'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import { useOrderStore } from '~/app/stores/Sale/OrderStore'
 
 Chart.register(...registerables)
 

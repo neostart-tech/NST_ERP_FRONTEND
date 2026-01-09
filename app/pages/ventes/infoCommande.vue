@@ -308,8 +308,8 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useOrderStore } from "#imports";
 import Swal from "sweetalert2";
+import { useOrderStore } from "~/app/stores/Sale/OrderStore";
 
 const router = useRouter();
 const orderStore = useOrderStore();

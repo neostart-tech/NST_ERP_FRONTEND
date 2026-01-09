@@ -79,6 +79,11 @@ export const ApiUrl = {
 	PROFORMA: "/proforma",
 	PROFORMA_BY_ID: "/proforma/:id",
 	PROFORMA_BY_ID_STATUS: "/proforma/:id/status",
+	PROFORMA_VALIDATE: "/proforma/validated",
+
+	ORDERS: "/orders",
+	ORDER_BY_ID: "/orders/:id",
+	ORDER_STATUS: "/orders/:id/status",
 
 	/**
  * Fonction pour les url à paramètres sous la forme url/:id

@@ -31,6 +31,7 @@ export const useProformaStore = defineStore("ProformaStore", {
 					proforma
 				);
 				this.proforma.push(data);
+				this.fetchAll();
 			} catch (error) {
 				console.error("Erreur d'enregistrement de facture", error);
 				throw error;
@@ -41,11 +42,15 @@ export const useProformaStore = defineStore("ProformaStore", {
 
 		async fetchProformaValidate() {
 			try {
-				this.proforma = await $fetch(
-					"http://127.0.0.1:8000/api/proforma/validated"
-				);
+				if (this.proforma.length == 0) {
+					this.isLoading = true;
+				}
+				const { data } = await useApi().get<Proforma[]>(ApiUrl.PROFORMA_VALIDATE);
+				this.proforma = data;
 			} catch (error) {
-				console.error("Erreur lors de l'affichage", error);
+				throw error;
+			} finally {
+				this.isLoading = false;
 			}
 		},
 		async updateStatus(id: string, status: string) {
@@ -54,7 +59,7 @@ export const useProformaStore = defineStore("ProformaStore", {
 					ApiUrl.parameterized(ApiUrl.PROFORMA_BY_ID_STATUS, id),
 					{ status }
 				);
-				this.proforma = this.proforma.map(_ => _.id === id ? data : _);
+				this.proforma = this.proforma.map((_) => (_.id === id ? data : _));
 			} catch (error) {
 				console.error("Erreur lors de la misa à jour du statut", error);
 			} finally {
@@ -64,18 +69,7 @@ export const useProformaStore = defineStore("ProformaStore", {
 
 		async downloadProforma(proforma: Proforma) {
 			try {
-				window.open(
-					`http://localhost:8000/api/proforma/download/${proforma.id}`,
-					"_blank"
-				);
-				// const res = await fetch(`http://localhost:8000/api/proforma/download/${proforma.id}`)
-				// const blob = await res.blob()
-				// const urlBlob = window.URL.createObjectURL(blob)
-				// const a = document.createElement('a')
-				// a.href = urlBlob
-				// a.download = `proforma_${proforma.reference}.pdf`
-				// a.click()
-				//  window.URL.revokeObjectURL(urlBlob)
+				useAlert().showAlert("Fonctionnalité pas encore implémentée", "info");
 			} catch (error) {
 				console.error("Erreur lors du téléchargement du PDF", error);
 			}
@@ -91,14 +85,21 @@ export const useProformaStore = defineStore("ProformaStore", {
 				throw error;
 			}
 		},
+
+		cleanStorage() {
+			this.proforma = [];
+			this.isLoading = false;
+			this.isSaving = false;
+			this.validationErrors = {};
+		}
 	},
 
 	// Configuration de la persistance
-	// persist: {
-	// 	storage: secureLsStorage,
-	// 	// Optionnel : personnaliser la clé de stockage
-	// 	key: "proforma-store",
-	// 	// Optionnel : choisir quelles propriétés persister
-	// 	pick: ["proforma"],
-	// },
+	persist: {
+		storage: secureLsStorage,
+		// Optionnel : personnaliser la clé de stockage
+		key: "proforma-store",
+		// Optionnel : choisir quelles propriétés persister
+		pick: ["proforma"],
+	},
 });

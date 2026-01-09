@@ -13,7 +13,7 @@
 					<!-- Header -->
 					<div class="flex items-center justify-between mb-6 bg-gradient-to-r from-blue-500 to-green-500 p-2">
 						<h2 class="text-lg font-semibold text-white flex items-center gap-2">
-							<i class="fas fa-file-invoice"></i> Enregistrer une Facture Proforma
+							<i class="fas fa-file-invoice"></i> {{ modalName }}
 						</h2>
 						<button @click="closeModal" class="text-white">
 							<Icon name="heroicons:x-mark" class="w-6 h-6" />
@@ -150,8 +150,13 @@ const props = defineProps({
 	showModal: {
 		type: Boolean,
 		required: true
+	},
+	modalName: {
+		type: String,
+		required: false,
+		default: 'Enregistrer une Facture Proforma'
 	}
-})
+});
 
 const emit = defineEmits(['close', 'saved'])
 
@@ -160,7 +165,7 @@ const form = ref({
 	object: '',
 	notes: '',
 	items: [] // { productName, quantity, unitPrice }
-})
+});
 
 // Ajouter un article
 const addItem = () => {
@@ -188,7 +193,7 @@ const proformaStore = useProformaStore();
 const { products } = storeToRefs(productStore);
 
 onMounted(() => {
-	clientStore.fetchClients()
+	clientStore.fetchAll()
 	productStore.fetchAll()
 })
 
@@ -228,7 +233,7 @@ const handleSubmit = async () => {
 		title: 'Succès',
 		text: 'Proforma enregistrée avec succès',
 	});
-	form.value = { clientId: '', object: '', items: [] }; // reset formulaire
+	form.value = { clientId: '', object: '', items: [] };
 	emit('saved')
 	emit('close')
 };

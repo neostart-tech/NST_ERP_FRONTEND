@@ -5,7 +5,7 @@ export interface User extends UserCreateForm {
 	isActive: boolean;
 	createdAt: string;
 	hasConfirmedPassword: boolean;
-	loggedInAt: string;
+	loggedInAt: Date;
 }
 
 export interface AuthUser extends User {

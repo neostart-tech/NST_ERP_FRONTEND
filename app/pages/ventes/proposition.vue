@@ -154,7 +154,7 @@ const proformaStore = useProformaStore();
 const { products } = storeToRefs(productStore);
 
 onMounted(() => {
-	clientStore.fetchClients()
+	clientStore.fetchAll()
 	productStore.fetchAll()
 })
 

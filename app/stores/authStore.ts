@@ -1,4 +1,3 @@
-// stores/auth.ts
 import { AppUrl } from "@/composables/appUrl";
 import type { User, LoginCredential, AuthUser, PasswordResetData, NewPasswordData } from '~/models/User';
 import { useApi } from '@/composables/useApi';
@@ -10,6 +9,8 @@ import { useEnterpriseStore } from './EnterpriseStore';
 import { useEquipmentStore } from "./Maintenance/EquipmentStore";
 import { useTechnicianStore } from "./TechnicianStore";
 import { useInterventionStore } from "./Maintenance/InterventionStore";
+import { useProformaStore } from "./Stock/ProformaStore";
+import { useOrderStore } from "./Sale/OrderStore";
 
 export const useAuthStore = defineStore('AuthStore', {
 	state: () => ({
@@ -101,6 +102,8 @@ export const useAuthStore = defineStore('AuthStore', {
 			useTechnicianStore().cleanStorage();
 			useInterventionStore().cleanStorage();
 			useOfferStore().cleanStorage();
+			useProformaStore().cleanStorage();
+			useOrderStore().cleanStorage();
 		},
 	},
 

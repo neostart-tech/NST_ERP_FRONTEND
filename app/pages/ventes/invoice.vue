@@ -11,7 +11,7 @@
           <select v-model="selectedCommande"class="text-center border border-black w-full p-2 rounded-lg">
           <option value="">Sélectionner la commande</option>
           <option v-for="(cmd,index) in orderStoreValidate.commande" :key="cmd.id" :value="cmd.id">
-              {{ cmd.date }} 
+              {{ cmd.date }}
 
           </option>
         </select>
@@ -120,11 +120,11 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useOrderStore } from '#imports'
 import {useInvoiceStore} from '#imports'
 import { onMounted } from 'vue'
 import { watch } from 'vue'
 import Swal from 'sweetalert2'
+import { useOrderStore } from '~/app/stores/Sale/OrderStore'
 
 definePageMeta({ layout: 'default' })
 const router = useRouter()
@@ -198,7 +198,7 @@ const submitInvoice= async ()=>{
       quantity:item.qty,
       unitPrice:item.price
     })),
-    invoiceTypeId: factureType.value 
+    invoiceTypeId: factureType.value
 
   }
   try{
@@ -213,7 +213,7 @@ const submitInvoice= async ()=>{
     showConfirmButton:false,
 
    })
-    
+
     // Réinitialiser le formulaire
   form.value = { client: '', date: '', items: [] }
   selectedCommande.value = ''
