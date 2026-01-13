@@ -27,6 +27,12 @@ export const AppUrl = {
 	FOLLOWUP: "/followup",
 	USERS: "/utilisateurs",
 
+	//STOCKS
+	STOCKS: "/stocks",
+	STOCKS_PRODUCTS: "/stocks/produits",
+	STOCKS_MOVEMENTS: "/stocks/mouvements",
+
+
 	// OFFERS
 	OFFERS: "/offers",
 	OFFERS_NEW: "/offers/offer-form",
@@ -68,8 +74,7 @@ export const AppUrl = {
 	MAINTENANCE_ADD_TECHNICIAN: "/maintenance/gestion-des-techniciens",
 	MAINTENANCE_REPORTING_BREAK: "/maintenance/signaler-une-panne",
 	MAINTENANCE_CUSTOMER_FILE: "/maintenance/fiche-client",
-	MAINTENANCE_MANAGEMENT_CONTRACT_MAINTENANCE:
-		"/maintenance/gestion-des-contrats",
+	MAINTENANCE_MANAGEMENT_CONTRACT_MAINTENANCE:"/maintenance/gestion-des-contrats",
 	MAINTENANCE_QUOTE: "/maintenance/gestion-devis",
 	MAINTENANCE_REPORTING: "/maintenance/reportage",
 	MAINTENANCE_MANAGEMENT_INVOICE: "/maintenance/gestion-factures",

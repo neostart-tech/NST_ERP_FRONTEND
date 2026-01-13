@@ -61,10 +61,8 @@
 
 	<div class="flex justify-between items-center mb-6">
 		<h2 class="text-xl font-semibold text-gray-800">Liste des Bordereaux</h2>
-		<select
-			v-model="filterType"
-			class="border border-gray-300 rounded-md shadow-sm px-4 py-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-		>
+		<select v-model="filterType"
+			class="border border-gray-300 rounded-md shadow-sm px-4 py-2 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
 			<option value="">Tous les types</option>
 			<option value="complete">Livraison Complète</option>
 			<option value="partial">Livraison Partielle</option>
@@ -75,50 +73,28 @@
 		<table class="min-w-full divide-y divide-gray-200">
 			<thead class="bg-gradient-to-r from-blue-50 to-blue-100">
 				<tr>
-					<th
-						scope="col"
-						class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-					>
+					<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 						Client
 					</th>
-					<th
-						scope="col"
-						class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-					>
+					<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 						Commande
 					</th>
-					<th
-						scope="col"
-						class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-					>
+					<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 						Type
 					</th>
-					<th
-						scope="col"
-						class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-					>
+					<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 						Date
 					</th>
-					<th
-						scope="col"
-						class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-					>
+					<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 						Adresse
 					</th>
-					<th
-						scope="col"
-						class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-					>
+					<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 						Actions
 					</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr
-					v-for="delivery in filteredDeliveries"
-					:key="delivery.id"
-					class="hover:bg-gray-50 border-b border-gray-200"
-				>
+				<tr v-for="delivery in filteredDeliveries" :key="delivery.id" class="hover:bg-gray-50 border-b border-gray-200">
 					<td class="p-3 text-center border border-gray-200"></td>
 					<td class="p-3 text-center border border-gray-200"></td>
 					<td class="p-3 text-center border border-gray-200">
@@ -133,18 +109,12 @@
 						{{ delivery.delivery_address }}
 					</td>
 					<td class="p-3 text-center space-x-2">
-						<button
-							@click="viewDetails(delivery)"
-							title="Voir"
-							class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100 transition duration-150 ease-in-out"
-						>
+						<button @click="viewDetails(delivery)" title="Voir"
+							class="text-blue-600 hover:text-blue-900 p-1 rounded-full hover:bg-blue-100 transition duration-150 ease-in-out">
 							<i class="fas fa-eye"></i>
 						</button>
-						<button
-							@click="downloadDelivery(delivery)"
-							title="Télécharger"
-							class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 transition duration-150 ease-in-out"
-						>
+						<button @click="downloadDelivery(delivery)" title="Télécharger"
+							class="text-green-600 hover:text-green-900 p-1 rounded-full hover:bg-green-100 transition duration-150 ease-in-out">
 							<i class="fas fa-download"></i>
 						</button>
 					</td>
@@ -158,20 +128,14 @@
 		</table>
 	</div>
 
-	<div
-		v-if="showModal && selectedDelivery"
-		class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-	>
-		<div
-			class="bg-white rounded-lg shadow-xl w-3/4 max-w-3xl p-6 relative max-h-[90vh] overflow-y-auto"
-		>
+	<div v-if="showModal && selectedDelivery"
+		class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+		<div class="bg-white rounded-lg shadow-xl w-3/4 max-w-3xl p-6 relative max-h-[90vh] overflow-y-auto">
 			<h2 class="text-2xl font-bold mb-4 text-indigo-700">
 				Détails du Bordereau
 			</h2>
 
-			<div
-				class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 mb-6"
-			>
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 mb-6">
 				<!-- <p><strong>Commande :</strong> {{ selectedDelivery.order.reference }}</p> -->
 				<!-- <p><strong>Client :</strong> {{ selectedDelivery.order.client.name }} </p> -->
 				<p>
@@ -183,10 +147,7 @@
 				</p>
 				<p>
 					<strong>Type :</strong>
-					<span
-						:class="deliveryTypeClass(selectedDelivery.delivery_type)"
-						class="px-2 py-1 rounded text-xs font-bold"
-					>
+					<span :class="deliveryTypeClass(selectedDelivery.delivery_type)" class="px-2 py-1 rounded text-xs font-bold">
 						{{ translateDeliveryType(selectedDelivery.delivery_type) }}
 					</span>
 				</p>
@@ -198,38 +159,22 @@
 					<table class="min-w-full divide-y divide-gray-200">
 						<thead class="bg-gray-50">
 							<tr>
-								<th
-									scope="col"
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-								>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 									Désignation
 								</th>
-								<th
-									scope="col"
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-								>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 									Code
 								</th>
-								<th
-									scope="col"
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-								>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 									Numéro Série
 								</th>
-								<th
-									scope="col"
-									class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-								>
+								<th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
 									Qté Livrée
 								</th>
 							</tr>
 						</thead>
 						<tbody>
-							<tr
-								v-for="article in selectedDelivery.items"
-								:key="article.id"
-								class="border-t"
-							>
+							<tr v-for="article in selectedDelivery.items" :key="article.id" class="border-t">
 								<td class="p-2 border text-center">
 									{{ article.designation }}
 								</td>
@@ -239,15 +184,13 @@
 								<td class="p-2 border text-center">
 									{{ article.serial_number }}
 								</td>
-								<td class="p-2 text-center border text-center">
+								<td class="p-2 text-center border">
 									{{ article.quantity_delivered }}
 								</td>
 							</tr>
-							<tr
-								v-if="
-									!selectedDelivery.items || selectedDelivery.items.length === 0
-								"
-							>
+							<tr v-if="
+								!selectedDelivery.items || selectedDelivery.items.length === 0
+							">
 								<td colspan="4" class="text-center p-4 text-gray-500">
 									Aucun article livré.
 								</td>
@@ -255,17 +198,11 @@
 						</tbody>
 					</table>
 					<div class="mt-6 text-right flex justify-between">
-						<button
-							@click="downloadDelivery(selectedDelivery)"
-							title="Télécharger"
-							class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow"
-						>
+						<button @click="downloadDelivery(selectedDelivery)" title="Télécharger"
+							class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow">
 							<i class="fas fa-download"></i>
 						</button>
-						<button
-							@click="closeModal"
-							class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow"
-						>
+						<button @click="closeModal" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow">
 							Fermer
 						</button>
 					</div>
@@ -276,35 +213,33 @@
 </template>
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useDeliveryStore } from "#imports";
+import { useDeliveryStore } from "@/stores/sale/DeliveryStore";
 
 const filterType = ref("");
 const selectedDelivery = ref(null);
 const showModal = ref(false);
 
 const deliveryStore = useDeliveryStore();
+const { deliveries, isLoading } = storeToRefs(deliveryStore);
 
 onMounted(() => {
-	deliveryStore.fetchDelivery();
+	deliveryStore.fetchAll();
 });
 
 const stats = computed(() => {
-	const allDeliveries = deliveryStore.livraison;
 	return {
-		total: allDeliveries.length,
-		complete: allDeliveries.filter((d) => d.delivery_type === "complete")
+		total: deliveries.value.length,
+		complete: deliveries.value.filter((d) => d.delivery_type === "complete")
 			.length,
-		partial: allDeliveries.filter((d) => d.delivery_type === "partial").length,
+		partial: deliveries.value.filter((d) => d.delivery_type === "partial").length,
 	};
 });
 
 const filteredDeliveries = computed(() => {
 	if (!filterType.value) {
-		return deliveryStore.livraison;
+		return deliveries.value;
 	}
-	return deliveryStore.livraison.filter(
-		(d) => d.delivery_type === filterType.value
-	);
+	return deliveries.value.filter(_ => _.delivery_type === filterType.value);
 });
 
 const deliveryTypeClass = (type) => {

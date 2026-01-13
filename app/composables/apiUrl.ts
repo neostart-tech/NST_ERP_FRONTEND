@@ -69,6 +69,12 @@ export const ApiUrl = {
 
 	INVOICES: "/invoices",
 	INVOICE_BY_ID: "/invoices/:id",
+	
+	INVOICE_TYPES: "/invoice-types",
+	INVOICE_TYPE_BY_ID: "/invoice-types/:id",
+
+	DELIVERIES: "/deliveries",
+	DELIVERY_BY_ID: "/deliveries/:id",
 
 	PRODUCTS: "/products",
 	PRODUCT_BY_ID: "/products/:id",

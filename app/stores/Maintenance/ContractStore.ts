@@ -30,6 +30,7 @@ export const useContractStore = defineStore("ContractStore", {
 
 		async store(contract: Contract) {
 			this.isPersisting = true;
+			this.validationErrors = {};
 			try {
 				contract.reference_number = `CTR
 					${new Date().getFullYear()}
@@ -44,7 +45,33 @@ export const useContractStore = defineStore("ContractStore", {
 				this.fetchAll();
 			} catch (error) {
 				console.error("Erreur:", error);
-				useAlert().showAlert("Erreur lors de l'enregistrement du contrat", "error");
+				useAlert().showAlert(
+					"Erreur lors de l'enregistrement du contrat",
+					"error"
+				);
+				this.validationErrors = useValidationErrors(error);
+				throw error;
+			} finally {
+				this.isPersisting = false;
+			}
+		},
+
+		async update(contract: Contract) {
+			this.isPersisting = true;
+			this.validationErrors = {};
+			try {
+				const { data } = await useApi().put<Contract>(
+					ApiUrl.parameterized(ApiUrl.CONTRACT_BY_ID, contract.id),
+					contract
+				);
+				this.contracts.push(data);
+				this.fetchAll();
+			} catch (error) {
+				console.error("Erreur:", error);
+				useAlert().showAlert(
+					"Erreur lors de l'enregistrement du contrat",
+					"error"
+				);
 				this.validationErrors = useValidationErrors(error);
 				throw error;
 			} finally {
@@ -56,7 +83,7 @@ export const useContractStore = defineStore("ContractStore", {
 			try {
 				this.isPersisting = true;
 				const { data } = await useApi().put<Contract>(
-					ApiUrl.parameterized(ApiUrl.CONTRACTS, contractId),
+					ApiUrl.parameterized(ApiUrl.CONTRACT_BY_ID, contractId),
 					{ status: newStatus }
 				);
 
@@ -75,7 +102,9 @@ export const useContractStore = defineStore("ContractStore", {
 		async delete(contractId: string) {
 			try {
 				this.isDeleting = true;
-				await useApi().del(ApiUrl.parameterized(ApiUrl.CONTRACTS, contractId));
+				await useApi().del(
+					ApiUrl.parameterized(ApiUrl.CONTRACT_BY_ID, contractId)
+				);
 				this.contracts = this.contracts.filter((_) => _.id !== contractId);
 				this.fetchAll();
 			} catch (error) {

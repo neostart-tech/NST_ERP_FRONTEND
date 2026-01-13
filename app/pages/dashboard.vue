@@ -74,7 +74,7 @@ const features = [
     icon: "heroicons:wrench-screwdriver",
     bgColor: "bg-purple-100",
     textColor: "text-purple-600",
-    route: AppUrl.MAINTENANCE_REPORTING
+    route: AppUrl.MAINTENANCE_ADD_TECHNICIAN
   },
   {
     title: "Gestion des stocks",
@@ -82,7 +82,7 @@ const features = [
     icon: "heroicons:cube",
     bgColor: "bg-yellow-100",
     textColor: "text-yellow-600",
-    route: "/stocks"
+    route: AppUrl.STOCKS_PRODUCTS
   },
   {
     title: "Gestion des clients",
@@ -90,15 +90,15 @@ const features = [
     icon: "heroicons:user-group",
     bgColor: "bg-pink-100",
     textColor: "text-pink-600",
-    route: "/clients"
+    route: AppUrl.CLIENTS
   },
   {
-    title: "Tableaux de bord",
-    description: "Visualisez vos indicateurs clés avec des graphiques personnalisables.",
-    icon: "heroicons:presentation-chart-bar",
+    title: "Entreprises",
+    description: "Gérez les informations des entreprises et leurs contacts.",
+    icon: "heroicons:building-office",
     bgColor: "bg-indigo-100",
     textColor: "text-indigo-600",
-    route: "/tableaux-de-bord"
+    route: AppUrl.ENTREPRISE_INDEX
   },
 ];
 
@@ -111,7 +111,7 @@ const handleLogout = () => {
   authStore.logout();
 };
 
-// Normalement, c'est géré par le middleware mais je le laisse au cas où
+
 // Vérifier si l'utilisateur est connecté, sinon rediriger vers la page de connexion
 // const router = useRouter();
 ;

@@ -261,33 +261,21 @@ onMounted(() => {
 // Required documents list
 const requiredDocuments = ref([
   {
-    name: 'Attestation de conformité fiscale',
-    description: 'Attestation de conformité fiscale délivrée par l\'administration fiscale',
+    name: 'Relevé d\'identité bancaire',
+    description: 'Relevé destiné à confirmer la capacité de paiement',
     required: true,
     checked: false
   },
   {
-    name: 'Attestation de conformité sociale',
-    description: 'Attestation de conformité sociale délivrée par la CNSS',
+    name: 'Carte d\'immatriculation fiscale',
+    description: 'Carte d\'immatriculation fiscale servant à identifier l\'entreprise',
     required: true,
     checked: false
   },
   {
-    name: 'Extrait Kbis ou équivalent',
-    description: 'Extrait Kbis ou document équivalent de moins de 3 mois',
+    name: 'Attestation de régularité fiscale',
+    description: 'Attestation stipulant que vous êtes en règle avec ladministration fiscale',
     required: true,
-    checked: false
-  },
-  {
-    name: 'Certificat de qualification',
-    description: 'Certificat de qualification professionnelle dans le domaine concerné',
-    required: true,
-    checked: false
-  },
-  {
-    name: 'Références de travaux similaires',
-    description: 'Liste des références de travaux similaires réalisés',
-    required: false,
     checked: false
   },
   {

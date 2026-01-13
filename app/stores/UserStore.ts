@@ -12,7 +12,7 @@ export const useUserStore = defineStore("UserStore", {
 	},
 
 	actions: {
-		async fetchUsers() {
+		async fetchAll() {
 			try {
 				const {data} = await useApi().get<User[]>(ApiUrl.USERS_INDEX);
 				this.users = data;
@@ -23,7 +23,7 @@ export const useUserStore = defineStore("UserStore", {
 			}
 		},
 
-		async getOneUser(userId: string) {
+		async find(userId: string) {
 			this.isLoading = true;
 			try {
 				const { data } = await useApi().get<User>(ApiUrl.parameterized(ApiUrl.USER_BY_ID, userId));
@@ -36,7 +36,7 @@ export const useUserStore = defineStore("UserStore", {
 			}
 		},
 
-		async createUser(user: UserCreateForm) {
+		async store(user: UserCreateForm) {
 			this.isLoading = true;
 			try {
 				const { data } = await useApi().post<User>(ApiUrl.USERS_INDEX, {
@@ -81,6 +81,20 @@ export const useUserStore = defineStore("UserStore", {
 			} catch (error) {
 				this.validationErrors = useValidationErrors(error);
 				throw error;
+			}
+		},
+
+		async delete(id: string) {
+			this.isLoading = true;
+			try {
+				await useApi().del(ApiUrl.parameterized(ApiUrl.USER_BY_ID, id));
+				this.users = this.users.filter(_ => _.id !== id);
+				this.fetchAll();
+			} catch (error) {
+				this.validationErrors = useValidationErrors(error);
+				throw error;
+			} finally {
+				this.isLoading = false;
 			}
 		}
 	}

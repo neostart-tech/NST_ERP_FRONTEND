@@ -275,11 +275,11 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useInvoiceStore } from '#imports'
 import { PieChart, BarChart } from 'vue-chart-3'
 import { Chart, registerables } from 'chart.js'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
+import { useInvoiceStore } from '~/app/stores/sale/InvoiceStore'
 
 Chart.register(...registerables)
 
@@ -476,7 +476,7 @@ const getStatusLabel = (status) => {
 onMounted(async () => {
   try {
     loading.value = true
-    await invoiceStore.fetchInvoice()
+    await invoiceStore.fetchAll()
     invoices.value = invoiceStore.facture || []
   } catch (error) {
     console.error('Erreur lors du chargement des factures:', error)

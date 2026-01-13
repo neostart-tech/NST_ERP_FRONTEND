@@ -2,6 +2,12 @@ import { type Client } from "./Client";
 import type { Product } from "./Product";
 import type { Proforma } from "./Proforma";
 
+export interface invoiceType {
+	id: string;
+	label: string;
+	description: string;
+}
+
 export interface OrderArticle {
 	id: number;
 	label: string;
@@ -34,6 +40,7 @@ export interface Invoice {
 	total: number;
 	status: "paid" | "pending" | "cancelled";
 	order: Order;
+	client: Client;
 	created_at?: string;
 	updated_at?: string;
 }

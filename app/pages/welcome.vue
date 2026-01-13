@@ -49,9 +49,9 @@ const features = [
     textColor: "text-green-600"
   },
   {
-    title: "Tableaux de bord",
-    description: "Visualisez vos indicateurs clés avec des graphiques personnalisables.",
-    icon: "heroicons:chart-bar",
+    title: "Entreprises",
+    description: "Gérez les informations des entreprises et leurs contacts.",
+    icon: "heroicons:building-office",
     bgColor: "bg-purple-100",
     textColor: "text-purple-600"
   },

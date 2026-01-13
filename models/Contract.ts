@@ -16,6 +16,8 @@ export interface Contract {
 	client?: Client;
 	formula: string;
 	start_date: string;
+	contract_type: string;
+	origin: string;
 	end_date: string;
 	amount: number;
 	frequency: string;
@@ -62,6 +64,8 @@ export const defaultContractData = (contract?: Contract): Contract => {
 		client_id: contract?.client_id || "",
 		formula: contract?.formula || "standard",
 		start_date: contract?.start_date || "",
+		contract_type: contract?.contract_type || "",
+		origin: contract?.origin || "",
 		end_date: contract?.end_date || "",
 		amount: contract?.amount || 0,
 		frequency: contract?.frequency || "mensuel",

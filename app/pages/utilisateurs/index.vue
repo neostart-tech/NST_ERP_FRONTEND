@@ -21,9 +21,10 @@
 					<div>
 						<p class="text-sm font-medium text-green-900">Utilisateurs actifs</p>
 						<p class="text-3xl font-bold text-green-900 mt-2">
-							{{ users.filter((u) => u.hasConfirmedPassword).length }}
+							{{users.filter((u) => u.hasConfirmedPassword).length}}
 							<span class="text-sm font-normal">
-								({{ users.length ? Math.round((users.filter((u) => u.hasConfirmedPassword).length / users.length) * 100) : 0 }}%)
+								({{users.length ? Math.round((users.filter((u) => u.hasConfirmedPassword).length / users.length) * 100)
+								: 0 }}%)
 							</span>
 						</p>
 					</div>
@@ -39,7 +40,7 @@
 					<div>
 						<p class="text-sm font-medium text-purple-900">Rôles uniques</p>
 						<p class="text-3xl font-bold text-purple-900 mt-2">
-							{{ new Set(users.map((u) => u.role).filter(Boolean)).size }}
+							{{new Set(users.map((u) => u.role).filter(Boolean)).size}}
 						</p>
 					</div>
 					<div class="p-3 rounded-lg bg-purple-500">
@@ -54,12 +55,12 @@
 					<div>
 						<p class="text-sm font-medium text-amber-900">Nouveaux (7j)</p>
 						<p class="text-3xl font-bold text-amber-900 mt-2">
-							{{ users.filter(u => {
+							{{users.filter(u => {
 								const userDate = new Date(u.createdAt);
 								const weekAgo = new Date();
 								weekAgo.setDate(weekAgo.getDate() - 7);
 								return userDate >= weekAgo;
-							}).length }}
+							}).length}}
 						</p>
 					</div>
 					<div class="p-3 rounded-lg bg-amber-500">
@@ -77,18 +78,13 @@
 					<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
 						<Icon name="heroicons:magnifying-glass" class="h-5 w-5 text-gray-400" />
 					</div>
-					<input
-						v-model="searchQuery"
-						type="text"
-						placeholder="Rechercher..."
+					<input v-model="searchQuery" type="text" placeholder="Rechercher..."
 						class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400" />
 				</div>
 
 				<!-- Bouton d'action -->
-				<NuxtLink
-					:to="AppUrl.USERS_ADD"
-					class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all"
-				>
+				<NuxtLink :to="AppUrl.USERS_ADD"
+					class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all">
 					<Icon name="heroicons:plus" class="h-5 w-5 mr-2" />
 					Nouvel utilisateur
 				</NuxtLink>
@@ -96,25 +92,14 @@
 		</div>
 
 		<Loader v-if="isLoading" message="Chargement des utilisateurs..." />
-		<EmptyState
-			v-else-if="filteredUsers.length === 0"
-			title="Aucun utilisateur trouvé"
-			:description="noDataDescription"
-			icon="heroicons:user-group"
-			iconColor="text-indigo-400"
-			@reload="fetchUsers"
-			:isLoading="isLoading"
-			:searchQuery="searchQuery"
-		/>
+		<EmptyState v-else-if="filteredUsers.length === 0" title="Aucun utilisateur trouvé" :description="noDataDescription"
+			icon="heroicons:user-group" iconColor="text-indigo-400" @reload="fetchUsers" :isLoading="isLoading"
+			:searchQuery="searchQuery" />
 
 		<template v-else>
 			<!-- Version mobile/tablette (card) -->
 			<div class="lg:hidden grid gap-4">
-				<div
-					v-for="user in paginatedUsers"
-					:key="user.id"
-					class="user-card bg-white rounded-lg shadow p-4"
-				>
+				<div v-for="user in paginatedUsers" :key="user.id" class="user-card bg-white rounded-lg shadow p-4">
 					<div class="flex justify-between items-start">
 						<div>
 							<h3 class="font-semibold text-lg">
@@ -122,12 +107,10 @@
 							</h3>
 							<p class="text-gray-600">{{ user.email }}</p>
 						</div>
-						<span
-							:class="[
-								'status-badge',
-								user.hasConfirmedPassword ? 'active' : 'inactive',
-							]"
-						>
+						<span :class="[
+							'status-badge',
+							user.hasConfirmedPassword ? 'active' : 'inactive',
+						]">
 							{{ user.hasConfirmedPassword ? "Confirmé" : "Non conf." }}
 						</span>
 					</div>
@@ -149,10 +132,7 @@
 						<button class="action-btn edit">
 							<Icon name="heroicons:pencil" class="h-5 w-5" />
 						</button>
-						<button
-							v-if="user.id !== currentUser!.id"
-							class="action-btn delete"
-						>
+						<button @click="deleteUser(user)" class="action-btn delete">
 							<Icon name="heroicons:trash" class="h-5 w-5" />
 						</button>
 					</div>
@@ -164,40 +144,22 @@
 				<table class="min-w-full divide-y divide-gray-200">
 					<thead class="bg-gradient-to-r from-blue-50 to-blue-100">
 						<tr>
-							<th
-								scope="col"
-								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-							>
+							<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 								Nom
 							</th>
-							<th
-								scope="col"
-								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-							>
+							<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 								Email
 							</th>
-							<th
-								scope="col"
-								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-							>
+							<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 								Rôle
 							</th>
-							<th
-								scope="col"
-								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-							>
+							<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 								Statut
 							</th>
-							<th
-								scope="col"
-								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-							>
+							<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 								Inscription
 							</th>
-							<th
-								scope="col"
-								class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider"
-							>
+							<th scope="col" class="px-4 py-4 text-left text-xs font-semibold text-blue-800 uppercase tracking-wider">
 								Actions
 							</th>
 						</tr>
@@ -206,9 +168,7 @@
 						<tr v-for="user in paginatedUsers" :key="user.id">
 							<td class="px-6 py-4 whitespace-nowrap">
 								<div class="flex items-center">
-									<div
-										class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center"
-									>
+									<div class="flex-shrink-0 h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center">
 										<span class="text-indigo-600 font-medium uppercase">
 											{{ user.firstName.charAt(0)
 											}}{{ user.lastName.charAt(0) }}
@@ -228,21 +188,17 @@
 								{{ user.role || "-" }}
 							</td>
 							<td class="px-6 py-4 whitespace-nowrap">
-								<span
-									:class="[
-										'status-badge',
-										user.hasConfirmedPassword ? 'active' : 'inactive',
-									]"
-								>
+								<span :class="[
+									'status-badge',
+									user.hasConfirmedPassword ? 'active' : 'inactive',
+								]">
 									{{ user.hasConfirmedPassword ? "Actif" : "Inactif" }}
 								</span>
 							</td>
 							<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 								{{ new Date(user.createdAt).toLocaleDateString() }}
 							</td>
-							<td
-								class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-							>
+							<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
 								<div class="flex justify-end space-x-2">
 									<button class="action-btn view">
 										<Icon name="heroicons:eye" class="h-5 w-5" />
@@ -252,7 +208,7 @@
 										<Icon name="heroicons:pencil" class="h-5 w-5" />
 										<span class="sr-only">Modifier</span>
 									</button>
-									<button class="action-btn delete">
+									<button class="action-btn delete" @click="deleteUser(user)">
 										<Icon name="heroicons:trash" class="h-5 w-5" />
 										<span class="sr-only">Supprimer</span>
 									</button>
@@ -262,27 +218,25 @@
 					</tbody>
 				</table>
 			</div>
-			<Paginator
-				:totalItems="filteredUsers.length"
-				@range-changed="onRangeChanged"
-			/>
+			<Paginator :totalItems="filteredUsers.length" @range-changed="onRangeChanged" />
 		</template>
 	</div>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { useUserStore } from "~/app/stores/UserStore";
-import EmptyState from "~/app/components/EmptyState.vue";
-import { AppUrl } from "~/app/composables/appUrl";
-import Paginator from "~/app/components/Paginator.vue";
+import { useUserStore } from "@/stores/UserStore";
+import EmptyState from "@/components/EmptyState.vue";
+import { AppUrl } from "@/composables/appUrl";
+import Paginator from "@/components/Paginator.vue";
 import Loader from "~/app/components/Loader.vue";
-import { useAuthStore } from "~/app/stores/AuthStore";
+import Swal from "sweetalert2";
+import type { User } from "~/models/User";
 
-const { users, isLoading } = storeToRefs(useUserStore());
-const { user: currentUser } = storeToRefs(useAuthStore());
 const userStore = useUserStore();
-const fetchUsers = userStore.fetchUsers;
+const { users, isLoading } = storeToRefs(userStore);
+const { user: currentUser } = storeToRefs(useAuthStore());
+const fetchUsers = userStore.fetchAll;
 const searchQuery = ref<string>("");
 const noDataDescription = ref<string>(
 	"Il n'y a actuellement aucun utilisateur à afficher."
@@ -318,4 +272,37 @@ const filteredUsers = computed(() => {
 const paginatedUsers = computed(() => {
 	return filteredUsers.value.slice(range.start - 1, range.end);
 });
+
+const deleteUser = async (user: User) => {
+	if (user.id === currentUser!.value?.id) {
+		useAlert().showAlert("Vous ne pouvez pas supprimer votre propre compte", "error");
+		return;
+	}
+	Swal.fire({
+		title: "Supprimer l'utilisateur",
+		html: `Êtes-vous sûr de vouloir supprimer l'utilisateur <b>${user.firstName} ${user.lastName}</b> ?`,
+		icon: "warning",
+		showCancelButton: true,
+		confirmButtonColor: "#3085d6",
+		cancelButtonColor: "#d33",
+		confirmButtonText: "Oui, supprimer",
+		cancelButtonText: "Annuler",
+	}).then(async (result) => {
+		if (result.isConfirmed) {
+			try {
+				await userStore.delete(user.id);
+				Swal.fire({
+					title: "Utilisateur supprimé",
+					icon: "success",
+				});
+			} catch (error) {
+				Swal.fire({
+					title: "Erreur",
+					text: "Une erreur est survenue lors de la suppression de l'utilisateur",
+					icon: "error",
+				});
+			}
+		}
+	});
+};
 </script>

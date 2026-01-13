@@ -240,10 +240,7 @@ useHead({
 	title: "Gestion des proforma"
 });
 import { ref, onMounted } from "vue";
-import type { Proforma } from "~/models/Proforma";
 import { getClientName } from "~/models/Client";
-import ShowProformaDetails from '@/components/sales/ShowProformaDetails.vue'
-import ProformaFormModal from '@/components/sales/ProformaFormModal.vue'
 import Paginator from "@/components/Paginator.vue";
 import EmptyState from "@/components/EmptyState.vue";
 import Swal from "sweetalert2";
@@ -395,5 +392,4 @@ const stats = computed(() => ({
 	validated: orders.value.filter(_ => _.status === "delivered").length || 0,
 	canceled: orders.value.filter(_ => _.status === "canceled").length || 0,
 }));
-
 </script>

@@ -178,6 +178,14 @@ import { useRouter } from '#app';
 import Swal from 'sweetalert2';
 import { defaultLotData, defaultOfferData, type Lot, type Offer } from "~/models/Offer";
 
+// Type d'erreur pour l'API
+interface ApiError {
+	data?: {
+		message?: string;
+	};
+	message?: string;
+}
+
 const offerStore = useOfferStore();
 const lotStore = useLotStore();
 
@@ -218,50 +226,51 @@ const formatCurrency = (amount: number): string => {
 	}).format(amount);
 };
 
-const loadOfferData = async () => {
-	// Chargement des informations de l'offre
-	try {
-		isLoading.value = true;
-		offerData.value = await offerStore.getOneOffer(offerId);
-	} catch (error) {
-		Swal.fire({
-			icon: "error",
-			title: "Oops...",
-			text: "Une erreur est survenue lors de la récupération de la données de l'offre",
-			confirmButtonText: "Revenir en arrière",
-			allowOutsideClick: false
-		}).then(() => {
-			window.history.back();
-		});
-		console.error('Erreur lors du chargement de l\'offre:', error);
-	} finally {
-		isLoading.value = false;
-	}
+// const loadOfferData = async () => {
+// 	// Chargement des informations de l'offre
+// 	try {
+// 		isLoading.value = true;
+// 		offerData.value = await offerStore.getOneOffer(offerId);
+// 	} catch (error) {
+// 		Swal.fire({
+// 			icon: "error",
+// 			title: "Oops...",
+// 			text: "Une erreur est survenue lors de la récupération de la données de l'offre",
+// 			confirmButtonText: "Revenir en arrière",
+// 			allowOutsideClick: false
+// 		}).then(() => {
+// 			window.history.back();
+// 		});
+// 		console.error('Erreur lors du chargement de l\'offre:', error);
+// 	} finally {
+// 		isLoading.value = false;
+// 	}
 
-	// Chargement des lots de l'offre
-	try {
-		isLoading.value = true;
+// 	// Chargement des lots de l'offre
+// 	try {
+// 		isLoading.value = true;
 
-		const _lots = await lotStore.fetchLots(offerId);
-		if (_lots.length > 0)
-			lots.value = _lots;
-		console.log("lots.value:", lots.value);
+// 		const _lots = await lotStore.fetchLots(offerId);
+// 		if (_lots.length > 0)
+// 			lots.value = _lots;
+// 		console.log("lots.value:", lots.value);
 
-	} catch (error) {
-		Swal.fire({
-			icon: "error",
-			title: "Oops...",
-			text: "Une erreur est survenue lors de la récupération des lots",
-			confirmButtonText: "Revenir en arrière",
-			allowOutsideClick: false
-		}).then(() => {
-			window.history.back();
-		});
-		console.error('Erreur lors du chargement des lots:', error);
-	} finally {
-		isLoading.value = false;
-	}
-};
+// 	} catch (error: ApiError) {
+// 		console.error('Erreur lors du chargement des lots:', error);
+// 		const errorMessage = error?.data?.message || error?.message || 'Une erreur est survenue lors de la récupération des lots';
+// 		Swal.fire({
+// 			icon: "error",
+// 			title: "Oops...",
+// 			text: errorMessage,
+// 			confirmButtonText: "Revenir en arrière",
+// 			allowOutsideClick: false
+// 		}).then(() => {
+// 			window.history.back();
+// 		});
+// 	} finally {
+// 		isLoading.value = false;
+// 	}
+// };
 
 const toggleLot = (index: number) => {
 	expandedLots.value[index] = !expandedLots.value[index];
@@ -351,7 +360,7 @@ const proceedToSubmission = () => {
 };
 
 onMounted(() => {
-	loadOfferData();
+	// loadOfferData();
 	// Calculer les totaux initiaux
 	// lots.value.forEach((_, index) => calculateLotTotals(index));
 });

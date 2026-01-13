@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import type { Lot } from "~/models/Offer";
+import { ApiUrl } from "@/composables/apiUrl";
+import type { ValidationErrors } from "@/composables/useValidationErrors";
 
 export const useLotStore = defineStore("LotStore", {
 	state: () => ({
@@ -9,11 +11,20 @@ export const useLotStore = defineStore("LotStore", {
 	actions: {
 		async fetchLots(offerId: string) {
 			try {
-				const { data } = await useApi().get<Lot[]>(ApiUrl.parameterized(ApiUrl.OFFER_LOTS, offerId));
+				// Vérifier que l'offerId est valide
+				if (!offerId) {
+					throw new Error('ID de l\'offre non valide');
+				}
+
+				console.log('Fetching lots for offer:', offerId);
+				const apiUrl = ApiUrl.parameterized(ApiUrl.OFFER_LOTS, offerId);
+				console.log('API URL:', apiUrl);
+
+				const { data } = await useApi().get<Lot[]>(apiUrl);
+				console.log('Lots data received:', data);
 				return data.map(_ => ({ ..._, isNew: false }));
 			} catch (error) {
 				console.error("Error fetching lots:", error);
-				useAlert().showAlert("Une erreur est survenue lors du chargement des lots", "error");
 				throw error;
 			} finally {
 				this.isLoading = false;

@@ -251,7 +251,6 @@ import { getClientName } from '~/models/Client';
 import { type Contract } from '~/models/Contract';
 
 defineProps<{
-	getClientName: (clientId: string) => string;
 	getStatusClass: (status: string) => string;
 	getStatusText: (status: string) => string;
 	formatDate: (dateString: string) => string;

@@ -135,7 +135,7 @@ const  isLoading = ref<boolean>(false);
 const saveUser = async () => {
   isLoading.value = true;
   try {
-    await userStore.createUser(userForm.value);
+    await userStore.store(userForm.value);
     useAlert().showAlert("L'utilisateur a été ajouté avec succès", "success");
     userForm.value = createDefaultUserForm();
   } catch (error) {

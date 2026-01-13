@@ -117,11 +117,11 @@
 							<label for="status" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
 							<select id="status" v-model="newContract.status"
 								class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-								<option value="en_attente">En attente</option>
+								<option value="pending">En attente</option>
 								<option value="actif">Actif</option>
 								<option value="refuse">Refusé</option>
 								<option value="resilie">Résilié</option>
-								<option value="expire">Expiré</option>
+								<option value="expired">Expiré</option>
 							</select>
 							<InvalidInput :error="validationErrors.status" />
 						</div>
@@ -195,10 +195,18 @@ import {  getClientName, type Client } from '~/models/Client';
 import type { Contract } from '~/models/Contract';
 import Spinner from '../partials/Spinner.vue';
 import { useContractStore } from '~/app/stores/Maintenance/ContractStore';
+import { useClientStore } from '~/app/stores/clientStore';
 import RequiredField from '../partials/RequiredField.vue';
 import InvalidInput from '../partials/InvalidInput.vue';
 
+const clientStore = useClientStore();
+
 const { isPersisting, validationErrors } = storeToRefs(useContractStore());
+const { clients } = storeToRefs(clientStore);
+
+onMounted(() => {
+	clientStore.fetchAll();
+})
 
 defineProps<{
 	showContractForm: boolean;
@@ -206,6 +214,5 @@ defineProps<{
 	closeContractForm: () => void;
 	submitContractForm: () => Promise<void>;
 	newContract: Contract;
-	clients: Client[];
 }>()
 </script>

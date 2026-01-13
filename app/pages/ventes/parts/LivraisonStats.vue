@@ -77,9 +77,9 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useDeliveryStore } from '#imports'
 import { PieChart, BarChart } from 'vue-chart-3'
 import { Chart, registerables } from 'chart.js'
+import { useDeliveryStore } from '@/sale/DeliveryStore'
 Chart.register(...registerables)
 
 const deliveryStore = useDeliveryStore()

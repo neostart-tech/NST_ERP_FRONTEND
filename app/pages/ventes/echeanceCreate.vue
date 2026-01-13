@@ -92,10 +92,10 @@
 
 <script setup>
 import { ref, watch, computed, onMounted } from "vue";
-import { useInvoiceStore } from "#imports";
 import { useScheduleStore } from "#imports";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
+import { useInvoiceStore } from "@/stores/sale/InvoiceStore";
 
 const router = useRouter();
 const invoiceStore = useInvoiceStore();
@@ -110,7 +110,7 @@ const today = new Date().toISOString().split("T")[0];
 
 // Charger les factures
 onMounted(() => {
-  invoiceStore.fetchInvoice();
+  invoiceStore.fetchAll();
 });
 
 // Calcul du total restant
