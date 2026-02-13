@@ -188,7 +188,7 @@ import { useArticleStore } from '#imports'
 import { useOrderStore } from '#imports'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2'
-import { useProformaStore } from '~/app/stores/Stock/ProformaStore'
+import { useProformaStore } from '@/stores/Stock/ProformaStore.ts'
 
 const selectedQuote = ref('')
 const selectedClient = ref('')

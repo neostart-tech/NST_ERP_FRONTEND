@@ -1,26 +1,29 @@
-import { defineStore } from 'pinia';
-import type { Client } from '~/models/Client';
-import { ApiUrl } from '@/composables/apiUrl';
-import type { ValidationErrors } from '@/composables/useValidationErrors';
-import { useValidationErrors } from '../composables/useValidationErrors';
+import { defineStore } from "pinia";
+import type { Client } from "~/models/Client";
+import { ApiUrl } from "@/composables/apiUrl";
+import type { ValidationErrors } from "@/composables/useValidationErrors";
+import { useValidationErrors } from "../composables/useValidationErrors";
 
-export const useClientStore = defineStore('client', {
+export const useClientStore = defineStore("client", {
 	state: () => ({
 		clients: [] as Client[],
 		stat: {
 			total: 0,
 			physique: 0,
-			moral: 0
+			moral: 0,
 		},
 		isLoading: false,
-		errors: {} as ValidationErrors
+		errors: {} as ValidationErrors,
 	}),
 
 	actions: {
 		// Créer un client
 		async createClient(clientData: Client) {
 			try {
-				const { data } = await useApi().post<Client>(ApiUrl.CLIENTS, clientData);
+				const { data } = await useApi().post<Client>(
+					ApiUrl.CLIENTS,
+					clientData,
+				);
 				this.clients.push(data);
 				return data;
 			} catch (error) {
@@ -34,9 +37,11 @@ export const useClientStore = defineStore('client', {
 		// Charger les clients
 		async fetchAll() {
 			try {
-				this.isLoading = true;
-				this.errors = {};
+				if (this.clients.length === 0) {
+					this.isLoading = true;
+				}
 
+				this.errors = {};
 				const { data } = await useApi().get<Client[]>(ApiUrl.CLIENTS);
 				this.clients = data;
 				this.updateStat();
@@ -54,7 +59,9 @@ export const useClientStore = defineStore('client', {
 			try {
 				this.isLoading = true;
 				this.errors = {} as ValidationErrors;
-				const { data } = await useApi().get<Client>(ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id));
+				const { data } = await useApi().get<Client>(
+					ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id),
+				);
 				return data;
 			} catch (error) {
 				console.error("Erreur lors du chargement du client:", error);
@@ -68,8 +75,11 @@ export const useClientStore = defineStore('client', {
 		// Mettre à jour un client
 		async updateClient(id: string, clientData: Client) {
 			try {
-				const {data} = await useApi().put<Client>(ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id), clientData);
-				this.clients.map(_ => _.id === id ? data : _);
+				const { data } = await useApi().put<Client>(
+					ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id),
+					clientData,
+				);
+				this.clients.map((_) => (_.id === id ? data : _));
 				this.updateStat();
 				return data;
 			} catch (error) {
@@ -82,9 +92,11 @@ export const useClientStore = defineStore('client', {
 		// Supprimer un client
 		async deleteClient(id: string) {
 			try {
-				await useApi().del<Client>(ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id));
+				await useApi().del<Client>(
+					ApiUrl.parameterized(ApiUrl.CLIENT_BY_ID, id),
+				);
 				// Retirer le client de la liste
-				this.clients = this.clients.filter(_ => _.id !== id);
+				this.clients = this.clients.filter((_) => _.id !== id);
 				this.updateStat();
 			} catch (error) {
 				this.errors = useValidationErrors(error);
@@ -99,8 +111,12 @@ export const useClientStore = defineStore('client', {
 
 		updateStat() {
 			this.stat.total = this.clients.length;
-			this.stat.physique = this.clients.filter(_ => _.client_type.toLocaleLowerCase() === 'physique').length;
-			this.stat.moral = this.clients.filter(_ => _.client_type.toLocaleLowerCase() === 'moral').length;
-		}
-	}
+			this.stat.physique = this.clients.filter(
+				(_) => _.client_type.toLocaleLowerCase() === "physique",
+			).length;
+			this.stat.moral = this.clients.filter(
+				(_) => _.client_type.toLocaleLowerCase() === "moral",
+			).length;
+		},
+	},
 });

@@ -37,10 +37,14 @@ export const ApiUrl = {
 	DEFINE_PASSWORD: "/auth/define-password",
 
 	DOCUMENT_TYPES: "/document-types",
+	// DOCUMENT_TYPES_QUERIED: "/document-types?s",
+	DOCUMENT_TYPES_BY_ID: "/document-types/:id",
+
 	OFFER_TYPES: "/offer-types",
 	OFFERS_PENDING: "/offers/pending",
 	OFFER_BY_ID: "/offers/:id",
 	OFFER_DECISION: "/offers/:id/decision",
+	OFFER_DOCUMENTS: "/offers/:id/doc-configs",
 	OFFERS: "/offers",
 	OFFER_LOTS: "/offers/:id/lots",
 
@@ -69,7 +73,7 @@ export const ApiUrl = {
 
 	INVOICES: "/invoices",
 	INVOICE_BY_ID: "/invoices/:id",
-	
+
 	INVOICE_TYPES: "/invoice-types",
 	INVOICE_TYPE_BY_ID: "/invoice-types/:id",
 
@@ -90,6 +94,9 @@ export const ApiUrl = {
 	ORDERS: "/orders",
 	ORDER_BY_ID: "/orders/:id",
 	ORDER_STATUS: "/orders/:id/status",
+
+	QUOTES: "/quotes",
+	QUOTE_BY_ID: "/quotes/:id",
 
 	/**
  * Fonction pour les url à paramètres sous la forme url/:id

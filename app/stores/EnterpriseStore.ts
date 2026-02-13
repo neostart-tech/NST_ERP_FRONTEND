@@ -13,7 +13,7 @@ export const useEnterpriseStore = defineStore("EnterpriseStore", {
     validationErrors: {} as ValidationErrors,
   }),
   actions: {
-    async fetchEnterprises() {
+    async fetchAll() {
       try {
         const { data } = await useApi().get<Entreprise[]>(ApiUrl.ENTREPRISES);
         this.enterprises = data;

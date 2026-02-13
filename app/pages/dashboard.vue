@@ -58,7 +58,7 @@ const features = [
     icon: "heroicons:document-chart-bar",
     bgColor: "bg-blue-100",
     textColor: "text-blue-600",
-    route: AppUrl.OFFERS_QUICK_STAT
+    route: AppUrl.OFFERS
   },
   {
     title: "Gestion des ventes",

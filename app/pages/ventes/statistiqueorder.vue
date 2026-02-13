@@ -42,7 +42,7 @@
 import { ref, onMounted } from 'vue'
 import { Chart, registerables } from 'chart.js'
 import { PieChart, BarChart } from 'vue-chart-3'
-import { useOrderStore } from '~/app/stores/Sale/OrderStore'
+import { useOrderStore } from '@/stores/Sale/OrderStore'
 
 Chart.register(...registerables)
 

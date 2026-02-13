@@ -121,7 +121,7 @@
 import { ref, computed } from 'vue'
 import { onMounted } from 'vue'
 import Swal from 'sweetalert2'
-import { useProformaStore } from '~/app/stores/Stock/ProformaStore'
+import { useProformaStore } from '@/stores/Stock/ProformaStore.ts'
 import { useProductStore } from '@/stores/Stock/ProductStore'
 import { useClientStore } from '@/stores/ClientStore'
 import { getClientName } from '~/models/Client'

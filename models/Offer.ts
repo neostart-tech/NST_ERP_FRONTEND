@@ -86,6 +86,13 @@ export interface MetadataForm {
 	comment?: string;
 }
 
+export interface LotItem {
+	productId: string;
+	productName: string;
+	quantity: number;
+	unitPrice: number;
+}
+
 export interface Lot {
 	id: string;
 	name: string;
@@ -93,9 +100,10 @@ export interface Lot {
 	description: string | null;
 	total_profit: number;
 	isNew: boolean;
+	items: LotItem[];
 }
 
-export const defaultOfferFormData = (data: Offer | null): OfferForm => ({
+export const defaultOfferFormData = (data?: Offer): OfferForm => ({
 	title: data?.title || "",
 	description: data?.description || "",
 	estimated_budget: data?.estimated_budget || 0,
@@ -120,29 +128,29 @@ export const defaultOfferFormData = (data: Offer | null): OfferForm => ({
 	metadata: data?.metadata || {}
 });
 
-export const defaultOfferData = (): Offer => ({
-	title: "",
-	description: "",
-	estimated_budget: 0,
-	publication_date: "",
-	amount: 0,
-	submission_deadline: "",
-	status: "",
-	offer_type: "",
-	offer_source: "",
-	source_label: "",
-	enterprise: "",
-	metadata: defaultMetadataFormData(),
-	number: "",
-	file_price: 0,
-	file_obtaining_deadline: "",
-	offer_validity: "",
-	submission_address: "",
-	requirement: "",
-	stacking_instruction: "",
-	batch_number: "",
-	execution_batch_duration: "",
-	execution_duration: "",
+export const defaultOfferData = (offer?: Offer): Offer => ({
+	title: offer?.title || "",
+	description: offer?.description || "",
+	estimated_budget: offer?.estimated_budget || 0,
+	publication_date: offer?.publication_date || "",
+	amount: offer?.amount || 0,
+	submission_deadline: offer?.submission_deadline || "",
+	status: offer?.status || "",
+	offer_type: offer?.offer_type || "",
+	offer_source: offer?.offer_source || "",
+	source_label: offer?.source_label || "",
+	enterprise: offer?.enterprise || "",
+	metadata: offer?.metadata || defaultMetadataFormData(),
+	number: offer?.number || "",
+	file_price: offer?.file_price || 0,
+	file_obtaining_deadline: offer?.file_obtaining_deadline || "",
+	offer_validity: offer?.offer_validity || "",
+	submission_address: offer?.submission_address || "",
+	requirement: offer?.requirement || "",
+	stacking_instruction: offer?.stacking_instruction || "",
+	batch_number: offer?.batch_number || "",
+	execution_batch_duration: offer?.execution_batch_duration || "",
+	execution_duration: offer?.execution_duration || "",
 });
 
 export const defaultMetadataFormData = (): MetadataForm => ({
@@ -162,7 +170,8 @@ export const defaultLotData = (): Lot => ({
 	title: "",
 	description: "",
 	total_profit: 0,
-	isNew: true
+	isNew: true,
+	items: []
 })
 
 

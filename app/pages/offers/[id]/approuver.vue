@@ -6,7 +6,7 @@
         <h2 class="text-xl font-semibold text-gray-900">
           Informations de l'appel d'offre
         </h2>
-        <button @click="navigateTo(AppUrl.OFFERS_QUICK_STAT)"
+        <button @click="navigateTo(AppUrl.OFFERS)"
           class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
           <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
             fill="currentColor">

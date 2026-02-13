@@ -298,8 +298,8 @@ import { useOrderStore } from '@/stores/Sale/OrderStore'
 import { getClientName } from '~/models/Client'
 import type { Order } from '~/models/Invoice'
 import { useRouter } from 'vue-router'
-import { useInvoiceTypeStore } from '~/app/stores/sale/InvoiceTypeStore'
-import { useInvoiceStore } from '~/app/stores/sale/InvoiceStore'
+import { useInvoiceTypeStore } from '@/stores/Sale/InvoiceTypeStore'
+import { useInvoiceStore } from '@/stores/Sale/InvoiceStore'
 
 const router = useRouter()
 const taux = 18;

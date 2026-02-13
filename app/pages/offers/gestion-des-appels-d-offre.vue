@@ -171,135 +171,15 @@
 		<div class="mt-5">
 			<template v-if="recentOffers.length > 0">
 				<!-- Vue Tableau (visible uniquement sur écrans lg et plus) -->
-				<div class="hidden lg:block bg-white border rounded-lg shadow overflow-hidden">
-					<div class="overflow-x-auto">
-						<table class="min-w-full divide-y divide-gray-200">
-							<thead class="bg-gradient-to-r from-blue-50 to-green-50">
-								<tr>
-									<th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-blue-800 tracking-wider">
-										Appel d'Offres
-									</th>
-									<th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-blue-800 tracking-wider">
-										Échéance
-									</th>
-									<th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-blue-800 tracking-wider">
-										Budget
-									</th>
-									<th scope="col" class="px-6 py-3 text-left text-xs font-semibold text-blue-800 tracking-wider">
-										Statut
-									</th>
-									<th scope="col" class="px-6 py-3 text-right text-xs font-semibold text-blue-800 tracking-wider">
-										Actions
-									</th>
-								</tr>
-							</thead>
-							<tbody class="bg-white divide-y divide-gray-200">
-								<tr v-for="offer in paginatedOffers" :key="offer.id + '-table'"
-									class="hover:bg-gray-50 transition-colors duration-150">
-									<td class="px-6 py-4">
-										<div class="flex items-center">
-											<div
-												class="h-10 w-10 flex-shrink-0 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-												<Icon name="heroicons:document-text" class="h-5 w-5 text-blue-600" />
-											</div>
-											<div>
-												<div class="text-sm font-medium text-gray-900">{{ offer.title }}</div>
-												<div class="text-sm text-gray-500">{{ offer.enterprise?.name || 'Non spécifié' }}</div>
-											</div>
-										</div>
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap">
-										<div class="flex items-center text-sm text-gray-500">
-											{{ formatDate(offer.submission_deadline) }}
-										</div>
-										<span :class="getDeadlineBadgeClass(offer.submission_deadline)"
-											class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium mt-1">
-											{{ getDaysUntilDeadline(offer.submission_deadline) }}
-										</span>
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-										{{ formatCurrency(offer.estimated_budget) }}
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap">
-										<span :class="getStatusBadgeClass(offer.status)"
-											class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full">
-											{{ getStatusLabel(offer.status) }}
-										</span>
-									</td>
-									<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-										<NuxtLink :to="AppUrl.parameterize(AppUrl.OFFERS_APPROVAL, offer.id)"
-											class="text-gray-600 hover:text-gray-900 mr-3" title="Voir les détails">
-											<Icon name="heroicons:eye" class="w-5 h-5" />
-										</NuxtLink>
-										<NuxtLink :to="AppUrl.parameterize(AppUrl.OFFERS_EDIT, offer.id)"
-											class="text-blue-600 hover:text-blue-900 mr-3" title="Modifier">
-											<Icon name="heroicons:pencil-square" class="w-5 h-5" />
-										</NuxtLink>
-										<button @click.stop="confirmDelete(offer)" class="text-red-600 hover:text-red-900"
-											title="Supprimer">
-											<Icon name="heroicons:trash" class="w-5 h-5" />
-										</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
+				<OfferListView :paginatedOffers="paginatedOffers" :getDeadlineBadgeClass="getDeadlineBadgeClass"
+					:getDaysUntilDeadline="getDaysUntilDeadline" :getStatusBadgeClass="getStatusBadgeClass"
+					:getStatusLabel="getStatusLabel" :confirmDelete="confirmDelete" />
 
 				<!-- Vue Cartes (visible uniquement sur écrans md et moins) -->
-				<div class="lg:hidden grid grid-cols-1 md:grid-cols-2 gap-4">
-					<div v-for="offer in paginatedOffers" :key="offer.id + '-card'"
-						class="rounded-lg shadow-md border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow duration-200 bg-white">
-						<div class="p-4">
-							<div class="flex items-start space-x-3">
-								<div class="h-12 w-12 flex-shrink-0 rounded-full bg-blue-100 flex items-center justify-center">
-									<Icon name="heroicons:document-text" class="h-6 w-6 text-blue-600" />
-								</div>
-								<div class="flex-1">
-									<h3 class="text-lg font-semibold text-gray-900">{{ offer.title }}</h3>
-									<span :class="getStatusBadgeClass(offer.status)"
-										class="inline-block mt-1 px-2 py-1 text-xs font-semibold rounded-full">
-										{{ getStatusLabel(offer.status) }}
-									</span>
-								</div>
-							</div>
-							<div class="mt-3 space-y-2">
-								<div class="flex items-center text-sm text-gray-600">
-									<Icon name="heroicons:building-office" class="w-4 h-4 mr-2 text-gray-400" />
-									<span>{{ offer.enterprise?.name || 'Non spécifié' }}</span>
-								</div>
-								<div class="flex items-center text-sm text-gray-600">
-									<Icon name="heroicons:calendar" class="w-4 h-4 mr-2 text-gray-400" />
-									<span>{{ formatDate(offer.submission_deadline) }}</span>
-								</div>
-								<div class="flex items-center text-sm text-gray-600">
-									<Icon name="heroicons:currency-dollar" class="w-4 h-4 mr-2 text-gray-400" />
-									<span>{{ formatCurrency(offer.estimated_budget) }}</span>
-								</div>
-								<div class="flex items-center">
-									<span :class="getDeadlineBadgeClass(offer.submission_deadline)"
-										class="px-2 py-1 text-xs font-semibold rounded-full">
-										{{ getDaysUntilDeadline(offer.submission_deadline) }}
-									</span>
-								</div>
-							</div>
-							<div class="flex justify-end mt-4 space-x-2">
-								<NuxtLink :to="AppUrl.parameterize(AppUrl.OFFERS_APPROVAL, offer.id)"
-									class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full" title="Voir les détails">
-									<Icon name="heroicons:eye" class="w-5 h-5" />
-								</NuxtLink>
-								<NuxtLink :to="AppUrl.parameterize(AppUrl.OFFERS_EDIT, offer.id)"
-									class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full" title="Modifier">
-									<Icon name="heroicons:pencil-square" class="w-5 h-5" />
-								</NuxtLink>
-								<button @click.stop="confirmDelete(offer)" class="p-1.5 text-red-600 hover:bg-red-50 rounded-full"
-									title="Supprimer">
-									<Icon name="heroicons:trash" class="w-5 h-5" />
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
+				<OfferCardView :paginatedOffers="paginatedOffers" :getStatusBadgeClass="getStatusBadgeClass"
+					:getStatusLabel="getStatusLabel"
+					:getDeadlineBadgeClass="getDeadlineBadgeClass" :getDaysUntilDeadline="getDaysUntilDeadline"
+					:confirmDelete="confirmDelete" />
 			</template>
 
 			<!-- EmptyState -->
@@ -329,6 +209,9 @@ import { NuxtLink } from '#components'
 import Swal from 'sweetalert2'
 import { formatDate } from '@/utils/dateParser'
 import Paginator from '~/app/components/Paginator.vue'
+import OfferListView from '../../components/offers/OfferListView.vue'
+import OfferCardView from './OfferCardView.vue'
+import {formatCurrency} from "@/utils/currency-parser";
 
 const isFiltersCollapsed = ref(true);
 const filterType = ref('date');
@@ -586,21 +469,6 @@ const getDaysUntilDeadline = (deadline: string): string => {
 	return `${diffDays}j`
 }
 
-// Utility functions
-const formatCurrency = (amount: number, withCurrency: boolean = false): string => {
-	return new Intl.NumberFormat('fr-FR', {
-		style: 'decimal',
-		minimumFractionDigits: 0,
-		maximumFractionDigits: 0
-	}).format(amount) + (withCurrency ? ' F CFA' : '');
-}
-
-// const formatDate = (dateString: string): string => {
-// 	return new Date(dateString).toLocaleDateString('fr-FR', {
-// 		month: 'short',
-// 		day: 'numeric',
-// 	})
-// }
 
 const formatRelativeDate = (dateString: string): string => {
 	const date = new Date(dateString)
@@ -617,96 +485,4 @@ const formatRelativeDate = (dateString: string): string => {
 onMounted(() => {
 	refreshData()
 })
-
 </script>
-
-<style scoped>
-/* Animations de base */
-.fade-enter-active,
-.fade-leave-active {
-	transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-	opacity: 0;
-	transform: translateY(10px);
-}
-
-/* Animation pour les éléments en escalier */
-.fade-stagger-move,
-.fade-stagger-enter-active,
-.fade-stagger-leave-active {
-	transition: all 0.4s ease;
-}
-
-.fade-stagger-enter-from,
-.fade-stagger-leave-to {
-	opacity: 0;
-	transform: translateY(20px);
-}
-
-.fade-stagger-leave-active {
-	position: absolute;
-	width: calc(100% - 2rem);
-}
-
-/* Animation du squelette */
-@keyframes shimmer {
-	0% {
-		background-position: -1000px 0;
-	}
-
-	100% {
-		background-position: 1000px 0;
-	}
-}
-
-.animate-pulse {
-	animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-@keyframes pulse {
-
-	0%,
-	100% {
-		opacity: 1;
-	}
-
-	50% {
-		opacity: 0.5;
-	}
-}
-
-/* Transition pour les cartes */
-.card-enter-active,
-.card-leave-active {
-	transition: all 0.3s ease;
-}
-
-.card-enter-from,
-.card-leave-to {
-	opacity: 0;
-	transform: scale(0.95);
-}
-
-/* Amélioration de l'accessibilité */
-.sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border-width: 0;
-}
-
-/* Focus visible pour l'accessibilité */
-.focus-visible {
-	outline: 2px solid #3b82f6;
-	outline-offset: 2px;
-	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
-}
-</style>

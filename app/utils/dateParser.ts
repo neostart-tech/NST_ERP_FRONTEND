@@ -2,7 +2,8 @@ export const formatDate = (date: Date | string): string => {
 	const parsedDate = typeof date === "string" ? new Date(date) : date;
 
 	if (isNaN(parsedDate.getTime())) {
-		throw new Error("Date invalide");
+		return "Date invalide";
+		// throw new Error("Date invalide");
 	}
 
 	const day = parsedDate.getDate().toString().padStart(2, "0");

@@ -279,7 +279,7 @@ import { PieChart, BarChart } from 'vue-chart-3'
 import { Chart, registerables } from 'chart.js'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
-import { useInvoiceStore } from '~/app/stores/sale/InvoiceStore'
+import { useInvoiceStore } from '@/stores/Sale/InvoiceStore'
 
 Chart.register(...registerables)
 

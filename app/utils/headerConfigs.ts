@@ -45,6 +45,11 @@ const titleMap: Record<string, PageContentTitle> = {
 		title: "Soumissions d'offres",
 		description: "Soumissions d'offres",
 	},
+	"offers-id-documents": {
+		icon: "heroicons:document-text",
+		title: "Disponibilité des documents",
+		description: "Vérification et contrôle de la disponibilité des documents",
+	},
 	"client-detail": {
 		icon: "heroicons:document-text",
 		title: "Détail Client",
@@ -113,6 +118,19 @@ const titleMap: Record<string, PageContentTitle> = {
 		title: "Gestion des commandes",
 		icon: "heroicons:document-text",
 	},
+	"maintenance-gestion-des-contrats": {
+		title: "Gestion des contrats",
+		icon: "heroicons:document-text",
+	},
+	"gestion-des-type-de-document": {
+		icon: "heroicons:document-text",
+		title: "Gestion des types de documents",
+	},
+	"offers-id-lots-configuration": {
+		icon: "heroicons:puzzle-piece",
+		title: "Configuration des lots",
+		description: "Configuration des lots",
+	}
 };
 
 const defaultPageContentTitle = {
@@ -121,5 +139,4 @@ const defaultPageContentTitle = {
 	description: "Système de gestion intégré",
 } as PageContentTitle;
 
-export const getPageContentTitle = (routeName: string) =>
-	titleMap[routeName] || defaultPageContentTitle;
+export const getPageContentTitle = (routeName: string) => titleMap[routeName] || defaultPageContentTitle;

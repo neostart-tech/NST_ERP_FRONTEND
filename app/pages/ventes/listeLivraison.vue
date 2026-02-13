@@ -213,7 +213,7 @@
 </template>
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useDeliveryStore } from "@/stores/sale/DeliveryStore";
+import { useDeliveryStore } from "@/stores/Sale/DeliveryStore";
 
 const filterType = ref("");
 const selectedDelivery = ref(null);

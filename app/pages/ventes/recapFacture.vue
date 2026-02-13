@@ -287,7 +287,7 @@ useSeoMeta({ title: "Récapitulatif des factures" });
 import { ref, computed, onMounted } from "vue";
 import Swal from "sweetalert2";
 import EmptyState from "~/app/components/EmptyState.vue";
-import { useInvoiceStore } from "~/app/stores/sale/InvoiceStore";
+import { useInvoiceStore } from "@/stores/Sale/InvoiceStore";
 import type { Invoice } from "~/models/Invoice";
 import { getClientName } from "~/models/Client";
 

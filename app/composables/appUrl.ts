@@ -32,18 +32,20 @@ export const AppUrl = {
 	STOCKS_PRODUCTS: "/stocks/produits",
 	STOCKS_MOVEMENTS: "/stocks/mouvements",
 
+	// DOCUMENTS
+	DOCUMENTS: "/gestion-des-type-de-document",
+
 
 	// OFFERS
-	OFFERS: "/offers",
 	OFFERS_NEW: "/offers/offer-form",
 	OFFERS_TASK_FORM: "/offers/task-form",
 	OFFERS_APPROVAL: "/offers/:id/approuver",
 	OFFERS_EDIT: "/offers/:id/modifier",
 	OFFERS_PENDING: "/offers/pending",
-	OFFERS_DOCUMENTS: "/offers/:id/documents-availability",
-	OFFERS_LOTS: "/offers/:id/lots-configuration",
+	OFFERS_DOCUMENTS: "/offers/:id/documents",
+	OFFERS_LOTS: "/offers/:id/configuration-des-lots",
 	OFFERS_PROJECTS: "/offers/projects",
-	OFFERS_QUICK_STAT: "/offers/gestion-des-appels-d-offre",
+	OFFERS: "/offers/gestion-des-appels-d-offre",
 
 	//SUPPLIERS
 	SUPPLIERS: "/fournisseurs",
@@ -75,7 +77,7 @@ export const AppUrl = {
 	MAINTENANCE_REPORTING_BREAK: "/maintenance/signaler-une-panne",
 	MAINTENANCE_CUSTOMER_FILE: "/maintenance/fiche-client",
 	MAINTENANCE_MANAGEMENT_CONTRACT_MAINTENANCE:"/maintenance/gestion-des-contrats",
-	MAINTENANCE_QUOTE: "/maintenance/gestion-devis",
+	MAINTENANCE_QUOTE: "/maintenance/gestion-des-devis",
 	MAINTENANCE_REPORTING: "/maintenance/reportage",
 	MAINTENANCE_MANAGEMENT_INVOICE: "/maintenance/gestion-factures",
 

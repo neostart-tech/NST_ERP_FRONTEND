@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import type { Entreprise } from "~/models/Enterprise";
 import type { Offer, OfferForm, MetadataForm, Lot } from "~/models/Offer";
 import { extractDateTime } from "../utils/dateParser";
+import type { DocumentType } from "~/models/DocumentType";
 
 const PERSISTANCE_KEY = "offers-store";
 
@@ -13,20 +14,20 @@ export const useOfferStore = defineStore("OfferStore", {
 		isLoading: true,
 	}),
 	actions: {
-		async fetchOffers() {
+		async fetchOffers( limit: number = 1000) {
 			try {
 				if (this.offers.length === 0) this.isLoading = true;
 				const response = await useApi().get<Offer[]>(
 					ApiUrl.queryable(ApiUrl.OFFERS, {
-						limit: 5,
-					})
+						limit,
+					}),
 				);
 				this.offers = response.data || [];
 			} catch (error) {
 				console.error("Error fetching offers:", error);
 				useAlert().showAlert(
 					"Une erreur est survenue lors du chargement des appels d'offres",
-					"error"
+					"error",
 				);
 				throw error;
 			} finally {
@@ -42,7 +43,7 @@ export const useOfferStore = defineStore("OfferStore", {
 				console.error("Error fetching offers:", error);
 				useAlert().showAlert(
 					"Une erreur est survenue lors du chargement des appels d'offres",
-					"error"
+					"error",
 				);
 				throw error;
 			} finally {
@@ -71,7 +72,7 @@ export const useOfferStore = defineStore("OfferStore", {
 		async updateOffer(
 			offerId: string,
 			offerData: OfferForm,
-			metadata: MetadataForm
+			metadata: MetadataForm,
 		) {
 			try {
 				const formData = {
@@ -82,11 +83,11 @@ export const useOfferStore = defineStore("OfferStore", {
 				};
 				const { data } = await useApi().put<Offer>(
 					ApiUrl.parameterized(ApiUrl.OFFER_BY_ID, offerId),
-					formData
+					formData,
 				);
 
 				this.offers = this.offers.map((offer) =>
-					offer.id === data.id ? { ...offer, ...data } : offer
+					offer.id === data.id ? { ...offer, ...data } : offer,
 				);
 			} catch (error) {
 				console.log("Error storing offer:", error);
@@ -99,7 +100,7 @@ export const useOfferStore = defineStore("OfferStore", {
 		async getOneOffer(id: string) {
 			try {
 				const { data } = await useApi().get<Offer>(
-					ApiUrl.parameterized(ApiUrl.OFFER_BY_ID, id)
+					ApiUrl.parameterized(ApiUrl.OFFER_BY_ID, id),
 				);
 				return data;
 			} catch (error) {
@@ -112,10 +113,10 @@ export const useOfferStore = defineStore("OfferStore", {
 			try {
 				const response = await useApi().post<Offer>(
 					ApiUrl.parameterized(ApiUrl.OFFER_DECISION, id),
-					{ appreciation }
+					{ appreciation },
 				);
 				this.offers = this.offers.map((offer) =>
-					offer.id === id ? response.data : offer
+					offer.id === id ? response.data : offer,
 				);
 				return response.data;
 			} catch (error) {
@@ -130,15 +131,15 @@ export const useOfferStore = defineStore("OfferStore", {
 				decision: "yes" | "no" | null;
 				submissionMotif?: string;
 				refusalMotif?: string;
-			}
+			},
 		) {
 			try {
 				const response = await useApi().put<Offer>(
 					ApiUrl.parameterized(ApiUrl.OFFER_DECISION, id),
-					decisionData
+					decisionData,
 				);
 				this.offers = this.offers.map((offer) =>
-					offer.id === id ? { ...offer, ...response.data } : offer
+					offer.id === id ? { ...offer, ...response.data } : offer,
 				);
 				return response.data;
 			} catch (error) {
@@ -164,19 +165,39 @@ export const useOfferStore = defineStore("OfferStore", {
 				decision: "yes" | "no" | null;
 				submissionMotif?: string;
 				refusalMotif?: string;
-			}
+			},
 		) {
 			try {
 				const response = await useApi().put<Offer>(
 					ApiUrl.parameterized(ApiUrl.OFFER_DECISION, id),
-					decisionData
+					decisionData,
 				);
 				this.offers = this.offers.map((offer) =>
-					offer.id === id ? { ...offer, ...response.data } : offer
+					offer.id === id ? { ...offer, ...response.data } : offer,
 				);
 				return response.data;
 			} catch (error) {
 				console.error("Error saving decision:", error);
+				throw error;
+			}
+		},
+
+		async configureDocuments(id: string, documents: DocumentType[]) {
+			let formData = new FormData();
+				formData.append("docConfigs[]", documents.map(_ => _.id).join(",").split(",").toString());
+			console.log("formData:", formData);
+
+			try {
+				const { data } = await useApi().post<Offer>(
+					ApiUrl.parameterized(ApiUrl.OFFER_DOCUMENTS, id),
+					formData,
+				);
+				this.offers = this.offers.map((offer) =>
+					offer.id === id ? { ...offer, ...data } : offer,
+				);
+				return data;
+			} catch (error) {
+				this.validationErrors = useValidationErrors(error);
 				throw error;
 			}
 		},

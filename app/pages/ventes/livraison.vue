@@ -110,7 +110,7 @@ import { ref, watch, onMounted } from 'vue'
 import Swal from 'sweetalert2'
 import { useRouter } from 'vue-router'
 import { useOrderStore } from '@/stores/Sale/OrderStore'
-import { useDeliveryStore } from '@/stores/sale/DeliveryStore'
+import { useDeliveryStore } from '@/stores/Sale/DeliveryStore'
 
 const router = useRouter()
 const livraisonType = ref('')

@@ -334,7 +334,7 @@ onMounted(async () => {
 	offerTypes.value = offerStore.offerTypes;
 
 	enterprises.value = enterpriseStore.enterprises;
-	await enterpriseStore.fetchEnterprises();
+	await enterpriseStore.fetchAll();
 	enterprises.value = enterpriseStore.enterprises;
 	metadataFormData.value = offerFormData.value.metadata!
 	metadataFormData.value.has_bank_guarentee = Number(metadataFormData.value.bank_guarentee) ? 1 : 0;

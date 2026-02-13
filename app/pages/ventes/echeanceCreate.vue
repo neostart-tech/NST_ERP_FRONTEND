@@ -95,7 +95,7 @@ import { ref, watch, computed, onMounted } from "vue";
 import { useScheduleStore } from "#imports";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
-import { useInvoiceStore } from "@/stores/sale/InvoiceStore";
+import { useInvoiceStore } from "@/stores/Sale/InvoiceStore";
 
 const router = useRouter();
 const invoiceStore = useInvoiceStore();

@@ -253,7 +253,7 @@ import ProformaFormModal from '@/components/sales/ProformaFormModal.vue'
 import Paginator from "~/app/components/Paginator.vue";
 import EmptyState from "~/app/components/EmptyState.vue";
 import Swal from "sweetalert2";
-import { useProformaStore } from "~/app/stores/Stock/ProformaStore";
+import { useProformaStore } from "@/stores/Stock/ProformaStore";
 
 const proformaStore = useProformaStore();
 const filteredProforma = ref<Proforma[]>([]);

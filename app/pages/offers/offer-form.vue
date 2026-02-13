@@ -145,7 +145,7 @@ const handleSubmit = async () => {
   try {
     await offerStore.storeOffer(offerFormData.value, metadataFormData.value);
     useAlert().showAlert("Offre enregistrée avec succès", "success");
-    navigateTo(AppUrl.OFFERS_QUICK_STAT);
+    navigateTo(AppUrl.OFFERS);
   } catch (error) {
 		console.log(error)
     const errorsSize = Object.keys(offerStore.validationErrors).length;
