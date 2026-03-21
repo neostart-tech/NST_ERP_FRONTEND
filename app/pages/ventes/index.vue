@@ -454,10 +454,10 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useUserStore } from "~/app/stores/_user";
+import { _useUserStore } from "~/app/stores/_user";
 
 // Références
-const userStore = useUserStore();
+const userStore = _useUserStore();
 const searchQuery = ref("");
 const statusFilter = ref("all");
 const sortBy = ref("name");

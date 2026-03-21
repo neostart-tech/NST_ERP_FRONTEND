@@ -25,13 +25,14 @@
 							<label for="client" class="block text-sm font-medium text-gray-700 mb-1">Client
 								<RequiredField />
 							</label>
-							<select id="client" v-model="newContract.client_id"
+							<!-- <select id="client" v-model="newContract.client_id"
 								class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
 								<option value="">Sélectionnez un client</option>
 								<option v-for="client in clients" :key="client.id" :value="client.id">
 									{{ getClientName(client) }}
 								</option>
-							</select>
+							</select> -->
+							<ClientComboBox v-model="newContract.client_id" :clients="clients" />
 							<InvalidInput :error="validationErrors.client_id" />
 						</div>
 
@@ -89,6 +90,7 @@
 							</label>
 							<select id="frequency" v-model="newContract.frequency"
 								class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+								<option value="">Sélectionner une fréquence</option>
 								<option value="monthly">Mensuel</option>
 								<option value="quarterly">Trimestriel</option>
 								<option value="one-time">Semestriel</option>
@@ -104,6 +106,7 @@
 							</label>
 							<select id="frequency" v-model="newContract.status"
 								class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+								<option value="">Sélectionner un statut</option>
 								<option value="active" selected	>Actif</option>
 								<option value="pending">En attente</option>
 								<option value="expired">Expiré</option>
@@ -117,6 +120,7 @@
 							<label for="status" class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
 							<select id="status" v-model="newContract.status"
 								class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+								<option value="">Sélectionner un statut</option>
 								<option value="pending">En attente</option>
 								<option value="actif">Actif</option>
 								<option value="refuse">Refusé</option>
@@ -131,6 +135,7 @@
 							<label for="status" class="block text-sm font-medium text-gray-700 mb-1">Type de maintenance</label>
 							<select id="status" v-model="newContract.contract_type"
 								class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+								<option value="">Sélectionner un type</option>
 								<option value="preventive">Préventive</option>
 								<option value="corrective">Corrective</option>
 							</select>
@@ -195,24 +200,45 @@ import {  getClientName, type Client } from '~/models/Client';
 import type { Contract } from '~/models/Contract';
 import Spinner from '../partials/Spinner.vue';
 import { useContractStore } from '~/app/stores/Maintenance/ContractStore';
-import { useClientStore } from '~/app/stores/clientStore';
+import { useClientStore } from '@/stores/ClientStore';
 import RequiredField from '../partials/RequiredField.vue';
 import InvalidInput from '../partials/InvalidInput.vue';
+import ClientComboBox from '../ui/ClientComboBox.vue';
 
 const clientStore = useClientStore();
 
 const { isPersisting, validationErrors } = storeToRefs(useContractStore());
 const { clients } = storeToRefs(clientStore);
 
-onMounted(() => {
-	clientStore.fetchAll();
-})
-
-defineProps<{
+const props = defineProps<{
 	showContractForm: boolean;
 	isEditing: boolean;
 	closeContractForm: () => void;
 	submitContractForm: () => Promise<void>;
 	newContract: Contract;
 }>()
+
+// Fonction pour calculer la date de fin (date de début + 1 an)
+const calculateEndDate = (startDate: string): string => {
+	if (!startDate) return '';
+
+	const date = new Date(startDate);
+	date.setFullYear(date.getFullYear() + 1);
+
+	// Format YYYY-MM-DD pour les inputs de type date
+	return date.toISOString().split('T')[0];
+}
+
+// Watcher pour mettre à jour automatiquement la date de fin
+watch(() => props.newContract.start_date, (newStartDate) => {
+	// Si la date de fin n'est pas encore définie et qu'on a une date de début
+	if (newStartDate && !props.newContract.end_date) {
+		props.newContract.end_date = calculateEndDate(newStartDate);
+	}
+});
+
+onMounted(() => {
+	clientStore.fetchAll();
+	validationErrors.value = {};
+})
 </script>

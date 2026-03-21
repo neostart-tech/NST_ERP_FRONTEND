@@ -17,7 +17,8 @@ export interface Equipment {
 	company_city: string;
 	comment: string;
 	photo: string | null | File,
-	photoPreview: string | null | File
+	photoPreview: string | null | File,
+	under_warranty?: boolean;
 }
 
 export const equipmentFormData = (equipment?: Equipment): Equipment => ({
@@ -39,5 +40,17 @@ export const equipmentFormData = (equipment?: Equipment): Equipment => ({
 	company_city: equipment?.company_city || '',
 	comment: equipment?.comment || '',
 	photo: equipment?.photo || null,
-	photoPreview: equipment?.photoPreview || null
+	photoPreview: equipment?.photoPreview || null,
+	under_warranty: equipment?.under_warranty || false
 });
+
+export function getEquipmentName(equipment?: Equipment): string {
+	if (!equipment) return '';
+	return `${equipment.brand} ${equipment.model}`.trim() || equipment.name || `Équipement #${equipment.id}`;
+}
+
+export function getEquipmentDisplayInfo(equipment?: Equipment): string {
+	if (!equipment) return '';
+	const name = getEquipmentName(equipment);
+	return equipment.serial_number ? `${name} (${equipment.serial_number})` : name;
+}

@@ -1,11 +1,30 @@
 export interface User extends UserCreateForm {
 	id: string;
-	role?: string;
+	role?: UserRole;
 	permissions: string[];
 	isActive: boolean;
 	createdAt: string;
 	hasConfirmedPassword: boolean;
 	loggedInAt: Date;
+}
+
+export enum UserRole {
+	ADMIN = "Admin",
+	USER = "User",
+	SELLER = "Commercial"
+}
+
+export const getRoleName = (role: UserRole): string => {
+	switch (role) {
+		case UserRole.ADMIN:
+			return "Administrateur";
+		case UserRole.USER:
+			return "Utilisateur simple";
+		case UserRole.SELLER:
+			return "Commercial";
+		default:
+			return role;
+	}
 }
 
 export interface AuthUser extends User {
@@ -19,15 +38,17 @@ export interface UserCreateForm {
 	phone: string;
 	login: string;
 	hiredYear: string;
+	role?: UserRole;
 }
 
-export const createDefaultUserForm = (): UserCreateForm => ({
-	firstName: "",
-	lastName: "",
-	email: "",
-	phone: "",
-	login: "",
-	hiredYear: new Date().getFullYear().toString()
+export const createDefaultUserForm = (user?: User): UserCreateForm => ({
+	firstName: user?.firstName || "",
+	lastName: user?.lastName || "",
+	email: user?.email || "",
+	phone: user?.phone || "",
+	login: user?.login || "",
+	hiredYear: user?.hiredYear || new Date().getFullYear().toString(),
+	role: user?.role || UserRole.USER
 });
 
 export interface LoginCredential {

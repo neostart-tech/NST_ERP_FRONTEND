@@ -396,7 +396,7 @@ import Swal from 'sweetalert2';
 import { ref, computed, onMounted, reactive } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useContractStore } from '~/app/stores/Maintenance/ContractStore';
-import { useClientStore } from '~/app/stores/clientStore';
+import { useClientStore } from '@/stores/ClientStore';
 import { getClientName, type Client } from '~/models/Client';
 import { type Contract, contractStatusToString, defaultContractData, defaultLetterData, type Letter } from '~/models/Contract';
 import ContractForm from '../../components/contracts/ContractForm.vue';

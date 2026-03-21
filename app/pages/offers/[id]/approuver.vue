@@ -46,7 +46,7 @@
     </div>
 
     <!-- Submission Decision -->
-    <div class="bg-gray-50 rounded-lg p-6 my-6">
+    <div class="bg-gray-50 rounded-lg p-6 my-6" v-if="useAuthStore().user?.role === UserRole.ADMIN">
       <h3 class="text-lg font-medium text-gray-900 mb-4">Décision de soumission</h3>
       <div class="space-y-4">
         <div class="flex items-center space-x-6">
@@ -208,6 +208,8 @@
 </template>
 
 <script setup lang="ts">
+import {UserRole} from "~/models/User";
+
 definePageMeta({
   layout: 'default'
 });

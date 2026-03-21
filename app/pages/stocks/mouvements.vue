@@ -467,10 +467,12 @@ const addMovement = async () => {
 				icon: "error",
 				title: "Champs manquants",
 				text: "Veuillez remplir tous les champs obligatoires.",
-			});
+			}).then();
 			isFormLoading.value = false;
 			return;
 		}
+
+		console.log("newMovement.value:", newMovement.value.product_id)
 
 		await movementStore.store(newMovement.value as any);
 		showMovementFormModal.value = false;

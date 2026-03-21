@@ -87,13 +87,13 @@
 					<!-- Désignation -->
 					<div class="mb-3 relative">
 						<label class="block text-xs text-gray-500 uppercase font-semibold mb-1">Désignation <RequiredField /></label>
-						<select v-model="item.articleId" @change="onProductChange(index)" required :readonly="sourceType === 'proforma'"
-							class="w-full border border-gray-300 rounded p-2 focus:ring-1 focus:ring-indigo-500">
-							<option value="" selected>Sélectionner un produit</option>
-							<option v-for="product in products" :key="product.id" :value="product.id">
-								{{ product.name }} - {{ formatCurrency(product.unit_price_sale) }}
-							</option>
-						</select>
+						<ProductComboBox
+							v-model="item.articleId"
+							:products="products"
+							:show-price="true"
+							:show-quantity="true"
+							@update:modelValue="onProductChange(index)"
+						/>
 					</div>
 
 					<!-- Quantité et Prix -->
@@ -146,13 +146,13 @@
 					<tbody>
 						<tr v-for="(item, index) in form.items" :key="index" class="hover:bg-gray-50 transition-colors">
 							<td class="border-b border-gray-200 px-4 py-2 relative">
-								<select v-model="item.articleId" @change="onProductChange(index)" required :readonly="sourceType === 'proforma'"
-									class="w-full border border-gray-300 rounded p-2 focus:ring-1 focus:ring-indigo-500">
-									<option value="" selected>Sélectionner un produit</option>
-									<option v-for="product in products" :key="product.id" :value="product.id">
-										{{ product.name }} - {{ formatCurrency(product.unit_price_sale) }}
-									</option>
-								</select>
+								<ProductComboBox
+									v-model="item.articleId"
+									:products="products"
+									:show-price="true"
+									:show-quantity="true"
+									@update:modelValue="onProductChange(index)"
+								/>
 							</td>
 
 							<!-- Quantité -->
@@ -220,46 +220,190 @@
 			</button>
 		</div>
 
-		<!-- Modal pour sélectionner le client -->
-		<div v-if="showClientModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
-			aria-modal="true">
-			<div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-				<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeClientModal"></div>
-				<div
-					class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-					<div class="bg-white px-6 pt-5 pb-4">
-						<div class="flex items-center justify-between mb-4">
-							<h3 class="text-lg font-semibold text-gray-900">Sélectionner un client</h3>
-							<button @click="closeClientModal" class="text-gray-400 hover:text-gray-500">
-								<Icon name="heroicons:x-mark" class="w-6 h-6" />
-							</button>
-						</div>
-
-						<div class="relative mt-4">
-							<!-- <input type="text" v-model="searchClient" @input="filterClients" placeholder="Rechercher un client..."
-								class="block w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 transition-all p-2.5" />
-
-							<ul v-if="filteredClients.length" class="mt-2 max-h-60 overflow-auto border border-gray-300 rounded-lg">
-								<li v-for="client in filteredClients" :key="client.id" @click="selectClient(client)"
-									class="p-3 hover:bg-blue-50 cursor-pointer transition-colors border-b border-gray-200 last:border-b-0">
-									{{ client.first_name }} {{ client.last_name }}
-								</li>
-							</ul> -->
-							<select v-if="clients.length" v-model="selectedClient" @change="initClientArticles"
-								class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-indigo-500">
-								<option value="">Sélectionner un client</option>
-								<option v-for="client in clients" :key="client.id" :value="client.id">
-									{{ getClientName(client) }}
-								</option>
-							</select>
-							<p v-else-if="searchClient" class="mt-2 text-sm text-gray-500 text-center py-4">
-								Aucun client trouvé
-							</p>
+		<!-- Modal pour choisir la source -->
+		<Transition name="modal">
+			<div v-if="showSourceModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+				<div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+					<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="showSourceModal = false"></div>
+					<div class="relative inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+						<div class="bg-white px-6 pt-6 pb-4">
+							<div class="flex items-center justify-between mb-6">
+								<div class="flex items-center gap-3">
+									<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+										<Icon name="heroicons:question-mark-circle" class="w-6 h-6 text-blue-600" />
+									</div>
+									<h3 class="text-lg font-semibold text-gray-900">Choisir la source</h3>
+								</div>
+								<button @click="showSourceModal = false" class="text-gray-400 hover:text-gray-500 transition-colors">
+									<Icon name="heroicons:x-mark" class="w-6 h-6" />
+								</button>
+							</div>
+							<p class="text-gray-600 mb-6">Voulez-vous partir d'une proforma existante ou créer une nouvelle commande pour un client ?</p>
+							<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								<button @click="openProformaModal"
+									class="flex flex-col items-center justify-center p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all group">
+									<Icon name="heroicons:document-text" class="w-12 h-12 text-blue-500 mb-3 group-hover:scale-110 transition-transform" />
+									<span class="font-semibold text-gray-900">Proforma existante</span>
+									<span class="text-sm text-gray-500 mt-1">Partir d'un devis validé</span>
+								</button>
+								<button @click="openClientModal"
+									class="flex flex-col items-center justify-center p-6 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-all group">
+									<Icon name="heroicons:user-plus" class="w-12 h-12 text-green-500 mb-3 group-hover:scale-110 transition-transform" />
+									<span class="font-semibold text-gray-900">Nouvelle commande</span>
+									<span class="text-sm text-gray-500 mt-1">Choisir un client</span>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		</Transition>
+
+		<!-- Modal pour sélectionner une proforma -->
+		<Transition name="modal">
+			<div v-if="showProformaModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+				<div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+					<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="showProformaModal = false"></div>
+					<div class="relative inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+						<div class="bg-white px-6 pt-6 pb-4">
+							<div class="flex items-center justify-between mb-6">
+								<div class="flex items-center gap-3">
+									<div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+										<Icon name="heroicons:document-text" class="w-6 h-6 text-blue-600" />
+									</div>
+									<h3 class="text-lg font-semibold text-gray-900">Sélectionner une proforma</h3>
+								</div>
+								<button @click="showProformaModal = false" class="text-gray-400 hover:text-gray-500 transition-colors">
+									<Icon name="heroicons:x-mark" class="w-6 h-6" />
+								</button>
+							</div>
+
+							<!-- Liste des proformas -->
+							<div v-if="proforma.length === 0" class="text-center py-8">
+								<Icon name="heroicons:document-minus" class="w-12 h-12 text-gray-400 mx-auto mb-3" />
+								<p class="text-gray-500">Aucune proforma validée disponible</p>
+							</div>
+							<div v-else class="max-h-80 overflow-y-auto space-y-2">
+								<div
+									v-for="p in proforma"
+									:key="p.id"
+									@click="selectProformaItem(p.id)"
+									class="p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-blue-50 hover:border-blue-300 transition-all"
+									:class="{ 'bg-blue-50 border-blue-500': selectedQuote === p.id }"
+								>
+									<div class="flex items-center justify-between">
+										<div>
+											<p class="font-semibold text-gray-900">{{ p.reference }}</p>
+											<p class="text-sm text-gray-600">{{ getClientName(p.client) }}</p>
+											<p v-if="p.object" class="text-sm text-gray-500">{{ p.object }}</p>
+										</div>
+										<Icon v-if="selectedQuote === p.id" name="heroicons:check-circle" class="w-6 h-6 text-blue-500" />
+									</div>
+								</div>
+							</div>
+
+							<div class="mt-6 flex justify-end gap-3">
+								<button @click="showProformaModal = false" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+									Annuler
+								</button>
+								<button @click="confirmProformaSelection" :disabled="!selectedQuote"
+									class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+									Sélectionner
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</Transition>
+
+		<!-- Modal pour sélectionner le client -->
+		<Transition name="modal">
+			<div v-if="showClientModal" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+				<div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+					<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeClientModal"></div>
+					<div class="relative inline-block align-bottom bg-white rounded-xl text-left overflow-visible shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:max-h-screen sm:min-h-[500px]">
+						<div class="bg-white px-6 pt-6 pb-4 max-h-full overflow-visible">
+							<div class="flex items-center justify-between mb-6">
+								<div class="flex items-center gap-3">
+									<div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+										<Icon name="heroicons:user" class="w-6 h-6 text-green-600" />
+									</div>
+									<h3 class="text-lg font-semibold text-gray-900">Sélectionner un client</h3>
+								</div>
+								<button @click="closeClientModal" class="text-gray-400 hover:text-gray-500 transition-colors">
+									<Icon name="heroicons:x-mark" class="w-6 h-6" />
+								</button>
+							</div>
+
+							<div v-if="clients.length === 0" class="text-center py-8">
+								<Icon name="heroicons:users" class="w-12 h-12 text-gray-400 mx-auto mb-3" />
+								<p class="text-gray-500">Aucun client disponible</p>
+							</div>
+							<div v-else class="relative" style="z-index: 60;">
+								<UiClientComboBox
+									v-model="tempSelectedClient"
+									:clients="clients"
+									:return-object="false"
+									:show-email="true"
+									:show-phone="true"
+									:show-type="true"
+									class="modal-combobox"
+								/>
+							</div>
+
+							<div class="mt-6 flex justify-end gap-3">
+								<button @click="closeClientModal" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+									Annuler
+								</button>
+								<button @click="confirmClientSelection" :disabled="!tempSelectedClient"
+									class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+									Sélectionner
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</Transition>
+
+		<!-- Modal d'alerte/notification -->
+		<Transition name="modal">
+			<div v-if="alertModal.show" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+				<div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
+					<div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="closeAlertModal"></div>
+					<div class="relative inline-block align-bottom bg-white rounded-xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full">
+						<div class="bg-white px-6 pt-6 pb-4">
+							<div class="flex items-center justify-center mb-4">
+								<div :class="[
+									'w-16 h-16 rounded-full flex items-center justify-center',
+									alertModal.type === 'success' ? 'bg-green-100' : '',
+									alertModal.type === 'error' ? 'bg-red-100' : '',
+									alertModal.type === 'warning' ? 'bg-yellow-100' : ''
+								]">
+									<Icon v-if="alertModal.type === 'success'" name="heroicons:check-circle" class="w-10 h-10 text-green-600" />
+									<Icon v-else-if="alertModal.type === 'error'" name="heroicons:x-circle" class="w-10 h-10 text-red-600" />
+									<Icon v-else name="heroicons:exclamation-triangle" class="w-10 h-10 text-yellow-600" />
+								</div>
+							</div>
+							<h3 class="text-lg font-semibold text-gray-900 text-center mb-2">{{ alertModal.title }}</h3>
+							<p class="text-gray-600 text-center" v-html="alertModal.message"></p>
+							<div class="mt-6 flex justify-center">
+								<button @click="closeAlertModal"
+									:class="[
+										'px-6 py-2 rounded-lg text-white transition-colors',
+										alertModal.type === 'success' ? 'bg-green-600 hover:bg-green-700' : '',
+										alertModal.type === 'error' ? 'bg-red-600 hover:bg-red-700' : '',
+										alertModal.type === 'warning' ? 'bg-yellow-600 hover:bg-yellow-700' : ''
+									]">
+									OK
+								</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</Transition>
 	</div>
 </template>
 
@@ -267,19 +411,45 @@
 import { ref, computed, onMounted } from 'vue'
 import { useClientStore } from '#imports'
 import { useRouter } from 'vue-router'
-import Swal from 'sweetalert2'
 import { useOrderStore } from '@/stores/Sale/OrderStore'
 import { useProformaStore } from '@/stores/Stock/ProformaStore'
 import { useProductStore } from '@/stores/Stock/ProductStore'
 import { getClientName } from '~/models/Client'
 import RequiredField from '~/app/components/partials/RequiredField.vue'
+import ProductComboBox from "@/components/ui/ProductComboBox.vue";
+import UiClientComboBox from "@/components/ui/ClientComboBox.vue";
+import Swal from "sweetalert2";
 
 const sourceType = ref<"client" | "proforma" | ''>('')
 const selectedQuote = ref('')
 const selectedClient = ref('')
+const tempSelectedClient = ref('')
 const fileName = ref('')
-const file = ref(null)
+const file = ref<File | null>(null)
 const showClientModal = ref(false)
+const showSourceModal = ref(false)
+const showProformaModal = ref(false)
+
+// Modal d'alerte
+const alertModal = ref({
+	show: false,
+	type: 'warning' as 'success' | 'error' | 'warning',
+	title: '',
+	message: ''
+})
+
+const showAlert = (type: 'success' | 'error' | 'warning', title: string, message: string) => {
+	alertModal.value = { show: true, type, title, message }
+}
+
+const closeAlertModal = () => {
+	alertModal.value.show = false
+	// Si c'est un succès et on vient de créer une commande, rediriger
+	if (alertModal.value.type === 'success' && alertModal.value.title === 'Succès') {
+		router.push(AppUrl.ORDER_INDEX);
+		resetForm();
+	}
+}
 
 const taux = 18;
 
@@ -313,91 +483,57 @@ onMounted(() => {
 })
 
 // Modal pour choisir la source
-const showSourceChoiceModal = async () => {
-	const { value: source } = await Swal.fire({
-		title: 'Choisir la source',
-		text: 'Voulez-vous partir d\'une proforma existante ou créer une nouvelle commande pour un client ?',
-		icon: 'question',
-		showCancelButton: true,
-		confirmButtonText: 'Proforma existante',
-		cancelButtonText: 'Nouvelle commande',
-		confirmButtonColor: '#3b82f6',
-		cancelButtonColor: '#10b981',
-		reverseButtons: true
-	});
-
-	if (source === true) {
-		await selectProforma()
-	} else {
-		await selectClient();
-	}
+const showSourceChoiceModal = () => {
+	showSourceModal.value = true
 }
 
-// Sélection d'une proforma
-const selectProforma = async () => {
+// Ouvrir le modal proforma
+const openProformaModal = () => {
+	showSourceModal.value = false
 	if (!proforma.value || proforma.value.length === 0) {
-		Swal.fire({
-			icon: 'warning',
-			title: 'Aucune proforma',
-			text: 'Aucune proforma validée disponible'
-		})
+		showAlert('warning', 'Aucune proforma', 'Aucune proforma validée disponible')
 		return
 	}
-
-	const options: Record<string, string> = {}
-	proforma.value.forEach(p => {
-		options[p.id] = `${p.reference} - ${getClientName(p.client)} - ${p.object || ''}`
-	})
-
-	const { value: proformaId } = await Swal.fire({
-		title: 'Sélectionner une proforma',
-		input: 'select',
-		inputOptions: options,
-		inputPlaceholder: 'Choisir une proforma',
-		showCancelButton: true,
-		confirmButtonText: 'Sélectionner',
-		cancelButtonText: 'Annuler'
-	})
-
-	if (proformaId) {
-		selectedClient.value = "";
-		sourceType.value = 'proforma'
-		selectedQuote.value = proformaId
-		form.value.items = [];
-		loadProformaArticles(proformaId);
-	}
+	selectedQuote.value = ''
+	showProformaModal.value = true
 }
-// Sélection d'une client
-const selectClient = async () => {
+
+// Ouvrir le modal client
+const openClientModal = () => {
+	showSourceModal.value = false
 	if (!clients.value || clients.value.length === 0) {
-		Swal.fire({
-			icon: 'warning',
-			title: 'Aucun client',
-			text: 'Aucun client disponible'
-		})
+		showAlert('warning', 'Aucun client', 'Aucun client disponible')
 		return
 	}
+	tempSelectedClient.value = ''
+	showClientModal.value = true
+}
 
-	const options: Record<string, string> = {}
-	clients.value.forEach(c => options[c.id] = getClientName(c));
+// Sélection d'une proforma dans la liste
+const selectProformaItem = (proformaId: string) => {
+	selectedQuote.value = proformaId
+}
 
-	const { value: clientId } = await Swal.fire({
-		title: 'Sélectionner un client',
-		input: 'select',
-		inputOptions: options,
-		inputPlaceholder: 'Choisir un client',
-		showCancelButton: true,
-		confirmButtonText: 'Sélectionner',
-		cancelButtonText: 'Annuler'
-	})
+// Confirmer la sélection de proforma
+const confirmProformaSelection = () => {
+	if (!selectedQuote.value) return
+	selectedClient.value = ""
+	sourceType.value = 'proforma'
+	form.value.items = []
+	loadProformaArticles(selectedQuote.value)
+	showProformaModal.value = false
+}
 
-	if (clientId) {
-		selectedQuote.value = "";
-		sourceType.value = 'client'
-		selectedClient.value = clientId
-		// loadClientArticles(clientId)
-		form.value.items = [];
-	}
+// Confirmer la sélection de client
+const confirmClientSelection = () => {
+	if (!tempSelectedClient.value) return
+	selectedQuote.value = ""
+	sourceType.value = 'client'
+	selectedClient.value = tempSelectedClient.value
+	searchClient.value = getClientName(clients.value.find(c => c.id === tempSelectedClient.value))
+	form.value.items = []
+	addItem()
+	showClientModal.value = false
 }
 
 // Charger les articles d'une proforma
@@ -440,14 +576,6 @@ const closeClientModal = () => {
 
 const searchClient = ref("")
 
-// Sélection d'un client
-const initClientArticles = () => {
-	searchClient.value = getClientName(clients.value.find(c => c.id === selectedClient.value));
-	sourceType.value = 'client';
-	showClientModal.value = false;
-	form.value.items = []; // Commencer avec une liste vide
-	addItem();
-}
 
 // Gestion du changement de produit
 const onProductChange = (idx: number) => {
@@ -474,8 +602,9 @@ const resetForm = () => {
 }
 
 // Gestion du fichier (UI uniquement)
-const handleFileUpload = (e) => {
-	const selectedFile = e.target.files[0]
+const handleFileUpload = (e: Event) => {
+	const target = e.target as HTMLInputElement
+	const selectedFile = target.files?.[0]
 	if (selectedFile) {
 		fileName.value = selectedFile.name
 		file.value = selectedFile
@@ -597,3 +726,27 @@ const submitOrder = async () => {
 	}
 }
 </script>
+
+<style scoped>
+.modal-enter-active,
+.modal-leave-active {
+	transition: opacity 0.2s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+	opacity: 0;
+}
+
+.modal-enter-active .relative,
+.modal-leave-active .relative {
+	transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.modal-enter-from .relative,
+.modal-leave-to .relative {
+	transform: scale(0.95);
+	opacity: 0;
+}
+</style>
+

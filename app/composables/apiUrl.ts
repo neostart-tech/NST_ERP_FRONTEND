@@ -1,5 +1,3 @@
-import Produits from "../pages/stocks/produits.vue";
-
 /**
  * Centralise les URLs des endpoints API pour :
  * - Éviter la duplication des URLs dans le code
@@ -97,6 +95,15 @@ export const ApiUrl = {
 
 	QUOTES: "/quotes",
 	QUOTE_BY_ID: "/quotes/:id",
+
+	INVOICE_SCHEDULES: "/invoice-schedules",
+	INVOICE_SCHEDULE_BY_ID: "/invoice-schedules/:id",
+	INVOICE_SCHEDULE_MARK_AS_PAID: "/invoice-schedules/:id/mark-paid",
+	INVOICE_SCHEDULES_CREATE: "/invoice-schedules/:id",
+	SEND_INVOICE_REMINDER_MANUALLY : "/send-invoice-reminder/:id",
+
+	MODE_PAYMENTS: "/mode-payments",
+	MODE_PAYMENT_BY_ID: "/mode-payments/:id",
 
 	/**
  * Fonction pour les url à paramètres sous la forme url/:id

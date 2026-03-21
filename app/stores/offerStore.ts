@@ -53,11 +53,14 @@ export const useOfferStore = defineStore("OfferStore", {
 
 		async storeOffer(offerData: OfferForm, metadata: MetadataForm) {
 			try {
+				const requirementValue = Array.isArray(offerData.requirement)
+					? offerData.requirement.join(",")
+					: (offerData.requirement || "");
 				const formData = {
 					...offerData,
 					...metadata,
 					offer_type_id: offerData.offer_type_id,
-					requirement: offerData.requirement?.join(",") || "",
+					requirement: requirementValue,
 				};
 				const { data } = await useApi().post<Offer>(ApiUrl.OFFERS, formData);
 				this.offers = [data, ...this.offers];
@@ -75,11 +78,14 @@ export const useOfferStore = defineStore("OfferStore", {
 			metadata: MetadataForm,
 		) {
 			try {
+				const requirementValue = Array.isArray(offerData.requirement)
+					? offerData.requirement.join(",")
+					: (offerData.requirement || "");
 				const formData = {
 					...offerData,
 					...metadata,
 					offer_type_id: offerData.offer_type_id,
-					requirement: offerData.requirement?.join(",") || "",
+					requirement: requirementValue,
 				};
 				const { data } = await useApi().put<Offer>(
 					ApiUrl.parameterized(ApiUrl.OFFER_BY_ID, offerId),
@@ -148,10 +154,15 @@ export const useOfferStore = defineStore("OfferStore", {
 			}
 		},
 
-		async deleteOffer(id: string) {
+		async deleteOffer(id: string | number) {
 			try {
-				await useApi().del(ApiUrl.parameterized(ApiUrl.OFFER_BY_ID, id));
-				this.offers = this.offers.filter((offer) => offer.id !== id);
+				const offerId = String(id).trim();
+				if (!offerId) {
+					throw new Error("Invalid offer id for delete operation");
+				}
+
+				await useApi().del(ApiUrl.parameterized(ApiUrl.OFFER_BY_ID, offerId));
+				this.offers = this.offers.filter((offer) => offer.id !== offerId);
 				return true;
 			} catch (error) {
 				console.error("Error deleting offer:", error);

@@ -68,7 +68,7 @@ export const defaultContractData = (contract?: Contract): Contract => {
 		origin: contract?.origin || "",
 		end_date: contract?.end_date || "",
 		amount: contract?.amount || 0,
-		frequency: contract?.frequency || "mensuel",
+		frequency: contract?.frequency || "monthly",
 		status: contract?.status || "pending",
 		interventions: contract?.interventions || [],
 	};

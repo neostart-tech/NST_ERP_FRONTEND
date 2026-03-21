@@ -143,12 +143,12 @@
 										class="text-red-600 hover:text-red-900 mr-3" title="Rejeter">
 										<Icon name="heroicons:x-circle" class="w-5 h-5" />
 									</button>
-									<button @click="viewProforma(order)" title="Voir" class="text-gray-600 hover:text-gray-900 mr-3">
+									<button @click="viewOrder(order)" title="Voir" class="text-gray-600 hover:text-gray-900 mr-3">
 										<Icon name="heroicons:eye" class="w-5 h-5" />
 									</button>
-									<button @click="downloadProforma(order)" title="Télécharger"
+									<button @click="downloadOrder(order)" title="Télécharger"
 										class="text-blue-600 hover:text-blue-900 mr-3">
-										<Icon name="heroicons:arrow-down-tray" class="w-5 h-5" />
+										<Icon name="heroicons-solid:arrow-down-tray" class="w-5 h-5" />
 									</button>
 									<button @click="deleteOrder(order)" title="Supprimer" class="text-red-600 hover:text-red-900">
 										<Icon name="heroicons:trash" class="w-5 h-5" />
@@ -202,13 +202,13 @@
 								</button>
 							</div>
 							<div class="flex gap-2">
-								<button @click.stop="viewProforma(proforma)" class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full"
+								<button @click.stop="viewOrder(proforma)" class="p-1.5 text-gray-600 hover:bg-gray-50 rounded-full"
 									title="Voir les détails">
 									<Icon name="heroicons:eye" class="w-5 h-5" />
 								</button>
-								<button @click.stop="downloadProforma(proforma)"
+								<button @click.stop="downloadOrder(proforma)"
 									class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-full" title="Télécharger">
-									<Icon name="heroicons:arrow-down-tray" class="w-5 h-5" />
+									<Icon name="heroicons-solid:arrow-down-tray" class="w-5 h-5" />
 								</button>
 								<button @click="deleteOrder(proforma)" title="Supprimer"
 									class="p-1.5 text-red-600 hover:bg-red-50 rounded-full">
@@ -228,8 +228,8 @@
 				:searchQuery="searchQuery" />
 		</div>
 
-		<!-- <ShowProformaDetails :showModal="showModal" :selectedProforma="selectedProforma!" :formatDate="formatDate"
-			:translateStatus="translateStatus" :downloadProforma="downloadProforma" :closeModal="closeModal" /> -->
+		<ShowOrderDetails :showModal="showModal" :selectedOrder="selectedOrder!" :formatDate="formatDate"
+			:translateStatus="translateStatus" :downloadOrder="downloadOrder" :closeModal="closeModal" />
 
 		<ProformaFormModal :showModal="showProformaFormModal" @close="closeProformaModal" @saved="onProformaSaved" />
 
@@ -245,21 +245,20 @@ useHead({
 	title: "Gestion des proforma"
 });
 import { ref, onMounted } from "vue";
-import type { Proforma } from "~/models/Proforma";
 import { getClientName } from "~/models/Client";
-import ShowProformaDetails from '@/components/sales/ShowProformaDetails.vue'
 import ProformaFormModal from '@/components/sales/ProformaFormModal.vue'
 import Paginator from "@/components/Paginator.vue";
 import EmptyState from "@/components/EmptyState.vue";
 import Swal from "sweetalert2";
 import { useOrderStore } from "@/stores/Sale/OrderStore";
 import type { Order } from "~/models/Invoice";
+import ShowOrderDetails from "~/app/components/sales/ShowOrderDetails.vue";
 
 const orderStore = useOrderStore();
 
 const searchQuery = ref("");
 const stats = ref({ total: 0, pending: 0, validated: 0, canceled: 0 });
-const selectedProforma = ref<Order>();
+const selectedOrder = ref<Order>();
 const showModal = ref(false);
 const showProformaFormModal = ref(false);
 const { orders, isLoading, validationErrors } = storeToRefs(orderStore);
@@ -385,22 +384,30 @@ const performStatusUpdate = async (order: Order, status: string) => {
 		});
 	}
 }
-function viewProforma(order: Order) {
-	selectedProforma.value = order;
+function viewOrder(order: Order) {
+	selectedOrder.value = order;
 	showModal.value = true;
 }
 function closeModal() {
 	showModal.value = false;
-	selectedProforma.value = undefined;
+	selectedOrder.value = undefined;
 }
 
-function downloadProforma(order: Order) {
-	// orderStore.downloadProforma(order);
+async function downloadOrder(order: Order) {
+	try {
+		await orderStore.downloadProformaAsPdf(order);
+	} catch(_) {
+		Swal.fire({
+			icon: "error",
+			title: "Erreur",
+			text: "La génération du PDF a échoué.",
+		});
+	}
 }
 
 const filteredOrders = computed(() => {
 	return orders.value.filter((_) => {
-		const query = searchQuery.value.toLowerCase().trim();		
+		const query = searchQuery.value.toLowerCase().trim();
 		const clientName = (!!_.client) ? getClientName(_.client) : "";
 		return (
 			_.reference?.toLowerCase().includes(query) ||

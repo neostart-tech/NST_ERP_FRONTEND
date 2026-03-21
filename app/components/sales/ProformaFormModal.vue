@@ -28,13 +28,11 @@
 							<!-- Client -->
 							<div>
 								<label for="client" class="block font-medium mb-1">Client <RequiredField /></label>
-								<select id="client" v-model="form.clientId" required
-									class="w-full border border-gray-300 rounded p-2 focus:ring-2 focus:ring-indigo-500">
-									<option value="">Sélectionner un client</option>
-									<option v-for="client in clientStore.clients" :key="client.id" :value="client.id">
-										{{ getClientName(client) }}
-									</option>
-								</select>
+								<ClientComboBox
+									v-model="form.clientId"
+									:clients="clientStore.clients"
+									:return-object="false"
+								/>
 							</div>
 
 							<!-- Objet (pleine largeur) -->
@@ -67,14 +65,21 @@
 								<div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
 									<!-- Produit/Service -->
 									<div class="md:col-span-5">
-										<label class="block text-sm font-medium mb-1">Désignation</label>
-										<select v-model="item.articleId" @change="onProductChange(idx)" required
-											class="w-full border border-gray-300 rounded p-2 focus:ring-1 focus:ring-indigo-500">
-											<option value="">Sélectionner un produit</option>
-											<option v-for="product in products" :key="product.id" :value="product.id">
-												{{ product.name }} - {{ formatCurrency(product.unit_price_sale) }}
-											</option>
-										</select>
+										<ProductComboBox
+											v-model="item.articleId"
+											:products="products"
+											label="Désignation"
+											:show-price="true"
+											:show-quantity="true"
+											@update:modelValue="onProductChange(idx)"
+										/>
+<!--										<select v-model="item.articleId" @change="onProductChange(idx)" required-->
+<!--											class="w-full border border-gray-300 rounded p-2 focus:ring-1 focus:ring-indigo-500">-->
+<!--											<option value="">Sélectionner un produit</option>-->
+<!--											<option v-for="product in products" :key="product.id" :value="product.id">-->
+<!--												{{ product.name }} - {{ formatCurrency(product.unit_price_sale) }}-->
+<!--											</option>-->
+<!--										</select>-->
 									</div>
 									<!-- Quantité -->
 									<div class="md:col-span-2">
@@ -142,9 +147,10 @@ import { onMounted } from 'vue'
 import Swal from 'sweetalert2'
 import { useProformaStore } from '@/stores/Stock/ProformaStore.ts'
 import { useProductStore } from '@/stores/Stock/ProductStore'
-import { useClientStore } from '@/stores/ClientStore'
-import { getClientName } from '~/models/Client'
+import { useClientStore } from '@/stores/ClientStore.ts'
 import RequiredField from '../partials/RequiredField.vue'
+import ProductComboBox from "@/components/ui/ProductComboBox.vue";
+import ClientComboBox from "@/components/ui/ClientComboBox.vue";
 
 const props = defineProps({
 	showModal: {

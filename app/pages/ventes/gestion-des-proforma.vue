@@ -1,7 +1,5 @@
 <template>
 	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-6">
-		<!-- HEADER -->
-
 		<!-- STATS -->
 		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 			<!-- Carte Total Proforma -->
@@ -134,26 +132,54 @@
 								<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 									{{ formatDate(proforma.created_at!) }}
 								</td>
-								<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-									<button v-if="proforma.status === 'draft'" @click="updateStatus(proforma, 'validated')"
-										class="text-green-600 hover:text-green-900 mr-3" title="Valider">
-										<Icon name="heroicons:check-circle" class="w-5 h-5" />
+								<td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium relative">
+									<!-- Bouton actions: ... -->
+									<button @click.stop="toggleActions(proforma.id)"
+										class="inline-flex items-center justify-center w-8 h-8 rounded-md text-gray-600 hover:bg-gray-100 focus:outline-none">
+										<span class="sr-only">Actions</span>
+										<Icon name="heroicons-solid:ellipsis-horizontal" class="w-5 h-5"/>
 									</button>
-									<button v-if="proforma.status === 'draft'" @click="updateStatus(proforma, 'rejected')"
-										class="text-red-600 hover:text-red-900 mr-3" title="Rejeter">
-										<Icon name="heroicons:x-circle" class="w-5 h-5" />
-									</button>
-									<button @click="viewProforma(proforma)" title="Voir" class="text-gray-600 hover:text-gray-900 mr-3">
-										<Icon name="heroicons:eye" class="w-5 h-5" />
-									</button>
-									<button @click="downloadProforma(proforma)" title="Télécharger"
-										class="text-blue-600 hover:text-blue-900 mr-3">
-										<Icon name="heroicons:arrow-down-tray" class="w-5 h-5" />
-									</button>
-									<button @click="deleteProforma(proforma)" title="Supprimer"
-										class="text-red-600 hover:text-red-900">
-										<Icon name="heroicons:trash" class="w-5 h-5" />
-									</button>
+
+									<!-- Dropdown -->
+									<div v-if="openActionsId === proforma.id" class="absolute right-6 top-10 z-50 w-48 bg-white border border-gray-200 rounded-md shadow-md overflow-hidden">
+										<ul class="divide-y divide-gray-100">
+											<li>
+												<button @click.stop="() => { updateStatus(proforma, 'validated'); closeActions(); }"
+												class="w-full text-left px-4 py-2 text-sm text-green-600 hover:bg-green-50">
+													<Icon name="heroicons-solid:check" class="w-4 h-4 inline mr-2" />
+													Valider
+												</button>
+											</li>
+											<li>
+												<button @click.stop="() => { updateStatus(proforma, 'rejected'); closeActions(); }"
+												class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+													<Icon name="heroicons-solid:x-mark" class="w-4 h-4 inline mr-2" />
+													Rejeter
+												</button>
+											</li>
+											<li>
+												<button @click.stop="() => { viewProforma(proforma); closeActions(); }"
+												class="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+													<Icon name="heroicons-solid:eye" class="w-4 h-4 inline mr-2" />
+													Voir
+												</button>
+											</li>
+											<li>
+												<button @click.stop="() => { downloadProforma(proforma); closeActions(); }"
+												class="w-full text-left px-4 py-2 text-sm text-blue-600 hover:bg-blue-50">
+													<Icon name="heroicons-solid:arrow-down-tray" class="w-4 h-4 inline mr-2" />
+													Télécharger
+												</button>
+											</li>
+											<li>
+												<button @click.stop="() => { deleteProforma(proforma); closeActions(); }"
+												class="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+													<Icon name="heroicons-solid:trash" class="w-4 h-4 inline mr-2" />
+													Supprimer
+												</button>
+											</li>
+										</ul>
+									</div>
 								</td>
 							</tr>
 						</tbody>
@@ -245,7 +271,7 @@
 useHead({
 	title: "Gestion des proforma"
 });
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive, computed } from "vue";
 import type { Proforma } from "~/models/Proforma";
 import { getClientName } from "~/models/Client";
 import ShowProformaDetails from '@/components/sales/ShowProformaDetails.vue'
@@ -283,22 +309,19 @@ onMounted(async () => {
 	computeStats();
 });
 
+// Gestion du menu d'actions (id du proforma dont le menu est ouvert)
+const openActionsId = ref<number | string | null>(null);
+const toggleActions = (id: number | string) => {
+	openActionsId.value = openActionsId.value === id ? null : id;
+};
+const closeActions = () => { openActionsId.value = null };
+
 const badgeClass = (status: string) => {
 	return {
 		"bg-yellow-200 text-yellow-800": status === "draft",
 		"bg-green-200 text-green-800": status === "validated",
 		"bg-red-200 text-red-800": status === "rejected",
 	};
-};
-const statusColor = (status: string) => {
-	switch (status) {
-		case "draft":
-			return "bg-yellow-200 text-yellow-100";
-		case "validated":
-			return "bg-gren-200 text-green-800";
-		case "rejected":
-			return "bg-red-200 text-red-800";
-	}
 };
 const translateStatus = (status: string) => {
 	switch (status) {
@@ -382,7 +405,15 @@ function closeModal() {
 }
 
 function downloadProforma(proforma: Proforma) {
-	proformaStore.downloadProforma(proforma);
+	try {
+		proformaStore.downloadProformaAsPdf(proforma);
+	} catch(_) {
+		Swal.fire({
+			icon: "error",
+			title: "Erreur",
+			text: "La génération du PDF a échoué.",
+		});
+	}
 }
 
 

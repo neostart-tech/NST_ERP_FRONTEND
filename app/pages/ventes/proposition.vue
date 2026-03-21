@@ -123,7 +123,7 @@ import { onMounted } from 'vue'
 import Swal from 'sweetalert2'
 import { useProformaStore } from '@/stores/Stock/ProformaStore.ts'
 import { useProductStore } from '@/stores/Stock/ProductStore'
-import { useClientStore } from '@/stores/ClientStore'
+import { useClientStore } from '@/stores/ClientStore.ts'
 import { getClientName } from '~/models/Client'
 
 

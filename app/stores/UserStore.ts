@@ -19,14 +19,14 @@ export const useUserStore = defineStore("UserStore", {
 			} catch (error) {
 				throw error;
 			} finally {
-				 this.isLoading = false;
+				this.isLoading = false;
 			}
 		},
 
 		async find(userId: string) {
 			this.isLoading = true;
 			try {
-				const { data } = await useApi().get<User>(ApiUrl.parameterized(ApiUrl.USER_BY_ID, userId));
+				const {data} = await useApi().get<User>(ApiUrl.parameterized(ApiUrl.USER_BY_ID, userId));
 				return data;
 			} catch (error) {
 				this.validationErrors = useValidationErrors(error);
@@ -39,7 +39,7 @@ export const useUserStore = defineStore("UserStore", {
 		async store(user: UserCreateForm) {
 			this.isLoading = true;
 			try {
-				const { data } = await useApi().post<User>(ApiUrl.USERS_INDEX, {
+				const {data} = await useApi().post<User>(ApiUrl.USERS_INDEX, {
 					...user,
 					first_name: user.firstName,
 					last_name: user.lastName,
@@ -55,11 +55,20 @@ export const useUserStore = defineStore("UserStore", {
 			}
 		},
 
-		async updateUser(user: User) {
+		async updateUser(user: UserCreateForm, id: string) {
 			this.isLoading = true;
 			try {
-				const { data } = await useApi().put<User>(ApiUrl.parameterized(ApiUrl.USER_BY_ID, user.id), user);
-				this.users = this.users.map(_ => _.id === user.id ? data : _);
+				const {data} = await useApi().put<User>(
+					ApiUrl.parameterized(ApiUrl.USER_BY_ID, id),
+					{
+						...user,
+						first_name: user.firstName,
+						last_name: user.lastName,
+						hired_year: user.hiredYear
+					}
+				);
+				this.users = this.users.map(_ => _.id === id ? data : _);
+				this.validationErrors = {} as ValidationErrors;
 				return data;
 			} catch (error) {
 				this.validationErrors = useValidationErrors(error);
@@ -97,5 +106,14 @@ export const useUserStore = defineStore("UserStore", {
 				this.isLoading = false;
 			}
 		}
-	}
+	},
+
+	// Configuration de la persistance
+	persist: {
+		storage: persistedState.cookies,
+		// Optionnel : personnaliser la clé de stockage
+		key: "users-store",
+		// Optionnel : choisir quelles propriétés persister
+		pick: ["Users"],
+	},
 });

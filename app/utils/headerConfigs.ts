@@ -130,7 +130,27 @@ const titleMap: Record<string, PageContentTitle> = {
 		icon: "heroicons:puzzle-piece",
 		title: "Configuration des lots",
 		description: "Configuration des lots",
-	}
+	},
+	"utilisateurs-id-modifier": {
+		icon: "heroicons:user",
+		title: "Modifier un utilisateur",
+		description: "Modifier les information d'un utilisateur",
+	},
+	"ventes-recapitulatif-des-factures": {
+		icon: "heroicons:document-text",
+		title: "Récapitulatif des factures",
+		description: "Récapitulatif des factures",
+	},
+	"ventes-liste-des-echeances": {
+		icon: "heroicons:calendar-days",
+		title: "Liste des echeances",
+		description: "Liste des echeances",
+	},
+	"stocks-mouvements": {
+		icon: "heroicons:arrows-right-left",
+		title: "Mouvements de stock",
+		description: "Mouvements de stock",
+	},
 };
 
 const defaultPageContentTitle = {

@@ -279,8 +279,6 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
-import { useScheduleStore } from "#imports";
 
 // Types de statuts
 const STATUS = {

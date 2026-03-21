@@ -63,6 +63,11 @@ export const useApi = () => {
 				authStore.logout();
 			}
 
+			// Handle 204 No Content (successful response with no body)
+			if (response.status === 204) {
+				return { data: null as any };
+			}
+
 			const data = await response.json();
 
 			if (!response.ok) {

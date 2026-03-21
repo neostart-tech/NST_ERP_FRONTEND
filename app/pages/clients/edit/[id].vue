@@ -251,7 +251,7 @@
 </template>
 
 <script setup>
-import { useClientStore } from '~/app/stores/ClientStore';
+import { useClientStore } from '@/stores/ClientStore.ts';
 import { onMounted, ref, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 

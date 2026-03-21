@@ -420,7 +420,7 @@ onMounted(async () => {
 		didOpen: () => {
 			Swal.showLoading();
 		}
-	});
+	}).then();
 	try {
 		isLoading.value = true;
 		await productStore.fetchAll();

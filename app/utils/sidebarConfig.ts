@@ -1,14 +1,16 @@
 import { AppUrl } from "@/composables/appUrl";
+import {UserRole} from "~/models/User";
 
 // sidebarMenu.ts
 export const sidebarMenu = [
 	{
 		id: "dashboard",
 		name: "Tableau de bord",
-		icon: "M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z M8 5a2 2 0 012-2h4a2 2 0 012 2v3H8V5z",
+		icon: "heroicons-solid:chart-bar",
 		url: AppUrl.DASHBOARD,
 		description: "Vue d'ensemble",
 		isSingle: true, // Pas de sous-menus
+		accessibleTo: [UserRole.USER, UserRole.ADMIN, UserRole.SELLER], // Accessible à tous les rôles
 	},
 	{
 		id: "stock",
@@ -23,7 +25,7 @@ export const sidebarMenu = [
 			},
 			{
 				name: "Mouvements",
-				icon: "M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4",
+				icon: "heroicons:arrows-right-left",
 				url: AppUrl.STOCKS_MOVEMENTS,
 				description: "Entrées et sorties de stock",
 			},
@@ -40,18 +42,13 @@ export const sidebarMenu = [
 			// 	description: 'Historique des mouvements'
 			// }
 		],
+		accessibleTo: [UserRole.ADMIN, UserRole.SELLER],
 	},
-
 	{
 		id: "sales",
 		name: "Ventes",
 		icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z",
 		submenus: [
-			{
-				name: "Gestion client",
-				icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2",
-				url: AppUrl.CLIENTS,
-			},
 			{
 				name: "Proforma",
 				icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
@@ -60,28 +57,23 @@ export const sidebarMenu = [
 			},
 			{
 				name: "Commandes",
-				icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z",
+				icon: "heroicons-solid:shopping-cart",
 				url: AppUrl.ORDER_INDEX,
 				description: "Suivi des commandes",
 			},
 			{
 				name: "Factures",
-				icon: "M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2-2v16l3.5-2 3.5 2 3.5-2 3.5 2z",
-				url: AppUrl.INVOICEINFO,
+				icon: "heroicons-solid:receipt-tax",
+				url: AppUrl.INVOICES_INDEX,
 				description: "Récapitulatif des factures",
 			},
-			{
-				name: "Livraison",
-				icon: "M9 17a2 2 0 11-4 0 2 2 0 014 0zm12 0a2 2 0 11-4 0 2 2 0 014 0zm-4-2V6a1 1 0 00-1-1H3a1 1 0 00-1 1v9a1 1 0 001 1h1a4 4 0 008 0h4a4 4 0 008 0h1a1 1 0 001-1v-4a1 1 0 00-1-1h-3z",
-				url: AppUrl.DELIVERYINFO,
-				description: "Bordereau de livraison",
-			},
-			{
-				name: "Échéanciers",
-				icon: "fa-solid fa-calendar-alt",
-				url: AppUrl.SCHEDULEINFO,
-				description: "Suivre les paiements",
-			},
+			// {
+			// 	name: "Livraison",
+			// 	icon: "heroicons-solid:truck",
+			// 	url: AppUrl.DELIVERYINFO,
+			// 	description: "Bordereau de livraison",
+			// },
+		
 			// {
 			// 	name: 'Bilans',
 			// 	icon: 'fa-solid fa-file-invoice-dollar',
@@ -95,6 +87,7 @@ export const sidebarMenu = [
 			// 	description: 'Tableaux et graphiques'
 			// }
 		],
+		accessibleTo: [UserRole.ADMIN, UserRole.SELLER],
 	},
 
 	{
@@ -107,22 +100,25 @@ export const sidebarMenu = [
 				icon: "heroicons:user-group",
 				url: AppUrl.CLIENTS,
 			},
-			{
-				name: "Gestion commerciaux",
-				icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z",
-				url: AppUrl.SALES,
-			},
+			// {
+			// 	name: "Gestion commerciaux",
+			// 	icon: "M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z",
+			// 	url: AppUrl.SALES,
+			// },
 			{
 				name: "Gestion recouvrement",
-				icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z",
-				url: AppUrl.FOLLOWUP,
+				icon: "heroicons-solid:calendar-days",
+				url: AppUrl.SCHEDULE_LIST,
+				description: "Suivre les échéances",
 			},
-			{
-				name: "Gestion des utilisateurs",
-				icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
-				url: AppUrl.USERS,
-			},
+			// {
+			// 	name: "Échéanciers",
+			// 	icon: "heroicons-solid:calendar-days",
+			// 	url: AppUrl.SCHEDULE_LIST,
+			// 	description: "Suivre les échéances",
+			// },
 		],
+		accessibleTo: [UserRole.ADMIN, UserRole.SELLER],
 	},
 
 	{
@@ -132,29 +128,30 @@ export const sidebarMenu = [
 		submenus: [
 			{
 				name: "Appels d'Offres",
-				icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z",
+				icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
 				url: AppUrl.OFFERS,
 				description: "Gestion & soumissions",
 			},
 			{
 				name: "Ajouter un appel",
-				icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
+				icon: "heroicons:document-plus",
 				url: AppUrl.OFFERS_NEW,
 				description: "Enregistrer un nouvel appel d'offre",
 			},
 			{
-				name: "Soumissions",
-				icon: "M12 19l9 2-9-18-9 18 9-2zm0 0v-8",
-				url: AppUrl.OFFERS_APPROVAL,
-				description: "Envoi & suivi résultats",
+				name: "Configuration des lots",
+				icon: "heroicons:puzzle-piece",
+				url: AppUrl.OFFERS_LOTS_INDEX,
+				description: "Configurer les lots par appel d'offre",
 			},
-			// {
-			// 	name: 'Pilotage Projet',
-			// 	icon: 'M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4',
-			// 	url: AppUrl.OFFERS_PROJECTS,
-			// 	description: 'Tâches & planning'
-			// }
+			{
+				name: "Documents des offres",
+				icon: "heroicons:document-text",
+				url: AppUrl.OFFERS_DOCUMENTS_INDEX,
+				description: "Gérer les documents par appel d'offre",
+			}
 		],
+		accessibleTo: [UserRole.ADMIN, UserRole.USER],
 	},
 	// {
 	// 	id: 'fournisseurs',
@@ -234,25 +231,26 @@ export const sidebarMenu = [
 				url: AppUrl.MAINTENANCE_MANAGEMENT_CONTRACT_MAINTENANCE,
 				description: "Maintenance",
 			},
-			{
-				name: "Gestion Des Devis",
-				icon: "M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2h-2V1h-2v1H8V1H6v1H4Z M18 6H8 M18 10H8 M18 14H8 M18 18H8",
-				url: AppUrl.MAINTENANCE_QUOTE,
-				description: "",
-			},
-			{
-				name: "Reportage",
-				icon: "M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
-				url: AppUrl.MAINTENANCE_REPORTING,
-				description: "",
-			},
-			{
-				name: "Gestion Des Factures",
-				icon: "M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
-				url: AppUrl.MAINTENANCE_MANAGEMENT_INVOICE,
-				description: "",
-			},
+			// {
+			// 	name: "Gestion Des Devis",
+			// 	icon: "M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2h-2V1h-2v1H8V1H6v1H4Z M18 6H8 M18 10H8 M18 14H8 M18 18H8",
+			// 	url: AppUrl.MAINTENANCE_QUOTE,
+			// 	description: "",
+			// },
+			// {
+			// 	name: "Reportage",
+			// 	icon: "M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
+			// 	url: AppUrl.MAINTENANCE_REPORTING,
+			// 	description: "",
+			// },
+			// {
+			// 	name: "Gestion Des Factures",
+			// 	icon: "M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z",
+			// 	url: AppUrl.MAINTENANCE_MANAGEMENT_INVOICE,
+			// 	description: "",
+			// },
 		],
+		accessibleTo: [UserRole.ADMIN, UserRole.USER],
 	},
 	{
 		id: "entreprises",
@@ -270,6 +268,7 @@ export const sidebarMenu = [
 				url: AppUrl.ENTREPRISE_NEW,
 			},
 		],
+		accessibleTo: [UserRole.ADMIN, UserRole.USER, UserRole.SELLER],
 	},
 	{
 		id: "document-types",
@@ -278,6 +277,7 @@ export const sidebarMenu = [
 		url: AppUrl.DOCUMENTS,
 		description: "Gestion des types de documents",
 		isSingle: true, // Pas de sous-menus
+		accessibleTo: [UserRole.ADMIN, UserRole.USER, UserRole.SELLER],
 	},
 	{
 		id: "utilisateurs",
@@ -303,5 +303,6 @@ export const sidebarMenu = [
 				description: "Aperçu des rôles et permissions",
 			},
 		],
+		accessibleTo: [UserRole.ADMIN],
 	},
 ];

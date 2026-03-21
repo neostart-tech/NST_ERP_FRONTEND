@@ -9,9 +9,9 @@
 			</div>
 
 			<!-- 2) Sélecteur d'éléments par page (centre en md+) -->
-			<div class="per-page-selector justify-self-center w-full md:w-auto" v-if="showItemsPerPage">
+			<div class="per-page-selector text-center md:text-left justify-self-center w-full md:w-auto" v-if="showItemsPerPage">
 				<select :value="itemsPerPage" @change="handleItemsPerPageChange($event)" class="page-select w-full md:w-auto">
-					<option v-for="num in [1, 10, 25, 50, 100]" :value="num" :key="`perpage-${num}`">
+					<option v-for="num in [10, 25, 50, 100]" :value="num" :key="`perpage-${num}`">
 						{{ num }} / page
 					</option>
 				</select>
@@ -99,8 +99,7 @@ const goToPage = (page: number) => {
 }
 
 const handleItemsPerPageChange = (event: Event) => {
-	const perPage = Number((event.target as HTMLSelectElement).value);
-	itemsPerPage.value = perPage;
+	itemsPerPage.value = Number((event.target as HTMLSelectElement).value);
 	currentPage.value = 1;
 }
 </script>

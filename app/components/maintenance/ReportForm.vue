@@ -21,13 +21,7 @@
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								Sélectionner l'équipement <span class="text-red-500">*</span>
 							</label>
-							<select v-model="localForm.equipement_id" @change="onEquipmentChange"
-								class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-								<option value="">Sélectionner un équipement</option>
-								<option v-for="equip in equipments" :key="equip.id" :value="equip.id">
-									{{ equip.brand }} {{ equip.model }} ({{ equip.serial_number }})
-								</option>
-							</select>
+							<EquipmentComboBox v-model="localForm.equipement_id" :equipments="equipments" @change="onEquipmentChange" />
 							<InvalidInput :error="validationErrors.equipement_id" />
 						</div>
 
@@ -35,14 +29,7 @@
 							<label class="block text-sm font-medium text-gray-700 mb-1">
 								Sélectionner le client <span class="text-red-500">*</span>
 							</label>
-							<select v-model="localForm.client_id" @change="onClientChange"
-								class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-								<option value="">Sélectionner un client</option>
-								<option v-for="client in clients" :key="client.id" :value="client.id">
-									{{ client.client_type === 'company' ? client.company_name : client.first_name + ' ' + client.last_name
-									}}
-								</option>
-							</select>
+							<ClientComboBox v-model="localForm.client_id" :clients="clients" @change="onClientChange" />
 							<InvalidInput :error="validationErrors.client_id" />
 						</div>
 					</div>
@@ -266,6 +253,8 @@ import type { Equipment } from '~/models/Equipment'
 import type { Intervention } from '~/models/Intervention'
 import InvalidInput from '../partials/InvalidInput.vue';
 import { useEquipmentStore } from '~/app/stores/Maintenance/EquipmentStore';
+import ClientComboBox from '../ui/ClientComboBox.vue';
+import EquipmentComboBox from '../ui/EquipmentComboBox.vue';
 
 const { validationErrors } = storeToRefs(useInterventionStore());
 

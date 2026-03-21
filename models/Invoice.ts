@@ -1,11 +1,16 @@
-import { type Client } from "./Client";
-import type { Product } from "./Product";
-import type { Proforma } from "./Proforma";
+import {type Client} from "./Client";
+import type {Product} from "./Product";
+import type {Proforma} from "./Proforma";
 
 export interface invoiceType {
 	id: string;
-	label: string;
+	label: InvoiceTypeEnum;
 	description: string;
+}
+
+export enum InvoiceTypeEnum {
+	DEFINITIVE = "Facture définitive",
+	ADVANCE = "Facture d'acompte"
 }
 
 export interface OrderArticle {
@@ -38,9 +43,18 @@ export interface Invoice {
 	reference: string;
 	date: string | Date;
 	total: number;
+	payed: number;
 	status: "paid" | "pending" | "cancelled";
 	order: Order;
 	client: Client;
 	created_at?: string;
 	updated_at?: string;
+	invoiceType: invoiceType
+}
+
+export const getStatus = (invoice: Invoice): boolean => {
+	if (invoice.invoiceType.label === InvoiceTypeEnum.DEFINITIVE) {
+		return true;
+	}
+	return invoice.payed >= invoice.total;
 }

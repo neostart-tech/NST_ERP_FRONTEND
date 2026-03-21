@@ -939,10 +939,6 @@ const saveProgress = async () => {
 			lastUpdated: new Date().toISOString(),
 		};
 
-		console.log("Progrès sauvegardé:", progressData);
-
-		// await offerStore.configureDocuments(offerId, documentsAvailability.value);
-
 		navigateTo(AppUrl.parameterize(AppUrl.OFFERS_LOTS, offerData.value.id));
 
 		Swal.fire({

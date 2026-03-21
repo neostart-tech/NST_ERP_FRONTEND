@@ -174,18 +174,12 @@
 				<OfferListView :paginatedOffers="paginatedOffers" :getDeadlineBadgeClass="getDeadlineBadgeClass"
 					:getDaysUntilDeadline="getDaysUntilDeadline" :getStatusBadgeClass="getStatusBadgeClass"
 					:getStatusLabel="getStatusLabel" :confirmDelete="confirmDelete" />
-
-				<!-- Vue Cartes (visible uniquement sur écrans md et moins) -->
-				<OfferCardView :paginatedOffers="paginatedOffers" :getStatusBadgeClass="getStatusBadgeClass"
-					:getStatusLabel="getStatusLabel"
-					:getDeadlineBadgeClass="getDeadlineBadgeClass" :getDaysUntilDeadline="getDaysUntilDeadline"
-					:confirmDelete="confirmDelete" />
 			</template>
 
 			<!-- EmptyState -->
 			<div v-else-if="isLoading || !offers || filteredOffers.length">
-				<EmptyState title="Aucun équipement trouvé" description="Il n'y a actuellement aucun équipement à afficher."
-					icon="heroicons:cpu-chip" iconColor="text-blue-400" @reload="refreshData" :isLoading="isLoading"
+				<EmptyState title="Aucun appel d'offre trouvé" description="Il n'y a actuellement aucun appel d'offre à afficher."
+					icon="heroicons:document-text" iconColor="text-blue-400" @reload="refreshData" :isLoading="isLoading"
 					:searchQuery="searchQuery" />
 			</div>
 
@@ -205,13 +199,13 @@ import { navigateTo } from '#app'
 import { useOfferStore } from '@/stores/offerStore'
 import { useNow } from '@vueuse/core'
 import type { Offer } from '~/models/Offer'
-import { NuxtLink } from '#components'
 import Swal from 'sweetalert2'
 import { formatDate } from '@/utils/dateParser'
 import Paginator from '~/app/components/Paginator.vue'
 import OfferListView from '../../components/offers/OfferListView.vue'
-import OfferCardView from './OfferCardView.vue'
+// import OfferCardView from './OfferCardView'
 import {formatCurrency} from "@/utils/currency-parser";
+import EmptyState from "@/components/EmptyState.vue";
 
 const isFiltersCollapsed = ref(true);
 const filterType = ref('date');
@@ -409,16 +403,20 @@ const confirmDelete = async (offer: Offer): Promise<void> => {
 	}).then(async (result) => {
 		if (result.isConfirmed) {
 			try {
-				await offerStore.deleteOffer(offer.id)
-				await refreshData()
-				useAlert().showAlert('Offre supprimée avec succès', 'success')
+				const offerId = String(offer?.id || '').trim();
+				if (!offerId) {
+					throw new Error('Identifiant offre invalide');
+				}
+				await offerStore.deleteOffer(offerId);
+				useAlert().showAlert('Offre supprimée avec succès', 'success');
+				await refreshData();
 			} catch (error) {
-				console.error('Erreur lors de la suppression de l\'offre :', error)
-				useAlert().showAlert('Erreur lors de la suppression de l\'offre', 'error')
+				console.error('Erreur lors de la suppression de l\'offre :', error);
+				useAlert().showAlert('Erreur lors de la suppression de l\'offre', 'error');
 			}
 		}
-	})
-}
+	});
+};
 
 // Status and urgency helpers
 const getStatusLabel = (status: string = 'draft'): string => {
@@ -483,6 +481,7 @@ const formatRelativeDate = (dateString: string): string => {
 
 // Lifecycle hooks
 onMounted(() => {
-	refreshData()
+	refreshData();
+	console.log("User:", useAuthStore().user)
 })
 </script>

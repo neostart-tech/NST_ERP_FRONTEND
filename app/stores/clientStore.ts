@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import type { Client } from "~/models/Client";
 import { ApiUrl } from "@/composables/apiUrl";
 import type { ValidationErrors } from "@/composables/useValidationErrors";
-import { useValidationErrors } from "../composables/useValidationErrors";
+import { useValidationErrors } from "@/composables/useValidationErrors";
 
 export const useClientStore = defineStore("client", {
 	state: () => ({
@@ -46,9 +46,8 @@ export const useClientStore = defineStore("client", {
 				this.clients = data;
 				this.updateStat();
 			} catch (error) {
-				console.error("Erreur lors du chargement des clients:", error);
 				this.errors = useValidationErrors(error);
-				this.clients = []; // Garantir que clients reste un tableau
+				throw error;
 			} finally {
 				this.isLoading = false;
 			}

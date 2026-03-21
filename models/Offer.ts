@@ -1,6 +1,6 @@
-import type { OfferType } from "./ProjectType";
-import type { OfferSource } from "./OfferSource";
-import type { Entreprise } from "./Enterprise";
+import type {OfferType} from "./ProjectType";
+import type {OfferSource} from "./OfferSource";
+import type {Entreprise} from "./Enterprise";
 
 export enum OfferStatus {
 	PENDING = 'En attente de validation',
@@ -52,7 +52,7 @@ export interface OfferForm {
 	file_obtaining_deadline?: string;
 	offer_validity: string;
 	submission_address: string;
-	requirement?: string[];
+	requirement?: string[] | string;
 	stacking_instruction?: string;
 	batch_number: string;
 	execution_batch_duration?: string;
@@ -135,11 +135,11 @@ export const defaultOfferData = (offer?: Offer): Offer => ({
 	publication_date: offer?.publication_date || "",
 	amount: offer?.amount || 0,
 	submission_deadline: offer?.submission_deadline || "",
-	status: offer?.status || "",
-	offer_type: offer?.offer_type || "",
-	offer_source: offer?.offer_source || "",
+	status: offer?.status || OfferStatus.PENDING,
+	offer_type: offer?.offer_type || {} as OfferType,
+	offer_source: offer?.offer_source || {} as OfferSource,
 	source_label: offer?.source_label || "",
-	enterprise: offer?.enterprise || "",
+	enterprise: offer?.enterprise || {} as Entreprise,
 	metadata: offer?.metadata || defaultMetadataFormData(),
 	number: offer?.number || "",
 	file_price: offer?.file_price || 0,

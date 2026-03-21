@@ -9,19 +9,18 @@ export const AppUrl = {
 	// Tout le reste a besoin d'authentification
 	DASHBOARD: "/dashboard",
 	ABOUT: "/about",
-	CLIENTS: "/ventes/clients",
 	QUOTES: "/quotes",
 	INVOICES: "/invoices",
 	SALES: "/ventes",
 	PROFORMA_INFORMATIONS: "/ventes/gestion-des-proforma",
 	PROPO: "/ventes/proposition",
 	ORDER: "/ventes/order",
-	INVOICE: "/ventes/invoice",
-	INVOICEINFO: "/ventes/recapFacture",
+	INVOICE: "/ventes/nouvelle-facture",
+	INVOICES_INDEX: "/ventes/recapitulatif-des-factures",
 	DELIVERY: "/ventes/livraison",
 	DELIVERYINFO: "/ventes/listeLivraison",
-	SCHEDULE: "/ventes/echeanceCreate",
-	SCHEDULEINFO: "/ventes/echeanceListe",
+	ADD_NEW_SCHEDULE: "/ventes/enregistrer-des-echeances",
+	SCHEDULE_LIST: "/ventes/liste-des-echeances",
 	BALANCE: "/ventes/bilan",
 	STATS: "/ventes/statistique",
 	FOLLOWUP: "/followup",
@@ -35,6 +34,8 @@ export const AppUrl = {
 	// DOCUMENTS
 	DOCUMENTS: "/gestion-des-type-de-document",
 
+	// CLIENTS
+	CLIENTS: "/clients",
 
 	// OFFERS
 	OFFERS_NEW: "/offers/offer-form",
@@ -42,9 +43,10 @@ export const AppUrl = {
 	OFFERS_APPROVAL: "/offers/:id/approuver",
 	OFFERS_EDIT: "/offers/:id/modifier",
 	OFFERS_PENDING: "/offers/pending",
-	OFFERS_DOCUMENTS: "/offers/:id/documents",
+	OFFERS_LOTS_INDEX: "/offers/configuration-des-lots",
 	OFFERS_LOTS: "/offers/:id/configuration-des-lots",
-	OFFERS_PROJECTS: "/offers/projects",
+	OFFERS_DOCUMENTS_INDEX: "/offers/documents",
+	OFFERS_DOCUMENTS: "/offers/:id/documents",
 	OFFERS: "/offers/gestion-des-appels-d-offre",
 
 	//SUPPLIERS
@@ -77,9 +79,9 @@ export const AppUrl = {
 	MAINTENANCE_REPORTING_BREAK: "/maintenance/signaler-une-panne",
 	MAINTENANCE_CUSTOMER_FILE: "/maintenance/fiche-client",
 	MAINTENANCE_MANAGEMENT_CONTRACT_MAINTENANCE:"/maintenance/gestion-des-contrats",
-	MAINTENANCE_QUOTE: "/maintenance/gestion-des-devis",
-	MAINTENANCE_REPORTING: "/maintenance/reportage",
-	MAINTENANCE_MANAGEMENT_INVOICE: "/maintenance/gestion-factures",
+	// MAINTENANCE_QUOTE: "/maintenance/gestion-des-devis",
+	// MAINTENANCE_REPORTING: "/maintenance/reportage",
+	// MAINTENANCE_MANAGEMENT_INVOICE: "/maintenance/gestion-factures",
 
 	ENTREPRISE_INDEX: "/entreprises",
 	ENTREPRISE_NEW: "/entreprises/ajouter",
@@ -88,6 +90,8 @@ export const AppUrl = {
 
 	USERS_INDEX: "/utilisateurs",
 	USERS_ADD: "/utilisateurs/ajouter",
+	USERS_EDIT: "/utilisateurs/:id/modifier",
+	USERS_DETAILS: "/utilisateurs/:id/details",
 	ROLES_INDEX: "/roles",
 
 	parameterize: (item: string, id: string) => item.replace(":id", id),

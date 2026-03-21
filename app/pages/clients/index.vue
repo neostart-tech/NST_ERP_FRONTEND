@@ -1,439 +1,618 @@
 <template>
-  <main class="flex-1 p-6 bg-gradient-to-br from-slate-50 to-slate-100 min-h-screen">
-    <div class="max-w-7xl mx-auto">
-      <div class="relative mb-8">
-        <div
-          class="bg-gradient-to-r from-sky-600 via-sky-700 to-sky-800 rounded-2xl shadow-xl p-8 text-white overflow-hidden"
-        >
-          <div class="absolute inset-0 opacity-10">
-            <div class="absolute -top-20 -right-20 w-40 h-40 bg-white rounded-full"></div>
-            <div class="absolute -bottom-16 -left-16 w-32 h-32 bg-white rounded-full"></div>
-            <div class="absolute top-1/2 right-1/4 w-24 h-24 bg-white rounded-full"></div>
-          </div>
+	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+		<!-- Statistiques -->
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+			<!-- Carte Total Clients -->
+			<div
+				class="bg-gradient-to-br from-sky-50 to-sky-100 rounded-lg p-6 border border-sky-200 md:col-span-2 lg:col-span-1"
+			>
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-sky-900">Total Clients</p>
+						<p class="text-3xl font-bold text-sky-900 mt-2">{{ stat.total }}</p>
+					</div>
+					<div class="p-3 rounded-lg bg-sky-500">
+						<Icon name="heroicons:user-group" class="w-6 h-6 text-white" />
+					</div>
+				</div>
+			</div>
 
-          <div class="relative z-10">
-            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-              <div>
-                <h1 class="text-3xl font-bold mb-2">Gestion des Clients</h1>
-                <p class="text-sky-100 text-lg">Gérez votre portefeuille clients et suivez leurs informations</p>
-                <div class="flex items-center gap-6 mt-4 text-sm">
-                  <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-blue-400 rounded-full"></div>
-                    <span class="text-sky-100">{{ kpis.clientsActifs }} Clients Actifs</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span class="text-sky-100">{{ kpis.nouveauxClients }} Nouveaux (7j)</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-purple-300 rounded-full"></div>
-                    <span class="text-sky-100">{{ kpis.clientsEntreprises }} Entreprises</span>
-                  </div>
-                </div>
-              </div>
+			<!-- Carte Clients Physiques -->
+			<div
+				class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-lg p-6 border border-emerald-200"
+			>
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-emerald-900">
+							Clients Physiques
+						</p>
+						<p class="text-3xl font-bold text-emerald-900 mt-2">
+							{{ stat.physique }}
+						</p>
+					</div>
+					<div class="p-3 rounded-lg bg-emerald-500">
+						<Icon name="heroicons:user" class="w-6 h-6 text-white" />
+					</div>
+				</div>
+			</div>
 
-              <div class="flex flex-col sm:flex-row gap-3">
-                <NuxtLink
-                  to="/clients/form"
-                  class="group px-6 py-3 bg-white text-sky-700 font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-3"
-                >
-                  <div
-                    class="w-5 h-5 bg-sky-100 rounded-full flex items-center justify-center group-hover:bg-sky-200 transition-colors"
-                  >
-                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                  </div>
-                  Ajouter un Client
-                </NuxtLink>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+			<!-- Carte Clients Moraux -->
+			<div
+				class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-lg p-6 border border-amber-200"
+			>
+				<div class="flex items-center justify-between">
+					<div>
+						<p class="text-sm font-medium text-amber-900">Clients Moraux</p>
+						<p class="text-3xl font-bold text-amber-900 mt-2">
+							{{ stat.moral }}
+						</p>
+					</div>
+					<div class="p-3 rounded-lg bg-amber-500">
+						<Icon name="heroicons:building-office" class="w-6 h-6 text-white" />
+					</div>
+				</div>
+			</div>
+		</div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        <div
-          class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
-        >
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm font-medium text-gray-600">Total Clients</p>
-              <p class="text-3xl font-bold text-gray-900">{{ kpis.clientsActifs }}</p>
-            </div>
-            <div class="w-12 h-12 bg-sky-100 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
+		<div class="sm:flex sm:items-center sm:justify-between mb-6">
+			<h1 class="text-xl font-bold text-gray-900">Liste des clients</h1>
+			<div class="mt-4 sm:mt-0 sm:ml-4 flex flex-col sm:flex-row gap-3">
+				<!-- Champ de recherche -->
+				<div class="relative flex-1 max-w-xs">
+					<div
+						class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+					>
+						<Icon
+							name="heroicons:magnifying-glass"
+							class="h-5 w-5 text-gray-400"
+						/>
+					</div>
+					<input
+						v-model="searchQuery"
+						type="text"
+						placeholder="Rechercher..."
+						class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm placeholder-gray-400"
+					/>
+				</div>
 
-        <div
-          class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
-        >
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm font-medium text-gray-600">Clients Particuliers</p>
-              <p class="text-3xl font-bold text-gray-900">{{ individualClientsCount }}</p>
-            </div>
-            <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
+				<!-- Boutons d'action -->
+				<button
+					@click="openModalForCreate"
+					class="bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 text-white px-6 py-2 rounded-lg flex items-center justify-center shadow-md hover:shadow-lg transition-all"
+				>
+					<Icon name="heroicons:plus" class="h-5 w-5 mr-2" />
+					Nouveau client
+				</button>
+			</div>
+		</div>
 
-        <div
-          class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
-        >
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="text-sm font-medium text-gray-600">Clients Moraux</p>
-              <p class="text-3xl font-bold text-gray-900">{{ moralClientsCount }}</p>
-            </div>
-            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
+		<ClientsList
+			:paginatedClients="paginatedClients"
+			:isLoading="isLoading"
+			:searchQuery="searchQuery"
+			:noDataDescription="noDataDescription"
+			@edit="editClient"
+			@view="viewClient"
+			@delete="deleteClient"
+			@reload="fetchClients"
+		/>
 
-      <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-        <div class="px-8 py-6 bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-              <h2 class="text-xl font-bold text-gray-900">Liste des clients</h2>
-              <p class="text-gray-600 text-sm mt-1">{{ filteredClients.length }} client(s) affiché(s)</p>
-            </div>
+		<Paginator
+			:totalItems="filteredClients.length"
+			@range-changed="onRangeChanged"
+		/>
 
-            <div class="relative">
-              <input
-                v-model="searchTerm"
-                type="text"
-                placeholder="Rechercher un client..."
-                class="w-full sm:w-80 pl-12 pr-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-all duration-200 text-gray-700 bg-white"
-              />
-              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <Icon name="heroicons:search" class="h-5 w-5 text-gray-400" />
-              </div>
-            </div>
-          </div>
-        </div>
+		<!-- Modal Client -->
+		<div v-if="showModal" class="fixed inset-0 z-50 overflow-y-auto">
+			<div
+				class="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+				@click="showModal = false"
+			></div>
 
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th class="px-8 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Nom</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Type</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Email</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Téléphone</th>
-                <th class="px-6 py-4 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-100">
-              <tr
-                v-for="client in filteredClients"
-                :key="client.id"
-                class="hover:bg-gradient-to-r hover:from-sky-50 hover:to-blue-50 transition-all duration-300 group"
-              >
-                <td class="px-8 py-6 whitespace-nowrap">
-                  <div class="flex items-center">
-                    <div class="ml-0">
-                      <div class="text-sm font-bold text-gray-900">{{ client.name}}</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-6 whitespace-nowrap">
-                  <span
-                    class="px-3 py-1.5 inline-flex text-xs leading-5 font-bold rounded-full"
-                  >
-                    {{ client.client_type }}
-                  </span>
-                </td>
-                <td class="px-6 py-6 whitespace-nowrap">
-                  <div class="text-sm text-gray-500 flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                    {{ client.email }}
-                  </div>
-                </td>
-                <td class="px-6 py-6 whitespace-nowrap">
-                  <div class="text-sm text-gray-500 flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                    {{ client.phone }}
-                  </div>
-                </td>
-                <td class="px-6 py-6 whitespace-nowrap text-sm font-medium">
-                  <div class="flex items-center gap-2">
-                    <button
-                      @click="viewClient(client.id)"
-                      class="group p-2 text-sky-600 hover:text-white hover:bg-sky-600 rounded-lg transition-all duration-200 flex items-center gap-1"
-                    >
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        ></path>
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                        ></path>
-                      </svg>
-                      <span class="hidden group-hover:inline text-xs">Voir</span>
-                    </button>
-                    <button
-                      @click="$router.push(`/clients/edit/${client.id}`)"
-                      class="group p-2 text-indigo-600 hover:text-white hover:bg-indigo-600 rounded-lg transition-all duration-200 flex items-center gap-1"
-                    >
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.232z"
-                        ></path>
-                      </svg>
-                      <span class="hidden group-hover:inline text-xs">Modifier</span>
-                    </button>
-                    <button
-                      @click="confirmDelete(client.id)"
-                      class="group p-2 text-red-600 hover:text-white hover:bg-red-600 rounded-lg transition-all duration-200 flex items-center gap-1"
-                    >
-                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                        ></path>
-                      </svg>
-                      <span class="hidden group-hover:inline text-xs">Supprimer</span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr v-if="filteredClients.length === 0">
-                <td colspan="5" class="px-6 py-12 text-center">
-                  <div class="flex flex-col items-center justify-center">
-                    <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                      />
-                    </svg>
-                    <p class="text-gray-500 text-lg font-medium">Aucun client trouvé</p>
-                    <p class="text-gray-400 text-sm mt-1">Essayez de modifier vos critères de recherche</p>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <div v-if="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div class="bg-white rounded-xl p-6 w-full max-w-md">
-        <h3 class="text-lg font-bold text-gray-900 mb-4">Confirmer la suppression</h3>
-        <p class="text-gray-600 mb-6">Êtes-vous sûr de vouloir supprimer ce client ? Cette action est irréversible.</p>
+			<div class="flex min-h-full items-center justify-center p-4 text-center">
+				<div
+					class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl"
+				>
+					<div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+						<div class="sm:flex sm:items-start">
+							<div
+								class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10"
+							>
+								<Icon
+									name="heroicons:user-circle"
+									class="h-6 w-6 text-blue-600"
+								/>
+							</div>
+							<div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+								<h3
+									class="text-lg font-medium leading-6 text-gray-900"
+									id="modal-title"
+								>
+									{{ isEditing ? "Modifier le client" : "Nouveau client" }}
+								</h3>
+							</div>
+						</div>
+					</div>
 
-        <div class="flex justify-end gap-3">
-          <button
-            @click="showDeleteModal = false"
-            class="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg transition-colors"
-            :disabled="isLoading"
-          >
-            Annuler
-          </button>
-          <button
-            @click="deleteClient"
-            class="px-4 py-2 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors flex items-center gap-2"
-            :disabled="isLoading"
-          >
-            <span v-if="isLoading">Suppression...</span>
-            <span v-else>Supprimer</span>
-            <svg v-if="isLoading" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </main>
+					<form @submit.prevent="handleSave">
+						<!-- Contenu du formulaire -->
+						<div class="px-6 py-4">
+							<div class="space-y-6">
+								<!-- Type de client -->
+								<div class="md:flex md:items-center md:justify-between">
+									<div class="md:w-1/2">
+										<div class="flex items-center">
+											<input
+												id="type-physique"
+												type="radio"
+												name="client_type"
+												value="Physique"
+												v-model="newClient.client_type"
+												class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+											/>
+											<label
+												for="type-physique"
+												class="ml-2 text-sm text-gray-700 cursor-pointer"
+												>Particulier</label
+											>
+										</div>
+									</div>
+									<div class="md:w-1/2">
+										<div class="flex items-center">
+											<input
+												id="type-moral"
+												type="radio"
+												name="client_type"
+												value="Moral"
+												v-model="newClient.client_type"
+												class="h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500"
+											/>
+											<label
+												for="type-moral"
+												class="ml-2 text-sm text-gray-700 cursor-pointer"
+												>Entreprise</label
+											>
+										</div>
+									</div>
+									<InvalidInput :error="errors.client_type" />
+								</div>
+
+								<!-- Formulaire Client Physique -->
+								<div
+									v-if="newClient.client_type == 'Physique'"
+									class="grid grid-cols-1 gap-4 sm:grid-cols-2"
+								>
+									<div class="space-y-1">
+										<label class="block text-sm font-medium text-gray-700"
+											>Nom</label
+										>
+										<input
+											v-model="newClient.last_name"
+											type="text"
+											name="last_name"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border"
+										/>
+										<InvalidInput :error="errors.last_name" />
+									</div>
+									<div class="space-y-1">
+										<label class="block text-sm font-medium text-gray-700"
+											>Prénom</label
+										>
+										<input
+											v-model="newClient.first_name"
+											type="text"
+											name="first_name"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border"
+										/>
+										<InvalidInput :error="errors.first_name" />
+									</div>
+								</div>
+
+								<!-- Formulaire Client Moral -->
+								<div
+									v-if="newClient.client_type == 'Moral'"
+									class="grid grid-cols-1 gap-4 sm:grid-cols-2"
+								>
+									<div class="space-y-1 sm:col-span-2">
+										<label class="block text-sm font-medium text-gray-700"
+											>Raison Sociale</label
+										>
+										<input
+											v-model="newClient.company_name"
+											type="text"
+											name="company_name"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border"
+										/>
+										<InvalidInput :error="errors.company_name" />
+									</div>
+								</div>
+
+								<!-- Formulaire Client Moral -->
+								<div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+									<div class="space-y-1">
+										<label class="block text-sm font-medium text-gray-700"
+											>Email</label
+										>
+										<input
+											v-model="newClient.email"
+											type="email"
+											name="email"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border"
+										/>
+										<InvalidInput :error="errors.email" />
+									</div>
+									<div class="space-y-1">
+										<label class="block text-sm font-medium text-gray-700"
+											>Téléphone</label
+										>
+										<input
+											v-model="newClient.phone"
+											type="tel"
+											name="phone"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border"
+										/>
+										<InvalidInput :error="errors.phone" />
+									</div>
+									<div class="space-y-1">
+										<label class="block text-sm font-medium text-gray-700"
+											>Région</label
+										>
+										<input
+											v-model="newClient.region"
+											type="text"
+											name="region"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border"
+										/>
+										<InvalidInput :error="errors.region" />
+									</div>
+									<div class="space-y-1">
+										<label class="block text-sm font-medium text-gray-700"
+											>Ville</label
+										>
+										<input
+											v-model="newClient.city"
+											type="text"
+											name="city"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border"
+										/>
+										<InvalidInput :error="errors.city" />
+									</div>
+									<div class="space-y-1 sm:col-span-2">
+										<label class="block text-sm font-medium text-gray-700"
+											>Pays</label
+										>
+										<input
+											v-model="newClient.country"
+											type="text"
+											name="country"
+											class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 border"
+										/>
+										<InvalidInput :error="errors.country" />
+									</div>
+								</div>
+							</div>
+
+							<!-- Pied de page du modal -->
+							<div class="mt-4 sm:flex sm:flex-row-reverse">
+								<button
+									type="submit"
+									:disabled="isSavingData"
+									class="inline-flex w-full justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+								>
+									<Spinner :is-loading="isSavingData" />
+									<span class="ml-3">{{
+										isSavingData
+											? isEditing
+												? "Mise à jour en cours..."
+												: "Enregistrement en cours..."
+											: isEditing
+												? "Mettre à jour"
+												: "Enregistrer"
+									}}</span>
+								</button>
+								<button
+									type="button"
+									@click="showModal = false"
+									class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-4 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+								>
+									Annuler
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<DetailModal
+		:isOpen="showViewModal"
+		:client="selectedClient"
+		@close="showViewModal = false"
+	/>
 </template>
 
-<script setup>
-import { ref, reactive, computed, onMounted } from 'vue';
-import { useClientStore } from '#imports';
-
+<script setup lang="ts">
+useHead({ title: "Gestion des Clients" });
+import { ref, onMounted, nextTick, reactive, computed } from "vue";
+import { storeToRefs } from "pinia";
+import Swal from "sweetalert2";
+import { defaultClient, type Client } from "~/models/Client";
+import { useClientStore } from "@/stores/ClientStore";
+import InvalidInput from "~/app/components/partials/InvalidInput.vue";
+import Paginator from "~/app/components/Paginator.vue";
+import EmptyState from "~/app/components/EmptyState.vue";
+import DetailModal from "~/app/components/clients/detailModal.vue";
+import ClientsList from "~/app/components/clients/list.vue";
+import Spinner from "~/app/components/partials/Spinner.vue";
+// TODO: Ajouter un spinner aux bouton d'enregistrement
 const clientStore = useClientStore();
+const { clients, errors, isLoading, stat } = storeToRefs(clientStore);
 
-const searchTerm = ref('');
-const showDeleteModal = ref(false);
-const clientToDelete = ref(null);
-const isLoading = ref(false);
+const showModal = ref(false);
+const isEditing = ref(false);
+const clientId = ref<string | null>(null);
+const error = ref<Error | null>(null);
+const isSavingData = ref<boolean>(false);
 
-const kpis = reactive({
-  clientsActifs: 0,
-  nouveauxClients: 0,
-  clientsEntreprises: 0
-});
+const searchQuery = ref<string>("");
+const noDataDescription = ref(
+	"Il n'y a actuellement aucune entreprise à afficher.",
+);
 
-// Utilisez filteredClients dans la boucle v-for
+const range = reactive({ start: 0, end: 0 });
+
+const onRangeChanged = ({ start, end }: { start: number; end: number }) => {
+	range.start = start;
+	range.end = end;
+};
+
 const filteredClients = computed(() => {
-  const clients = clientStore.clients ?? [];
-  if (!searchTerm.value) return clients;
-  return clients.filter(client =>
-    client.name.toLowerCase().includes(searchTerm.value.toLowerCase())
-  );
+	if (!searchQuery.value) {
+		return clients.value;
+	}
+
+	noDataDescription.value = "";
+	return clients.value.filter(
+		(_) =>
+			_.first_name?.toLowerCase().includes(searchQuery.value) ||
+			_.last_name?.toLowerCase().includes(searchQuery.value) ||
+			_.phone?.toLowerCase().includes(searchQuery.value) ||
+			_.company_name?.toLowerCase().includes(searchQuery.value) ||
+			_.city?.toString().toLowerCase().includes(searchQuery.value),
+	);
 });
 
-const individualClientsCount = computed(() => {
-  const clients = clientStore.clients ?? [];
-  return clients.filter(client =>
-    client.client_type && (
-      client.client_type.toLowerCase() === 'particulier' ||
-      client.client_type.toLowerCase() === 'individual' ||
-      client.client_type === 'Personne Physique'
-    )
-  ).length;
+const paginatedClients = computed(() => {
+	return filteredClients.value.slice(range.start - 1, range.end);
 });
 
-const moralClientsCount = computed(() => {
-  const clients = clientStore.clients ?? [];
-  return clients.filter(client =>
-    client.client_type && (
-      client.client_type.toLowerCase() === 'moral' ||
-      client.client_type.toLowerCase() === 'company' ||
-      client.client_type === 'Entreprise' ||
-      client.client_type === 'Personne Morale'
-    )
-  ).length;
-});
+// Référence pour le modal
+const modalRef = ref(null);
 
+const newClient = ref(defaultClient());
+
+const fetchClients = async () => {
+	try {
+		await clientStore.fetchAll();
+	} catch (e) {
+		error.value = e as Error;
+		console.error("Erreur lors de la récupération des entreprises:", e);
+	}
+};
+
+// Charger les clients au montage
 onMounted(async () => {
-  try {
-    await clientStore.fetchAll();
-
-    const clients = clientStore.clients ?? [];
-
-    kpis.clientsActifs = clients.length;
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-    kpis.nouveauxClients = clients.filter(c => {
-      const createdAt = new Date(c.created_at);
-      return createdAt >= sevenDaysAgo;
-    }).length;
-
-    kpis.clientsEntreprises = clients.filter(c => c.client_type === 'Entreprise').length;
-  } catch (error) {
-    console.error('Erreur chargement clients:', error);
-  }
+	await fetchClients();
 });
 
-const viewClient = async (id) => {
-  try {
-    await clientStore.fetchClient(id);
-    window.location.href = `/clients/${id}`;
-  } catch (error) {
-    console.error('Erreur lors du chargement du client:', error);
-    alert('Impossible de charger les détails du client');
-  }
+// Ouvrir modal pour créer un client
+const openModalForCreate = async () => {
+	resetForm();
+	isEditing.value = false;
+	showModal.value = true;
+	// Forcer le re-rendu
+	await nextTick();
+	if (modalRef.value) {
+		// @ts-ignore
+		modalRef.value.focus();
+	}
 };
 
-const editClient = (id) => {
-  window.location.href = `/clients/${id}/edit`;
+const selectedClient = ref<Client | null>(null);
+const showViewModal = ref(false);
+
+const viewClient = (client: Client) => {
+	selectedClient.value = client;
+	showViewModal.value = true;
 };
 
-const confirmDelete = (id) => {
-  clientToDelete.value = id;
-  showDeleteModal.value = true;
+// Créer ou mettre à jour selon le mode
+const handleSave = async () => {
+	// Validation du type
+	if (!newClient.value.client_type) {
+		Swal.fire({
+			icon: "warning",
+			title: "Attention",
+			text: "Le type de client est requis !",
+		});
+		return;
+	}
+
+	// Validation selon le type
+	if (newClient.value.client_type === "Physique") {
+		newClient.value.company_name = "";
+		if (!newClient.value.first_name || !newClient.value.last_name) {
+			Swal.fire({
+				icon: "warning",
+				title: "Attention",
+				text: "Le nom et prénom sont obligatoires pour un client physique.",
+			});
+			return;
+		}
+	} else if (newClient.value.client_type === "Moral") {
+		newClient.value.first_name = "";
+		newClient.value.last_name = "";
+		if (!newClient.value.company_name) {
+			Swal.fire({
+				icon: "warning",
+				title: "Attention",
+				text: "La raison sociale est obligatoire pour un client moral.",
+			});
+			return;
+		}
+	}
+
+	// Si tout est bon, enregistrer ou mettre à jour
+	if (isEditing.value) {
+		await updateClient();
+	} else {
+		await saveClient();
+	}
 };
 
-const deleteClient = async () => {
-  if (!clientToDelete.value) return;
+// Enregistrer un nouveau client
+const saveClient = async () => {
+	Swal.fire({
+		title: "Ajouter le client ?",
+		html: `Êtes-vous sûr de vouloir ajouter le client <b>${newClient.value.company_name || newClient.value.first_name + " " + newClient.value.last_name}</b> ?`,
+		icon: "question",
+		showCancelButton: true,
+		confirmButtonText: "Oui",
+		cancelButtonText: "Non",
+		confirmButtonColor: "#3085d6",
+		cancelButtonColor: "#d33",
+		reverseButtons: true,
+	}).then(async (result) => {
+		if (result.isConfirmed) {
+			try {
+				isSavingData.value = true;
+				await clientStore.createClient(newClient.value);
+				Swal.fire({
+					icon: "success",
+					title: "Succès",
+					text: "Client enregistré avec succès",
+					timer: 2000,
+					showConfirmButton: false,
+				});
+				await clientStore.fetchAll();
+				// await clientStore.fetchStat();
+				resetForm();
+				showModal.value = false;
+			} catch (error) {
+				console.error(error);
+				Swal.fire({
+					icon: "error",
+					title: "Erreur",
+					text: "Impossible d'enregistrer le client",
+				});
+			} finally {
+				isSavingData.value = false;
+			}
+		} else {
+			resetForm();
+			isSavingData.value = false;
+		}
+	});
+};
 
-  isLoading.value = true;
-  try {
-    await clientStore.deleteClient(clientToDelete.value);
-    alert('Client supprimé avec succès');
-  } catch (error) {
-    console.error('Erreur lors de la suppression:', error);
-    alert('Erreur lors de la suppression du client: ' + (error.message || 'Erreur inconnue'));
-  } finally {
-    showDeleteModal.value = false;
-    clientToDelete.value = null;
-    isLoading.value = false;
-  }
+// Préparer le formulaire pour édition
+const editClient = (client: Client) => {
+	isEditing.value = true;
+	showModal.value = true;
+	clientId.value = client.id;
+
+	newClient.value = {
+		client_type: client.client_type || "",
+		first_name: client.first_name || "",
+		last_name: client.last_name || "",
+		company_name: client.company_name || "",
+		email: client.email || "",
+		phone: client.phone || "",
+		region: client.region || "",
+		country: client.country || "",
+		city: client.city || "",
+	} as Client;
+};
+
+// Mettre à jour un client existant
+const updateClient = async () => {
+	Swal.fire({
+		title: "Mettre à jour le client ?",
+		html: `Êtes-vous sûr de vouloir mettre à jour le client <b>${newClient.value.company_name || newClient.value.first_name + " " + newClient.value.last_name}</b> ?`,
+		icon: "question",
+		showCancelButton: true,
+		confirmButtonText: "Oui",
+		cancelButtonText: "Non",
+		confirmButtonColor: "#3085d6",
+		cancelButtonColor: "#d33",
+		reverseButtons: true,
+	}).then(async (result) => {
+		if (result.isConfirmed) {
+			try {
+				isSavingData.value = true;
+				await clientStore.updateClient(clientId.value!, newClient.value);
+				Swal.fire({
+					icon: "success",
+					title: "Succès",
+					text: "Client modifié avec succès",
+					timer: 2000,
+					showConfirmButton: false,
+				});
+				await clientStore.fetchAll();
+				resetForm();
+				showModal.value = false;
+			} catch (error) {
+				Swal.fire({
+					icon: "error",
+					title: "Erreur",
+					text: "Impossible de modifier le client",
+				});
+			} finally {
+				isSavingData.value = false;
+			}
+		}
+	});
+};
+
+// Supprimer un client existant
+const deleteClient = async (client: Client) => {
+	Swal.fire({
+		title: "Supprimer le client ?",
+		html: `Êtes-vous sûr de vouloir supprimer le client <b>${client.company_name || client.first_name + " " + client.last_name}</b> ?`,
+		icon: "question",
+		showCancelButton: true,
+		cancelButtonText: "Annuler",
+		cancelButtonColor: "#3085d6",
+		confirmButtonColor: "#d33",
+		confirmButtonText: "Oui, supprimer !",
+	}).then(async (result) => {
+		if (result.isConfirmed) {
+			try {
+				await clientStore.deleteClient(client.id);
+				Swal.fire({
+					icon: "success",
+					title: "Succès",
+					text: "Client supprimé avec succès",
+					showConfirmButton: false,
+				});
+				await clientStore.fetchAll();
+			} catch (error) {
+				Swal.fire({
+					icon: "error",
+					title: "Erreur",
+					text: "Impossible de supprimer le client",
+				});
+			}
+		}
+	});
+};
+
+// Réinitialiser le formulaire
+const resetForm = () => {
+	newClient.value = defaultClient();
+	isEditing.value = false;
+	clientId.value = null;
+	// Ne pas modifier showModal ici, c'est géré par openModalForCreate
 };
 </script>
-
-<style scoped>
-/* Animation pour les cartes de statistiques */
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.group:hover .group-hover\:inline {
-  animation: slideInUp 0.2s ease-out;
-}
-
-/* Effet de survol pour les lignes du tableau */
-.group:hover {
-  box-shadow: 0 4px 15px -4px rgba(59, 130, 246, 0.15);
-}
-
-/* Style pour les boutons d'action */
-.group:hover .group-hover\:bg-sky-600,
-.group:hover .group-hover\:bg-red-600,
-.group:hover .group-hover\:bg-indigo-600 {
-  transform: scale(1.05);
-}
-</style>

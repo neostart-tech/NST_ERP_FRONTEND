@@ -4482,6 +4482,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"convertir-nombre-lettre@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "convertir-nombre-lettre@npm:1.0.2"
+  checksum: 10c0/fc723e82281aa3b23f970d28f667b110fc2ec79f133286ccfbec8d4599b0c2df5f9a4d39c746aa8d6e635447fe24fd27bfd1130f8a0411c7fd136610afff11c5
+  languageName: node
+  linkType: hard
+
 "cookie-es@npm:^1.2.2":
   version: 1.2.2
   resolution: "cookie-es@npm:1.2.2"
@@ -7953,6 +7960,7 @@ __metadata:
     "@vueuse/core": "npm:^13.8.0"
     axios: "npm:^1.11.0"
     chart.js: "npm:^4.5.0"
+    convertir-nombre-lettre: "npm:^1.0.2"
     date-fns: "npm:^4.1.0"
     jspdf: "npm:^3.0.4"
     lodash: "npm:^4.17.21"
