@@ -29,4 +29,35 @@ export const ApiUrls = {
    * Retour: Vide
    */
   LOGOUT: '/logout',
+
+  /**
+   * Endpoints pour les interventions
+   */
+  INTERVENTIONS: {
+    ADD: '/addIntervention',
+    DISPLAY: '/displayInterventions',
+    UPDATE: '/updateIntervention',
+    DELETE: '/deleteIntervention',
+  },
+
+  /**
+   * Endpoints pour les techniciens
+   */
+  TECHNICIANS: {
+    DISPLAY: '/displayTechnicians',
+  },
+
+  /**
+   * Endpoints pour les équipements
+   */
+  EQUIPMENTS: {
+    DISPLAY: '/displayEquipments',
+  },
+
+  /**
+   * Endpoints pour les clients
+   */
+  CLIENTS: {
+    DISPLAY: '/displayClients',
+  },
 };

@@ -32,7 +32,7 @@
 
 <script setup lang="ts">
 import { AppUrl } from "@/composables/appUrl";
-import { useAuthStore } from "@/stores/authStore";
+import { useAuthStore } from "~/app/Store/authStore";
 import Alert from "@/components/partials/Alert.vue";
 
 // Icônes pour les fonctionnalités

@@ -1,0 +1,378 @@
+<template>
+    <div class="min-h-screen bg-gray-50 p-6">
+        <!-- Navigation entre les types de documents -->
+        <div class="flex mb-6 border-b">
+            <button @click="activeDoc = 'invoice'" :class="{'border-b-2 border-blue-500 text-blue-600': activeDoc === 'invoice'}" class="px-4 py-2 font-medium">
+                Facture
+            </button>
+            <button @click="activeDoc = 'proforma'" :class="{'border-b-2 border-blue-500 text-blue-600': activeDoc === 'proforma'}" class="px-4 py-2 font-medium">
+                Proforma
+            </button>
+            <button @click="activeDoc = 'delivery'" :class="{'border-b-2 border-blue-500 text-blue-600': activeDoc === 'delivery'}" class="px-4 py-2 font-medium">
+                Bordereau Livraison
+            </button>
+        </div>
+
+        <!-- Formulaire de création -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-bold mb-4">Paramètres du document</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Informations client -->
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold mb-3 text-blue-700">Client</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Type</label>
+                            <select v-model="client.type" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                                <option value="company">Entreprise</option>
+                                <option value="individual">Particulier</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nom</label>
+                            <input v-model="client.name" type="text" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Adresse</label>
+                            <input v-model="client.address" type="text" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Téléphone</label>
+                            <input v-model="client.phone" type="text" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Email</label>
+                            <input v-model="client.email" type="email" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Détails du document -->
+                <div class="border rounded-lg p-4">
+                    <h3 class="font-semibold mb-3 text-blue-700">Document</h3>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Numéro</label>
+                            <input v-model="document.number" type="text" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Date</label>
+                            <input v-model="document.date" type="date" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                        </div>
+                        <div v-if="activeDoc === 'invoice'">
+                            <label class="block text-sm font-medium text-gray-700">Date d'échéance</label>
+                            <input v-model="document.dueDate" type="date" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                        </div>
+                        <div v-if="activeDoc !== 'delivery'">
+                            <label class="block text-sm font-medium text-gray-700">Contrat de maintenance</label>
+                            <select v-model="document.maintenanceContract" class="mt-1 block w-full border border-gray-300 rounded-md p-2">
+                                <option value="true">Oui</option>
+                                <option value="false">Non</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Articles -->
+            <div class="mt-6 border rounded-lg p-4">
+                <h3 class="font-semibold mb-3 text-blue-700">Articles</h3>
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="text-left py-2">Description</th>
+                            <th class="text-left py-2">Quantité</th>
+                            <th class="text-left py-2">Prix unitaire</th>
+                            <th class="text-left py-2">Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(item, index) in items" :key="index" class="border-b">
+                            <td class="py-2">
+                                <input v-model="item.description" type="text" class="border border-gray-300 rounded-md p-2 w-full">
+                            </td>
+                            <td class="py-2">
+                                <input v-model="item.quantity" type="number" @change="updateTotal" class="border border-gray-300 rounded-md p-2 w-20">
+                            </td>
+                            <td class="py-2">
+                                <input v-model="item.unitPrice" type="number" step="0.01" @change="updateTotal" class="border border-gray-300 rounded-md p-2 w-24">
+                            </td>
+                            <td class="py-2">{{ (item.quantity * item.unitPrice).toFixed(2) }} €</td>
+                            <td class="py-2">
+                                <button @click="removeItem(index)" class="text-red-500 hover:text-red-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button @click="addItem" class="mt-2 bg-blue-500 text-white px-3 py-1 rounded-md hover:bg-blue-600">
+                    + Ajouter un article
+                </button>
+                <div class="mt-4 flex justify-end">
+                    <div class="text-right">
+                        <p class="font-semibold">Total HT: {{ total.toFixed(2) }} €</p>
+                        <p>TVA (20%): {{ (total * 0.2).toFixed(2) }} €</p>
+                        <p class="text-xl font-bold">Total TTC: {{ (total * 1.2).toFixed(2) }} €</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Boutons d'action -->
+            <div class="mt-6 flex justify-end space-x-4">
+                <button @click="resetForm" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300">
+                    Réinitialiser
+                </button>
+                <button @click="generateDocument" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+                    Générer le document
+                </button>
+            </div>
+        </div>
+
+        <!-- Aperçu du document -->
+        <div v-if="preview" class="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">
+            <div class="flex justify-between mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold">{{ documentTitle }}</h1>
+                    <p class="text-gray-600">{{ cabinetInfo.name }}</p>
+                    <p class="text-gray-600">{{ cabinetInfo.address }}</p>
+                    <p class="text-gray-600">{{ cabinetInfo.phone }} | {{ cabinetInfo.email }}</p>
+                </div>
+                <div class="text-right">
+                    <p class="font-bold">N°: {{ document.number }}</p>
+                    <p>Date: {{ formatDate(document.date) }}</p>
+                    <p v-if="activeDoc === 'invoice'">Échéance: {{ formatDate(document.dueDate) }}</p>
+                    <p v-if="activeDoc !== 'delivery' && document.maintenanceContract === 'true'" class="text-blue-600 font-medium">
+                        Sous contrat de maintenance
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="font-semibold text-gray-700 border-b pb-1 mb-2">Émetteur</h3>
+                    <p>{{ cabinetInfo.name }}</p>
+                    <p>{{ cabinetInfo.address }}</p>
+                    <p>{{ cabinetInfo.phone }}</p>
+                    <p>{{ cabinetInfo.email }}</p>
+                    <p v-if="cabinetInfo.siret">SIRET: {{ cabinetInfo.siret }}</p>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-700 border-b pb-1 mb-2">Client</h3>
+                    <p>{{ client.name }}</p>
+                    <p>{{ client.address }}</p>
+                    <p>{{ client.phone }}</p>
+                    <p>{{ client.email }}</p>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <p class="mb-4">Madame, Monsieur,</p>
+                <p v-if="activeDoc === 'invoice'">Veuillez trouver ci-joint la facture correspondant à la réparation de votre équipement.</p>
+                <p v-if="activeDoc === 'proforma'">Veuillez trouver ci-joint le devis pour la réparation de votre équipement.</p>
+                <p v-if="activeDoc === 'delivery'">Nous vous confirmons la bonne réception de votre équipement réparé.</p>
+            </div>
+
+            <table class="w-full border-collapse mb-6">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border p-2 text-left">Description</th>
+                        <th class="border p-2 text-left">Quantité</th>
+                        <th class="border p-2 text-left">Prix unitaire</th>
+                        <th class="border p-2 text-left">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, index) in items" :key="index">
+                        <td class="border p-2">{{ item.description }}</td>
+                        <td class="border p-2">{{ item.quantity }}</td>
+                        <td class="border p-2">{{ item.unitPrice.toFixed(2) }} €</td>
+                        <td class="border p-2">{{ (item.quantity * item.unitPrice).toFixed(2) }} €</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="border p-2 text-right font-semibold">Total HT</td>
+                        <td class="border p-2">{{ total.toFixed(2) }} €</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="border p-2 text-right font-semibold">TVA (20%)</td>
+                        <td class="border p-2">{{ (total * 0.2).toFixed(2) }} €</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="border p-2 text-right font-bold">Total TTC</td>
+                        <td class="border p-2 font-bold">{{ (total * 1.2).toFixed(2) }} €</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div v-if="activeDoc === 'delivery'" class="mb-6">
+                <p class="mb-4">Bonne réception de votre équipement.</p>
+                <p>Nous vous remercions de votre confiance.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                <div class="border-t-2 pt-4">
+                    <p class="text-center text-sm text-gray-600 mb-2">Signature du technicien</p>
+                    <div class="border-2 border-gray-300 border-dashed rounded-lg h-24 flex items-center justify-center">
+                        <span class="text-gray-400">Signature</span>
+                    </div>
+                    <p class="text-center text-xs text-gray-500 mt-2">Fait à {{ cabinetInfo.city }}, le {{ formatDate(document.date) }}</p>
+                </div>
+                <div class="border-t-2 pt-4">
+                    <p class="text-center text-sm text-gray-600 mb-2">Signature du client</p>
+                    <div class="border-2 border-gray-300 border-dashed rounded-lg h-24 flex items-center justify-center">
+                        <span class="text-gray-400">Signature</span>
+                    </div>
+                    <p class="text-center text-xs text-gray-500 mt-2">Bon pour accord le ___________________</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-8 pt-4 border-t text-xs text-gray-500">
+                <p>{{ cabinetInfo.name }} - {{ cabinetInfo.address }} - {{ cabinetInfo.phone }} - {{ cabinetInfo.email }}</p>
+                <p v-if="cabinetInfo.siret">SIRET {{ cabinetInfo.siret }} - TVA Intracommunautaire {{ cabinetInfo.vatNumber }}</p>
+            </div>
+
+            <div class="mt-6 flex justify-center">
+                <button @click="printDocument" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 mr-4">
+                    Imprimer
+                </button>
+                <button @click="downloadPDF" class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600">
+                    Télécharger PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            activeDoc: 'invoice', // 'invoice', 'proforma', 'delivery'
+            preview: false,
+            cabinetInfo: {
+                name: "TECHNO SERVICE SARL",
+                address: "123 Rue des Réparations, 75000 Paris",
+                city: "Paris",
+                phone: "+33 1 23 45 67 89",
+                email: "contact@technoservice.fr",
+                siret: "123 456 789 00010",
+                vatNumber: "FR00123456789"
+            },
+            client: {
+                type: "company",
+                name: "",
+                address: "",
+                phone: "",
+                email: ""
+            },
+            document: {
+                number: "",
+                date: new Date().toISOString().split('T')[0],
+                dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                maintenanceContract: "false"
+            },
+            items: [
+                { description: "Maintenance équipement", quantity: 1, unitPrice: 120 },
+                { description: "Pièce de rechange", quantity: 1, unitPrice: 45 }
+            ]
+        }
+    },
+    computed: {
+        documentTitle() {
+            return {
+                'invoice': 'FACTURE',
+                'proforma': 'DEVIS PROFORMA',
+                'delivery': 'BORDEREAU DE LIVRAISON'
+            }[this.activeDoc]
+        },
+        total() {
+            return this.items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0)
+        }
+    },
+    methods: {
+        formatDate(dateString) {
+            if (!dateString) return ''
+            const date = new Date(dateString)
+            return date.toLocaleDateString('fr-FR')
+        },
+        addItem() {
+            this.items.push({ description: "", quantity: 1, unitPrice: 0 })
+        },
+        removeItem(index) {
+            this.items.splice(index, 1)
+            this.updateTotal()
+        },
+        updateTotal() {
+            // Force Vue to update computed total
+            this.$forceUpdate()
+        },
+        resetForm() {
+            this.client = {
+                type: "company",
+                name: "",
+                address: "",
+                phone: "",
+                email: ""
+            }
+            this.document = {
+                number: "",
+                date: new Date().toISOString().split('T')[0],
+                dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                maintenanceContract: "false"
+            }
+            this.items = [
+                { description: "Maintenance équipement", quantity: 1, unitPrice: 120 },
+                { description: "Pièce de rechange", quantity: 1, unitPrice: 45 }
+            ]
+            this.preview = false
+        },
+        generateDocument() {
+            // Générer un numéro de document si vide
+            if (!this.document.number) {
+                const prefix = {
+                    'invoice': 'FAC',
+                    'proforma': 'PRO',
+                    'delivery': 'BL'
+                }[this.activeDoc]
+                this.document.number = `${prefix}-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`
+            }
+            this.preview = true
+        },
+        printDocument() {
+            window.print()
+        },
+        downloadPDF() {
+            // Ici vous pourriez intégrer une librairie comme html2pdf.js pour générer un PDF
+            alert("Fonctionnalité PDF à implémenter")
+        }
+    }
+}
+</script>
+
+<style lang="scss" scoped>
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .preview-document, .preview-document * {
+        visibility: visible;
+    }
+    .preview-document {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 1cm;
+    }
+    .no-print {
+        display: none !important;
+    }
+}
+</style>

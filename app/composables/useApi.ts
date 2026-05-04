@@ -14,30 +14,34 @@ export const useApi = () => {
 	const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
 
 	let XSRFToken = useCookie('XSRF-TOKEN').value;
-	console.log("XSRFToken:", XSRFToken);
+	console.log("XSRFToken: - useApi.ts:17", XSRFToken);
 	if (!XSRFToken) {
 		refreshToken().then();
 		XSRFToken = useCookie('XSRF-TOKEN').value;
 	}
 
+
 	const getHeaders = (headers: HeadersInit = {}) => ({
 		'X-XSRF-TOKEN': XSRFToken,
 		'Content-Type': 'application/json',
 		'Accept': 'application/json',
-		...(authStore.token && {Authorization: `Bearer ${authStore.token}`}),
+		...(authStore.token && { Authorization: `Bearer ${authStore.token}` }),
 		// credentials: 'include',
 		...headers,
 	});
 
 	const request = async <T>(endpoint: string, config: ApiConfig = {}): Promise<ApiResponse<T>> => {
-		const {method = 'GET', headers = {}, body, signal} = config;
+		const { method = 'GET', headers = {}, body, signal } = config;
 		const fullUrl = `${baseUrl}${endpoint}`;
 
 		try {
+			// Déterminer si le body est FormData
+			const isFormData = body instanceof FormData;
+
 			const response = await fetch(fullUrl, {
 				method,
-				headers: getHeaders(headers),
-				body: body ? JSON.stringify(body) : undefined,
+				headers: isFormData ? getHeaders() : getHeaders(headers), // Ne pas ajouter Content-Type pour FormData
+				body: isFormData ? body : (body ? JSON.stringify(body) : undefined),
 				credentials: 'include',
 				signal,
 			});
@@ -59,28 +63,28 @@ export const useApi = () => {
 				throw error;
 			}
 
-			return {data: data.data};
+			return { data: data.data };
 
 		} catch (error) {
-			console.log("Api error:", error);
+			console.log("Api error: - useApi.ts:66", error);
 			throw error;
 		}
 	};
 
 	const get = <T>(endpoint: string, config: ApiConfig = {}) =>
-		request<T>(endpoint, {method: 'GET', ...config});
+		request<T>(endpoint, { method: 'GET', ...config });
 
 	const post = <T>(endpoint: string, body: any, config: ApiConfig = {}) =>
-		request<T>(endpoint, {method: 'POST', body, ...config});
+		request<T>(endpoint, { method: 'POST', body, ...config });
 
 	const put = <T>(endpoint: string, body: any, config: ApiConfig = {}) =>
-		request<T>(endpoint, {method: 'PUT', body, ...config});
+		request<T>(endpoint, { method: 'PUT', body, ...config });
 
 	const del = <T>(endpoint: string, config: ApiConfig = {}) =>
-		request<T>(endpoint, {method: 'DELETE', ...config});
+		request<T>(endpoint, { method: 'DELETE', ...config });
 
 	const patch = <T>(endpoint: string, body: any, config: ApiConfig = {}) =>
-		request<T>(endpoint, {method: 'PATCH', body, ...config});
+		request<T>(endpoint, { method: 'PATCH', body, ...config });
 
 	return {
 		request,
@@ -94,7 +98,7 @@ export const useApi = () => {
 };
 
 const refreshToken = async () => {
-	console.log("Refreshing token...");
+	console.log("Refreshing token... - useApi.ts:98");
 	await $fetch('http://localhost:8000/sanctum/csrf-cookie', {
 		credentials: 'include',
 	})

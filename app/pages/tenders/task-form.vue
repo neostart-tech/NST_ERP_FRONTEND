@@ -272,7 +272,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useTenderStore } from '../../stores/tenderStore';
+import { useTenderStore } from '../../Store/tenderStore';
 import type { ProjectTask, TaskFormData, TaskPriority } from '../../../types/tenders';
 
 // Props and Emits

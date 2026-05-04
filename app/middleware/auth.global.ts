@@ -1,6 +1,6 @@
 import { defineNuxtRouteMiddleware } from "nuxt/app";
-import {AppUrl} from "@/composables/appUrl";
-import { useAuthStore } from "@/stores/authStore";
+import { AppUrl } from "@/composables/appUrl";
+import { useAuthStore } from "~/app/Store/authStore";
 
 export default defineNuxtRouteMiddleware((to) => {
 	const authStore = useAuthStore();

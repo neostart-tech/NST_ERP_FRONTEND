@@ -119,7 +119,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/authStore';
+import { useAuthStore } from '../Store/authStore';
 
 const authStore = useAuthStore();
 

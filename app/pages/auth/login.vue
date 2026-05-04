@@ -7,14 +7,14 @@
           <h1 class="text-4xl font-bold tracking-tight">Neo-ERP</h1>
         </div>
       </div>
-  
+
       <!-- Côté droit - Formulaire avec animation -->
       <div class="w-full p-8 md:w-1/2 md:p-12 transform transition-all duration-500 hover:scale-[1.005]">
         <div class="mb-10 text-center">
           <h2 class="text-3xl font-bold text-gray-800 mb-2">Bienvenue</h2>
           <p class="text-gray-500">Connectez-vous pour accéder à votre compte</p>
         </div>
-        
+
         <form @submit.prevent="handleLogin" class="space-y-6">
           <!-- Champ Email -->
           <div class="space-y-2">
@@ -34,7 +34,7 @@
               />
             </div>
           </div>
-          
+
           <!-- Champ Mot de passe -->
           <div class="space-y-2">
             <div class="relative">
@@ -53,7 +53,7 @@
               />
             </div>
           </div>
-          
+
           <!-- Options -->
           <div class="flex items-center justify-between">
             <div class="flex items-center">
@@ -71,7 +71,7 @@
               </a>
             </div>
           </div>
-          
+
           <!-- Bouton de connexion -->
           <div class="flex justify-center">
             <button 
@@ -79,7 +79,7 @@
               class="flex items-center justify-center w-80 text-center bg-sky-800 hover:bg-sky-900 text-white font-medium py-3 px-4 rounded-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2"
               :disabled="isLoading"
             >
-              <Spinner :is-loading="isLoading" />
+              <Spinner v-if="isLoading" class="mr-2" />
               {{ isLoading ? 'Connexion en cours...' : 'Connexion' }}
             </button>
           </div>
@@ -90,29 +90,43 @@
 </template>
 
 <script setup lang="ts">
-import Spinner from '@/components/partials/Spinner.vue';
-import { createDefaultLoginCredential, type LoginCredential } from '~/models/User';
+import Spinner from '@/components/partials/Spinner.vue'
+import { useAuthStore } from '~/app/stores/authStore'
+import { createDefaultLoginCredential, type LoginCredential } from '~/models/User'
 
+//  Configuration de la page
 definePageMeta({
   layout: false
 })
 
-const isLoading = ref<boolean>(false);
-const credentials = ref<LoginCredential>(createDefaultLoginCredential());
+//  Auth & formulaire
+const isLoading = ref<boolean>(false)
+const rememberMe = ref<boolean>(false)
+const credentials = ref<LoginCredential>(createDefaultLoginCredential())
 
 const handleLogin = async () => {
-	isLoading.value = true;
-	try {
-		await useAuthStore().login(credentials.value);
-		credentials.value = createDefaultLoginCredential();
-		await navigateTo(AppUrl.WELCOME);
-	} catch (error) {
-		console.log("Error while authenticating:", error);
-		alert(error);
-	} finally {
-		isLoading.value = false;
-	}
+  isLoading.value = true
+  try {
+    await useAuthStore().login(credentials.value)
+    credentials.value = createDefaultLoginCredential()
+    await navigateTo(AppUrl.WELCOME)
+  } catch (error) {
+    console.log("Error while authenticating:", error)
+    alert(error)
+  } finally {
+    isLoading.value = false
+  }
 }
+
+//  Appel API Laravel pour récupérer les utilisateurs
+// const config = useRuntimeConfig()
+// const { data, error } = await useFetch(${config.public.apiBase}/utilisateurs)
+
+// // 👇 Optionnel : afficher dans la console
+// if (data.value) {
+//   console.log('Utilisateurs récupérés :', data.value)
+// }
+// if (error.value) {
+//   console.error('Erreur lors du fetch :', error.value)
+// }
 </script>
-
-
